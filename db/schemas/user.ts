@@ -1,18 +1,16 @@
-import { boolean, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
-import { v4 as uuidv4 } from "uuid";
+import { boolean, pgTable, timestamp, text, uuid } from "drizzle-orm/pg-core";
 
-export const users = mysqlTable("users", {
-  id: varchar("id", { length: 36 })
-    .$defaultFn(() => uuidv4())
-    .primaryKey(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
+export const users = pgTable("users", {
+  id: uuid("id").defaultRandom().primaryKey(),
 
-  password: varchar("password", { length: 255 }).notNull(),
-
-  displayName: varchar("display_name", { length: 50 }).notNull(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  displayName: text("display_name").notNull(),
 
   isActive: boolean("is_active").default(true),
 
-  createdAt: timestamp("created_at", { mode: "date" }).defaultNow(),
-  updatedAt: timestamp("updated_at", { mode: "date" }).defaultNow().onUpdateNow(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .$onUpdate(() => new Date()),
 });
