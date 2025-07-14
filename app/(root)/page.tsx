@@ -1,3 +1,4 @@
+import { GeometricLogo, TerminalLogo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 
 export default function Home() {
@@ -5,6 +6,7 @@ export default function Home() {
     <div>
       <p className="text-teal-200">hello</p>
       <Button>submit</Button>
+      <GeometricLogo />
     </div>
   );
 }

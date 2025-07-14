@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, ArrowRight, Zap, Search } from "lucide-react";
+import { Menu, X, ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 
 interface NavItem {
@@ -33,20 +33,19 @@ export default function Header2() {
   }, []);
 
   const containerVariants = {
-    hidden: { opacity: 0, y: -20 },
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      y: 0,
       transition: {
-        duration: 0.6,
-        staggerChildren: 0.1,
+        duration: 0.4,
+        staggerChildren: 0.05,
       },
     },
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: -10 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
   };
 
   const mobileMenuVariants = {
@@ -94,14 +93,14 @@ export default function Header2() {
             >
               <Link href="/" className="flex items-center space-x-3">
                 <div className="relative">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-rose-500 via-rose-600 to-rose-700 shadow-lg">
-                    <Zap className="h-5 w-5 text-white" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800 shadow-lg ring-1 ring-slate-200/20">
+                    <span className="text-sm font-medium text-slate-100">Tz</span>
                   </div>
-                  <div className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full bg-green-400"></div>
+                  {/* <div className="absolute -right-1 -top-1 h-3 w-3 animate-pulse rounded-full bg-blue-400/80"></div> */}
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-lg font-bold text-foreground">Acme Inc.</span>
-                  <span className="-mt-1 text-xs text-muted-foreground">Build faster</span>
+                  <span className="text-lg font-semibold text-foreground">Tz blog</span>
+                  <span className="-mt-1 text-xs text-muted-foreground">Personal blog</span>
                 </div>
               </Link>
             </motion.div>
