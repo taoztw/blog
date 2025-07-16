@@ -3,10 +3,10 @@ import { type Config } from "drizzle-kit";
 import { env } from "@/env";
 
 export default {
-  schema: "./src/server/db/schema.ts",
-  dialect: "mysql",
-  dbCredentials: {
-    url: env.DATABASE_URL,
-  },
-  tablesFilter: ["dip-root_*"],
+	schema: "./src/server/db/schema.ts",
+	dialect: "mysql",
+	dbCredentials: {
+		url: env.DATABASE_URL
+	},
+	tablesFilter: ["blog_*"]
 } satisfies Config;
