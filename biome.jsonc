@@ -20,7 +20,10 @@
           }
         }
       },
-      "recommended": true
+      "recommended": true,
+      "a11y": {
+        "noSvgWithoutTitle": "off"
+      }
     }
   }
 }
