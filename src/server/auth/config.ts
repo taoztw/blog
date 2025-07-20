@@ -1,7 +1,7 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { DefaultSession, NextAuthConfig } from "next-auth";
-import DiscordProvider from "next-auth/providers/discord";
 import GitHub from "next-auth/providers/github";
+import Google from "next-auth/providers/google";
 
 import { db } from "@/server/db";
 import { accounts, sessions, users, verificationTokens } from "@/server/db/schema";
@@ -33,7 +33,7 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
-	providers: [DiscordProvider, GitHub],
+	providers: [GitHub, Google],
 	adapter: DrizzleAdapter(db, {
 		usersTable: users,
 		accountsTable: accounts,
