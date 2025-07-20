@@ -8,6 +8,9 @@
 # testing
 /coverage
 
+# drizzle
+/drizzle
+
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
