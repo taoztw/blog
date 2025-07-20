@@ -2,7 +2,7 @@ import SignInForm from "@/components/forms/SignInForm";
 import React from "react";
 
 const SignIn = () => {
-  return <SignInForm />;
+	return <SignInForm />;
 };
 
 export default SignIn;

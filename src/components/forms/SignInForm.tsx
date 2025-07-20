@@ -12,92 +12,92 @@ import { Input } from "../ui/input";
 import SocialAuthForm from "./SocialAuthForm";
 
 const SignInForm = () => {
-  const signInSchema = z.object({
-    email: z.email().min(1, "Email is required"),
-    password: z
-      .string()
-      .min(6, "Password must be at least 6 characters")
-      .max(100, "Password must be at most 100 characters"),
-  });
+	const signInSchema = z.object({
+		email: z.email().min(1, "Email is required"),
+		password: z
+			.string()
+			.min(6, "Password must be at least 6 characters")
+			.max(100, "Password must be at most 100 characters")
+	});
 
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
-    defaultValues: { email: "", password: "" },
-  });
+	const form = useForm<z.infer<typeof signInSchema>>({
+		resolver: zodResolver(signInSchema),
+		defaultValues: { email: "", password: "" }
+	});
 
-  const handleSubmit = (values: z.infer<typeof signInSchema>) => {
-    console.log("Form submitted with values:", values);
-  };
+	const handleSubmit = (values: z.infer<typeof signInSchema>) => {
+		console.log("Form submitted with values:", values);
+	};
 
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(handleSubmit)}
-        className="m-auto h-fit w-full max-w-[400px] rounded-[calc(var(--radius)+.125rem)] border bg-card p-0.5 shadow-md dark:[--color-muted:var(--color-zinc-900)]"
-      >
-        <div className="p-8 pb-6">
-          <div>
-            <Link href="/" aria-label="go home">
-              <LogoIcon />
-            </Link>
-            <h1 className="mt-4 mb-1 font-semibold text-xl">Sign In to Tailark</h1>
-            <p className="text-sm">Welcome back! Sign in to continue</p>
-          </div>
+	return (
+		<Form {...form}>
+			<form
+				onSubmit={form.handleSubmit(handleSubmit)}
+				className="m-auto h-fit w-full max-w-[400px] rounded-[calc(var(--radius)+.125rem)] border bg-card p-0.5 shadow-md dark:[--color-muted:var(--color-zinc-900)]"
+			>
+				<div className="p-8 pb-6">
+					<div>
+						<Link href="/" aria-label="go home">
+							<LogoIcon />
+						</Link>
+						<h1 className="mt-4 mb-1 font-semibold text-xl">Sign In to Tailark</h1>
+						<p className="text-sm">Welcome back! Sign in to continue</p>
+					</div>
 
-          <SocialAuthForm />
+					<SocialAuthForm />
 
-          <hr className="my-4 border-dashed" />
+					<hr className="my-4 border-dashed" />
 
-          <div className="space-y-6">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Enter you email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+					<div className="space-y-6">
+						<FormField
+							control={form.control}
+							name="email"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Email</FormLabel>
+									<FormControl>
+										<Input type="email" placeholder="Enter you email" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <div className="flex items-center justify-between">
-                    <FormLabel>Password</FormLabel>
-                    <Button asChild variant="link" size="sm" className="font-light text-muted-foreground text-sm">
-                      <Link href="#">Forgot your Password ?</Link>
-                    </Button>
-                  </div>
+						<FormField
+							control={form.control}
+							name="password"
+							render={({ field }) => (
+								<FormItem>
+									<div className="flex items-center justify-between">
+										<FormLabel>Password</FormLabel>
+										<Button asChild variant="link" size="sm" className="font-light text-muted-foreground text-sm">
+											<Link href="#">Forgot your Password ?</Link>
+										</Button>
+									</div>
 
-                  <FormControl>
-                    <Input type="password" placeholder="Enter you Password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+									<FormControl>
+										<Input type="password" placeholder="Enter you Password" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 
-            <Button className="w-full">Sign In</Button>
-          </div>
-        </div>
+						<Button className="w-full">Sign In</Button>
+					</div>
+				</div>
 
-        <div className="rounded-(--radius) border bg-muted p-3">
-          <p className="text-center text-accent-foreground text-sm">
-            Don't have an account ?
-            <Button asChild variant="link" className="px-2">
-              <Link href="#">Create account</Link>
-            </Button>
-          </p>
-        </div>
-      </form>
-    </Form>
-  );
+				<div className="rounded-(--radius) border bg-muted p-3">
+					<p className="text-center text-accent-foreground text-sm">
+						Don't have an account ?
+						<Button asChild variant="link" className="px-2">
+							<Link href="#">Create account</Link>
+						</Button>
+					</p>
+				</div>
+			</form>
+		</Form>
+	);
 };
 
 export default SignInForm;

@@ -13,18 +13,18 @@ import { accounts, sessions, users, verificationTokens } from "@/server/db/schem
  * @see https://next-auth.js.org/getting-started/typescript#module-augmentation
  */
 declare module "next-auth" {
-  interface Session extends DefaultSession {
-    user: {
-      id: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
-  }
+	interface Session extends DefaultSession {
+		user: {
+			id: string;
+			// ...other properties
+			// role: UserRole;
+		} & DefaultSession["user"];
+	}
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+	// interface User {
+	//   // ...other properties
+	//   // role: UserRole;
+	// }
 }
 
 /**
@@ -33,20 +33,20 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
-  providers: [DiscordProvider, GitHub],
-  adapter: DrizzleAdapter(db, {
-    usersTable: users,
-    accountsTable: accounts,
-    sessionsTable: sessions,
-    verificationTokensTable: verificationTokens,
-  }),
-  callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
-  },
+	providers: [DiscordProvider, GitHub],
+	adapter: DrizzleAdapter(db, {
+		usersTable: users,
+		accountsTable: accounts,
+		sessionsTable: sessions,
+		verificationTokensTable: verificationTokens
+	}),
+	callbacks: {
+		session: ({ session, user }) => ({
+			...session,
+			user: {
+				...session.user,
+				id: user.id
+			}
+		})
+	}
 } satisfies NextAuthConfig;
