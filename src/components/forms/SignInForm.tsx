@@ -1,25 +1,18 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { signInSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z } from "zod";
 import { LogoIcon } from "../logo";
 import { Input } from "../ui/input";
 import SocialAuthForm from "./SocialAuthForm";
 
 const SignInForm = () => {
-	const signInSchema = z.object({
-		email: z.email().min(1, "Email is required"),
-		password: z
-			.string()
-			.min(6, "Password must be at least 6 characters")
-			.max(100, "Password must be at most 100 characters")
-	});
-
 	const form = useForm<z.infer<typeof signInSchema>>({
 		resolver: zodResolver(signInSchema),
 		defaultValues: { email: "", password: "" }
