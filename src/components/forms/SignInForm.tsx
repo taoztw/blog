@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import ROUTES from "@/constants/routes";
 import { signInSchema } from "@/lib/validations";
-import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
@@ -13,7 +12,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { LogoIcon } from "../logo";
+import { Logo } from "../logo";
 import { Input } from "../ui/input";
 import SocialAuthForm from "./SocialAuthForm";
 
@@ -58,7 +57,7 @@ const SignInForm = () => {
 				<div className="p-8 pb-6">
 					<div>
 						<Link href="/" aria-label="go home">
-							<LogoIcon />
+							<Logo size={"lg"} />
 						</Link>
 						<h1 className="mt-4 mb-1 font-semibold text-xl">Sign In to Tz blog</h1>
 						<p className="text-sm">Welcome back! Sign in to continue</p>

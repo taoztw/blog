@@ -13,7 +13,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { LogoIcon } from "../logo";
+import { Logo } from "../logo";
 import { Input } from "../ui/input";
 import { LoadingSpinner } from "../ui/loading-spinner";
 import { PasswordInput } from "../ui/password-input";
@@ -59,7 +59,6 @@ const SignUpForm = () => {
 	});
 
 	const handleSubmit = (values: z.infer<typeof signUpSchema>) => {
-		console.log("Form submitted with values:", values);
 		signUpMutation.mutate(values);
 	};
 
@@ -72,7 +71,7 @@ const SignUpForm = () => {
 				<div className="p-8 pb-6">
 					<div>
 						<Link href="/" aria-label="go home">
-							<LogoIcon />
+							<Logo size="lg" />
 						</Link>
 						<h1 className="mt-4 mb-1 font-semibold text-xl">Sign Up to Tz blog</h1>
 						<p className="text-sm">Welcome!</p>
