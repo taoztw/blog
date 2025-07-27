@@ -25,10 +25,10 @@ const SignUpForm = () => {
 	const form = useForm<z.infer<typeof signUpSchema>>({
 		resolver: zodResolver(signUpSchema),
 		defaultValues: {
-			email: "1@qq.com",
-			name: "tz",
-			password: "123123",
-			confirmPassword: "123123"
+			email: "",
+			name: "",
+			password: "",
+			confirmPassword: ""
 		}
 	});
 	const signUpMutation = api.user.signUp.useMutation({
@@ -103,7 +103,7 @@ const SignUpForm = () => {
 								<FormItem>
 									<FormLabel>Name</FormLabel>
 									<FormControl>
-										<Input placeholder="UserName" {...field} />
+										<Input placeholder="Username" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -137,7 +137,7 @@ const SignUpForm = () => {
 									</div>
 
 									<FormControl>
-										<PasswordInput placeholder="Confirm your Password" {...field} />
+										<PasswordInput placeholder="Confirm your password" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>

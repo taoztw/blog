@@ -56,9 +56,9 @@ const SignInForm = () => {
 			>
 				<div className="p-8 pb-6">
 					<div>
-						<Link href="/" aria-label="go home">
-							<Logo size={"lg"} />
-						</Link>
+						<div>
+							<Logo size={"lg"} href="/" />
+						</div>
 						<h1 className="mt-4 mb-1 font-semibold text-xl">Sign In to Tz blog</h1>
 						<p className="text-sm">Welcome back! Sign in to continue</p>
 					</div>
