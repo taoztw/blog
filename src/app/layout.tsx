@@ -1,10 +1,34 @@
 import "@/styles/globals.css";
+import localFont from "next/font/local";
 
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
+
+// const geistMono = localFont({
+// 	src: [
+// 		{
+// 			path: "./fonts/GeistMono-VariableFont_wght.ttf",
+// 			weight: "100 900", // 变量字体权重范围
+// 			style: "normal"
+// 		}
+// 	],
+// 	variable: "--font-geist-mono", // 用 CSS 变量方便在全局/ Tailwind 中使用
+// 	display: "swap"
+// });
+
+const geistSans = localFont({
+	src: [
+		{
+			path: "./fonts/Geist-VariableFont_wght.ttf",
+			weight: "100 900", // 变量字体权重范围
+			style: "normal"
+		}
+	],
+	variable: "--font-geist-sans", // 用 CSS 变量方便在全局/ Tailwind 中使用
+	display: "swap"
+});
 
 export const metadata: Metadata = {
 	title: "Tz Blog",
@@ -12,16 +36,12 @@ export const metadata: Metadata = {
 	icons: [{ rel: "icon", url: "/favicon.ico" }]
 };
 
-const geist = Geist({
-	subsets: ["latin"],
-	variable: "--font-geist-sans"
-});
-
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
 	return (
-		<html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
+		<html lang="en" className={`${geistSans.variable}`} suppressHydrationWarning>
+			{/* <html lang="en" suppressHydrationWarning> */}
 			<body>
-				<Toaster />
+				<Toaster position="top-right" />
 				<TRPCReactProvider>{children}</TRPCReactProvider>
 			</body>
 		</html>

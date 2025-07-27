@@ -43,11 +43,11 @@ function SocialAuthForm() {
 						d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
 					/>
 				</svg>
-				<span>Google</span>
+				<span className="font-medium">Google</span>
 			</Button>
 			<Button type="button" variant="outline" onClick={() => handleSignIn("github")}>
 				<Image src="/thirds/github-mark.svg" alt="GitHub logo" width={20} height={20} className="mr-2 h-5 w-5" />
-				<span>Github</span>
+				<span className="font-medium">Github</span>
 			</Button>
 		</div>
 	);

@@ -2,24 +2,65 @@
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import ROUTES from "@/constants/routes";
 import { signUpSchema } from "@/lib/validations";
+import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 import { LogoIcon } from "../logo";
 import { Input } from "../ui/input";
+import { LoadingSpinner } from "../ui/loading-spinner";
+import { PasswordInput } from "../ui/password-input";
 import SocialAuthForm from "./SocialAuthForm";
 
 const SignUpForm = () => {
+	const router = useRouter();
+
 	const form = useForm<z.infer<typeof signUpSchema>>({
 		resolver: zodResolver(signUpSchema),
-		defaultValues: { email: "", name: "", password: "", confirmPassword: "" }
+		defaultValues: {
+			email: "1@qq.com",
+			name: "tz",
+			password: "123123",
+			confirmPassword: "123123"
+		}
+	});
+	const signUpMutation = api.user.signUp.useMutation({
+		onSuccess: async (_data, variables) => {
+			toast.success("Sign up successful!");
+			try {
+				const res = await signIn("credentials", {
+					email: variables.email,
+					password: variables.password,
+					redirect: false
+				});
+				router.replace(ROUTES.HOME);
+			} catch (error) {
+				toast.error("Sign in failed.");
+				router.push(ROUTES.SIGN_IN);
+			}
+		},
+		onError: error => {
+			if (error.data?.code === "CONFLICT") {
+				form.setError("email", {
+					type: "server",
+					message: "Email already exists"
+				});
+				form.setFocus("email");
+			}
+			toast.error(`Sign up failed: ${error.message}`);
+		}
 	});
 
 	const handleSubmit = (values: z.infer<typeof signUpSchema>) => {
 		console.log("Form submitted with values:", values);
+		signUpMutation.mutate(values);
 	};
 
 	return (
@@ -33,8 +74,8 @@ const SignUpForm = () => {
 						<Link href="/" aria-label="go home">
 							<LogoIcon />
 						</Link>
-						<h1 className="mt-4 mb-1 font-semibold text-xl">Sign In to Tailark</h1>
-						<p className="text-sm">Welcome back! Sign in to continue</p>
+						<h1 className="mt-4 mb-1 font-semibold text-xl">Sign Up to Tz blog</h1>
+						<p className="text-sm">Welcome!</p>
 					</div>
 
 					<SocialAuthForm />
@@ -47,9 +88,9 @@ const SignUpForm = () => {
 							name="email"
 							render={({ field }) => (
 								<FormItem>
-									<FormLabel>Email</FormLabel>
+									<FormLabel className="font-medium">Email</FormLabel>
 									<FormControl>
-										<Input type="email" placeholder="Enter you email" {...field} />
+										<Input type="email" placeholder="Email" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -63,7 +104,7 @@ const SignUpForm = () => {
 								<FormItem>
 									<FormLabel>Name</FormLabel>
 									<FormControl>
-										<Input placeholder="Enter you Name" {...field} />
+										<Input placeholder="UserName" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -80,7 +121,7 @@ const SignUpForm = () => {
 									</div>
 
 									<FormControl>
-										<Input type="password" placeholder="Enter you Password" {...field} />
+										<PasswordInput placeholder="Password" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -97,15 +138,26 @@ const SignUpForm = () => {
 									</div>
 
 									<FormControl>
-										<Input type="password" placeholder="Confirm your Password" {...field} />
+										<PasswordInput placeholder="Confirm your Password" {...field} />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
 
-						<Button className="w-full">Sign In</Button>
+						<Button className="w-full cursor-pointer" disabled={signUpMutation.isPending}>
+							{signUpMutation.isPending && <LoadingSpinner className="text-white" type="bars" />}
+							Sign Up
+						</Button>
 					</div>
+				</div>
+				<div className="rounded-(--radius) border bg-muted p-3">
+					<p className="text-center text-accent-foreground text-sm">
+						Already have an account?
+						<Button asChild variant="link" className="px-2">
+							<Link href={ROUTES.SIGN_IN}>Sign In</Link>
+						</Button>
+					</p>
 				</div>
 			</form>
 		</Form>
