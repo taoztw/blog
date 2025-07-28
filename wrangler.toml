@@ -1,0 +1,14 @@
+name = "tz-blog"
+compatibility_date = "2025-04-18"
+compatibility_flags = ["nodejs_compat"]
+main = ".open-next/worker.js"
+# minify = true
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "blog-dev" # When you create your D1 DB, you choose the name
+database_id = "992fe911-50a5-4327-b594-4a205d6790c0"
