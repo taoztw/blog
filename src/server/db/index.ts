@@ -1,5 +1,6 @@
-import { drizzle } from "drizzle-orm/mysql2";
-import { type Pool, createPool } from "mysql2/promise";
+import type { D1Database } from "@cloudflare/workers-types/experimental";
+import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { drizzle } from "drizzle-orm/d1";
 
 import { env } from "@/env";
 import * as schema from "./schema";
@@ -9,10 +10,16 @@ import * as schema from "./schema";
  * update.
  */
 const globalForDb = globalThis as unknown as {
-	conn: Pool | undefined;
+	client?: D1Database;
 };
 
-const conn = globalForDb.conn ?? createPool({ uri: env.DATABASE_URL });
-if (env.NODE_ENV !== "production") globalForDb.conn = conn;
+export let client: D1Database | undefined;
 
-export const db = drizzle(conn, { schema, mode: "default" });
+export const db = async () => {
+	/**
+	 * Don't call getRequestContext() at the top level
+	 */
+	client = globalForDb.client ?? (await getCloudflareContext()).env.DB;
+	if (env.NODE_ENV !== "production") globalForDb.client = client;
+	return drizzle(client, { schema });
+};

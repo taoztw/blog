@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { index, mysqlTableCreator, primaryKey } from "drizzle-orm/mysql-core";
+import { index, integer, primaryKey, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
 import type { AdapterAccount } from "next-auth/adapters";
 
 /**
@@ -8,37 +8,36 @@ import type { AdapterAccount } from "next-auth/adapters";
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = mysqlTableCreator(name => `blog_${name}`);
+export const createTable = sqliteTableCreator(name => `blog_${name}`);
 
 export const posts = createTable(
 	"post",
-	d => ({
-		id: d.bigint({ mode: "number" }).primaryKey().autoincrement(),
-		name: d.varchar({ length: 256 }),
-		createdById: d
-			.varchar({ length: 255 })
+	{
+		id: integer("id").primaryKey({ autoIncrement: true }),
+		name: text("name", { length: 256 }),
+		createdById: text("created_by_id", { length: 255 })
 			.notNull()
 			.references(() => users.id),
-		createdAt: d
-			.timestamp()
+		createdAt: integer("created_at", { mode: "timestamp" })
 			.default(sql`CURRENT_TIMESTAMP`)
 			.notNull(),
-		updatedAt: d.timestamp().onUpdateNow()
-	}),
+		updatedAt: integer("updated_at", { mode: "timestamp" })
+			.default(sql`CURRENT_TIMESTAMP`)
+			.notNull()
+	},
 	t => [index("created_by_idx").on(t.createdById), index("name_idx").on(t.name)]
 );
 
-export const users = createTable("user", d => ({
-	id: d
-		.varchar({ length: 255 })
+export const users = createTable("user", {
+	id: text("id", { length: 255 })
 		.notNull()
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
-	name: d.varchar({ length: 255 }),
-	email: d.varchar({ length: 255 }).notNull(),
-	image: d.varchar({ length: 255 }),
-	location: d.varchar({ length: 255 })
-}));
+	name: text("name", { length: 255 }),
+	email: text("email", { length: 255 }).notNull(),
+	image: text("image", { length: 255 }),
+	location: text("location", { length: 255 })
+});
 
 export const usersRelations = relations(users, ({ many }) => ({
 	accounts: many(accounts)
@@ -46,25 +45,24 @@ export const usersRelations = relations(users, ({ many }) => ({
 
 export const accounts = createTable(
 	"account",
-	d => ({
-		userId: d
-			.varchar({ length: 255 })
+	{
+		userId: text("user_id", { length: 255 })
 			.notNull()
 			.references(() => users.id),
-		type: d.varchar({ length: 255 }).$type<AdapterAccount["type"]>().notNull(),
-		provider: d.varchar({ length: 255 }).notNull(),
-		providerAccountId: d.varchar({ length: 255 }).notNull(),
-		name: d.varchar({ length: 255 }).notNull(),
-		image: d.varchar({ length: 255 }),
-		password: d.varchar({ length: 300 })
-		// refresh_token: d.text(),
-		// access_token: d.text(),
-		// expires_at: d.int(),
-		// token_type: d.varchar({ length: 255 }),
-		// scope: d.varchar({ length: 255 }),
-		// id_token: d.text(),
-		// session_state: d.varchar({ length: 255 })
-	}),
+		type: text("type", { length: 255 }).$type<AdapterAccount["type"]>().notNull(),
+		provider: text("provider", { length: 255 }).notNull(),
+		providerAccountId: text("provider_account_id", { length: 255 }).notNull(),
+		name: text("name", { length: 255 }).notNull(),
+		image: text("image", { length: 255 }),
+		password: text("password", { length: 300 })
+		// refresh_token: text("refresh_token"),
+		// access_token: text("access_token"),
+		// expires_at: integer("expires_at"),
+		// token_type: text("token_type", { length: 255 }),
+		// scope: text("scope", { length: 255 }),
+		// id_token: text("id_token"),
+		// session_state: text("session_state", { length: 255 })
+	},
 	t => [
 		primaryKey({
 			columns: [t.provider, t.providerAccountId]
