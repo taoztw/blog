@@ -2,7 +2,6 @@ import { z } from "zod";
 
 import { signInSchema, signUpSchema } from "@/lib/validations";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
-import { signIn } from "@/server/auth";
 import { accounts, users } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcryptjs";
@@ -26,14 +25,13 @@ export const userRouter = createTRPCRouter({
 		const hashedPassword = await bcrypt.hash(password, 12);
 		// 创建新用户 并且返回用户
 
-		const _userIds = await ctx.db.insert(users).values({ email, name, image: "", location: "" }).$returningId();
-		const _userid = _userIds[0]?.id;
+		const [insertUser] = await ctx.db.insert(users).values({ email, name, image: "", location: "" }).returning();
 
-		if (!_userid) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create user" });
+		if (!insertUser) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create user" });
 
 		// 创建新账户
 		await ctx.db.insert(accounts).values({
-			userId: _userid,
+			userId: insertUser.id,
 			type: "email",
 			provider: "credentials",
 			providerAccountId: email,

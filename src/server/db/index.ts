@@ -1,6 +1,7 @@
 import type { D1Database } from "@cloudflare/workers-types/experimental";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { drizzle } from "drizzle-orm/d1";
+import { cache } from "react";
 
 import { env } from "@/env";
 import * as schema from "./schema";

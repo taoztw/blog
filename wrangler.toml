@@ -1,7 +1,7 @@
 name = "tz-blog"
 compatibility_date = "2025-04-18"
-compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
+compatibility_flags = ["nodejs_compat","global_fetch_strictly_public"]
+main = ".open-next/worker.js"
 # minify = true
 
 # Automatically place your workloads in an optimal location to minimize latency.
@@ -11,10 +11,11 @@ pages_build_output_dir = ".vercel/output/static"
 [placement]
 mode = "smart"
 
-
 [assets]
 directory = ".open-next/assets"
 binding = "ASSETS"
+
+
 
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB

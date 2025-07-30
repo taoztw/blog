@@ -6,4 +6,7 @@ interface CloudflareEnv {
 	CLOUDFLARE_D1_DATABASE_ID: string;
 	CLOUDFLARE_TOKEN: string;
 	DB: D1Database;
+	AUTH_SECRET: string;
+	AUTH_URL: string;
+	NEXTJS_ENV: string;
 }

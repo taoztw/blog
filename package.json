@@ -13,9 +13,12 @@
 		"db:push": "drizzle-kit push",
 		"db:studio": "drizzle-kit studio",
 		"dev": "next dev --turbo",
-		"preview": "next build && next start",
 		"start": "next start",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+		"deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+		"upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",
+		"cf-typegen": "wrangler types --env-interface CloudflareEnv cloudflare-env.d.ts"
 	},
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.7.2",
@@ -68,7 +71,7 @@
 		"tailwindcss": "^4.0.15",
 		"tw-animate-css": "^1.3.5",
 		"typescript": "^5.8.2",
-		"wrangler": "^4.26.0"
+		"wrangler": "^4.26.1"
 	},
 	"ct3aMetadata": {
 		"initVersion": "7.39.3"

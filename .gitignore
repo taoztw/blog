@@ -10,9 +10,9 @@
 
 # drizzle
 /drizzle
-
+.open-next
 .dev.vars
-
+.wrangler
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
