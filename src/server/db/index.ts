@@ -1,7 +1,6 @@
-import type { D1Database } from "@cloudflare/workers-types/experimental";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { drizzle } from "drizzle-orm/d1";
-import { cache } from "react";
+import type { DrizzleD1Database } from "drizzle-orm/d1";
 
 import { env } from "@/env";
 import * as schema from "./schema";
@@ -10,17 +9,21 @@ import * as schema from "./schema";
  * Cache the database connection in development. This avoids creating a new connection on every HMR
  * update.
  */
-const globalForDb = globalThis as unknown as {
-	client?: D1Database;
-};
 
-export let client: D1Database | undefined;
+export let db: DrizzleD1Database<typeof schema> | null = null;
 
-export const db = async () => {
-	/**
-	 * Don't call getRequestContext() at the top level
-	 */
-	client = globalForDb.client ?? (await getCloudflareContext()).env.DB;
-	if (env.NODE_ENV !== "production") globalForDb.client = client;
-	return drizzle(client, { schema });
+export const getDB = () => {
+	if (db) {
+		return db;
+	}
+
+	const { env: cf_env } = getCloudflareContext();
+
+	if (!cf_env.DB) {
+		throw new Error("D1 database not found");
+	}
+
+	db = drizzle(cf_env.DB, { schema, logger: true });
+
+	return db;
 };
