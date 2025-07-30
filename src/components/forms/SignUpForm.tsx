@@ -25,10 +25,10 @@ const SignUpForm = () => {
 	const form = useForm<z.infer<typeof signUpSchema>>({
 		resolver: zodResolver(signUpSchema),
 		defaultValues: {
-			email: "",
-			name: "",
-			password: "",
-			confirmPassword: ""
+			email: "1@qq.com",
+			name: "tz",
+			password: "123123",
+			confirmPassword: "123123"
 		}
 	});
 	const signUpMutation = api.user.signUp.useMutation({

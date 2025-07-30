@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { signInSchema, signUpSchema } from "@/lib/validations";
+import { signUpSchema } from "@/lib/validations";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { accounts, users } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";

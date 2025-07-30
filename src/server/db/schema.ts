@@ -10,6 +10,28 @@ import type { AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = sqliteTableCreator(name => `blog_${name}`);
 
+export const ROLES_ENUM = {
+	ADMIN: "admin",
+	USER: "user"
+} as const;
+const roleTuple = Object.values(ROLES_ENUM) as [string, ...string[]];
+
+const commonColumns = {
+	createdAt: integer({
+		mode: "timestamp"
+	})
+		.$defaultFn(() => new Date())
+		.notNull(),
+	updatedAt: integer({
+		mode: "timestamp"
+	})
+		.$onUpdateFn(() => new Date())
+		.notNull(),
+	updateCounter: integer()
+		.default(0)
+		.$onUpdate(() => sql`updateCounter + 1`)
+};
+
 export const posts = createTable(
 	"post",
 	{
@@ -18,26 +40,27 @@ export const posts = createTable(
 		createdById: text("created_by_id", { length: 255 })
 			.notNull()
 			.references(() => users.id),
-		createdAt: integer("created_at", { mode: "timestamp" })
-			.default(sql`CURRENT_TIMESTAMP`)
-			.notNull(),
-		updatedAt: integer("updated_at", { mode: "timestamp" })
-			.default(sql`CURRENT_TIMESTAMP`)
-			.notNull()
+		...commonColumns
 	},
 	t => [index("created_by_idx").on(t.createdById), index("name_idx").on(t.name)]
 );
 
-export const users = createTable("user", {
-	id: text("id", { length: 255 })
-		.notNull()
-		.primaryKey()
-		.$defaultFn(() => crypto.randomUUID()),
-	name: text("name", { length: 255 }),
-	email: text("email", { length: 255 }).notNull(),
-	image: text("image", { length: 255 }),
-	location: text("location", { length: 255 })
-});
+export const users = createTable(
+	"user",
+	{
+		id: text("id", { length: 255 })
+			.notNull()
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		name: text("name", { length: 255 }),
+		email: text("email", { length: 255 }).notNull(),
+		role: text("role", { enum: roleTuple }).default(ROLES_ENUM.USER).notNull(),
+		image: text("image", { length: 255 }),
+		location: text("location", { length: 255 }),
+		...commonColumns
+	},
+	table => [index("email_idx").on(table.email)]
+);
 
 export const usersRelations = relations(users, ({ many }) => ({
 	accounts: many(accounts)
@@ -54,7 +77,8 @@ export const accounts = createTable(
 		providerAccountId: text("provider_account_id", { length: 255 }).notNull(),
 		name: text("name", { length: 255 }).notNull(),
 		image: text("image", { length: 255 }),
-		password: text("password", { length: 300 })
+		password: text("password", { length: 300 }),
+		...commonColumns
 		// refresh_token: text("refresh_token"),
 		// access_token: text("access_token"),
 		// expires_at: integer("expires_at"),

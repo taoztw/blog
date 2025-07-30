@@ -5,6 +5,7 @@ import type { Config } from "drizzle-kit";
 import { env } from "@/env";
 
 function getLocalD1DB() {
+	console.log("Using local D1 database for development");
 	try {
 		const basePath = path.resolve(".wrangler/state/v3/d1");
 		const dbFile = fs.readdirSync(basePath, { encoding: "utf-8", recursive: true }).find(f => f.endsWith(".sqlite"));
@@ -26,7 +27,7 @@ export default {
 	schema: "./src/server/db/schema.ts",
 	out: "./migrations",
 	dialect: "sqlite",
-	...(process.env.NODE_ENV === "production"
+	...(env.NODE_ENV === "production"
 		? {
 				driver: "d1-http",
 				dbCredentials: {

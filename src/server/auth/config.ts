@@ -1,10 +1,9 @@
 import { signInSchema } from "@/lib/validations";
-import { db } from "@/server/db";
+import { getDB } from "@/server/db";
 import { accounts, users } from "@/server/db/schema";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
-import type { DefaultSession, NextAuthConfig } from "next-auth";
+import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
@@ -21,6 +20,8 @@ export const authConfig = {
 		Google,
 		Credentials({
 			async authorize(credentials) {
+				// 实现 authorize 方法来校验用户名/密码是否合法，并返回一个符合 NextAuth 规范的“用户对象”（或 null 表示登录失败
+				const db = getDB();
 				const validateFields = signInSchema.safeParse(credentials);
 				if (validateFields.success) {
 					const { email, password } = validateFields.data;
@@ -52,6 +53,7 @@ export const authConfig = {
 			return session;
 		},
 		async jwt({ token, account }) {
+			const db = getDB();
 			if (account) {
 				const providerAccountId = account.type === "credentials" ? token.email : account.providerAccountId;
 				if (providerAccountId) {
@@ -81,21 +83,22 @@ export const authConfig = {
 				trim: true
 			});
 
-			let _userId: string | undefined = undefined;
+			const db = getDB();
+			let _createdUser = undefined;
 			// 根据email查询user信息，如果不存在则创建一个新的user
 			const [existingUser] = await db.select().from(users).where(eq(users.email, email));
 			if (!existingUser) {
-				const userId = await db
+				const [createdUser] = await db
 					.insert(users)
 					.values({
 						name: slugifiedUsername,
 						email,
 						image
 					})
-					.$returningId();
-				_userId = userId[0]?.id;
+					.returning();
+				if (!createdUser) return false;
+				_createdUser = createdUser;
 			} else {
-				_userId = existingUser.id;
 				await db
 					.update(users)
 					.set({
@@ -103,13 +106,13 @@ export const authConfig = {
 						image
 					})
 					.where(eq(users.email, email));
+				_createdUser = existingUser;
 			}
 
-			// 是否存在Account，如果不存在则创建一个新的Account
 			const [existingAccount] = await db.select().from(accounts).where(eq(accounts.providerAccountId, user.email!));
 			if (!existingAccount) {
 				await db.insert(accounts).values({
-					userId: _userId!,
+					userId: _createdUser.id,
 					type: account.type,
 					provider: account.provider,
 					providerAccountId: account.providerAccountId,
