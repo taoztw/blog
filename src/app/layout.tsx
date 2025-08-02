@@ -1,22 +1,8 @@
 import "@/styles/globals.css";
-import localFont from "next/font/local";
-
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
-
 import { TRPCReactProvider } from "@/trpc/react";
-
-// const geistMono = localFont({
-// 	src: [
-// 		{
-// 			path: "./fonts/GeistMono-VariableFont_wght.ttf",
-// 			weight: "100 900", // 变量字体权重范围
-// 			style: "normal"
-// 		}
-// 	],
-// 	variable: "--font-geist-mono", // 用 CSS 变量方便在全局/ Tailwind 中使用
-// 	display: "swap"
-// });
+import localFont from "next/font/local";
 
 const geistSans = localFont({
 	src: [
