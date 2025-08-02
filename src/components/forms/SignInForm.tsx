@@ -15,9 +15,11 @@ import type { z } from "zod";
 import { Logo } from "../logo";
 import { Input } from "../ui/input";
 import SocialAuthForm from "./SocialAuthForm";
+import { LoadingSpinner } from "../ui/loading-spinner";
 
 const SignInForm = () => {
 	const router = useRouter();
+	const [isLoading, setIsLoading] = React.useState(false);
 
 	const form = useForm<z.infer<typeof signInSchema>>({
 		resolver: zodResolver(signInSchema),
@@ -25,27 +27,34 @@ const SignInForm = () => {
 	});
 
 	const handleSubmit = async (values: z.infer<typeof signInSchema>) => {
-		const res = await signIn("credentials", {
-			email: values.email,
-			password: values.password,
-			redirect: false
-		});
-		if (res?.error) {
-			toast.error("Sign in failed. Please check your credentials.");
-			form.setError("email", {
-				type: "manual",
-				message: "Invalid email or password"
+		setIsLoading(true);
+		try {
+			const res = await signIn("credentials", {
+				email: values.email,
+				password: values.password,
+				redirect: false
 			});
-			form.setError("password", {
-				type: "manual",
-				message: "Invalid email or password"
-			});
-			form.setFocus("email");
-			return;
+			if (res?.error) {
+				toast.error("Sign in failed. Please check your credentials.");
+				form.setError("email", {
+					type: "manual",
+					message: "Invalid email or password"
+				});
+				form.setError("password", {
+					type: "manual",
+					message: "Invalid email or password"
+				});
+				form.setFocus("email");
+				return;
+			}
+			toast.success("Sign in successful!");
+			// Redirect to home after successful sign in
+			router.replace(ROUTES.HOME);
+		} catch (error) {
+			toast.error("An unexpected error occurred");
+		} finally {
+			setIsLoading(false);
 		}
-		toast.success("Sign in successful!");
-		// Redirect to home after successful sign in
-		router.replace(ROUTES.HOME);
 	};
 
 	return (
@@ -102,7 +111,9 @@ const SignInForm = () => {
 							)}
 						/>
 
-						<Button className="w-full">Sign In</Button>
+						<Button className="w-full " disabled={isLoading}>
+							{isLoading && <LoadingSpinner className="text-white" type="bars" />}Sign In
+						</Button>
 					</div>
 				</div>
 
