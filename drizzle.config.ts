@@ -31,9 +31,9 @@ export default {
 		? {
 				driver: "d1-http",
 				dbCredentials: {
-					accountId: env.CLOUDFLARE_ACCOUNT_ID ?? "sk_invalid",
-					databaseId: env.CLOUDFLARE_D1_DATABASE_ID ?? "sk_invalid",
-					token: env.CLOUDFLARE_TOKEN ?? "sk_invalid"
+					accountId: env.CLOUDFLARE_ACCOUNT_ID,
+					databaseId: env.CLOUDFLARE_D1_DATABASE_ID,
+					token: env.CLOUDFLARE_TOKEN
 				}
 		  }
 		: {

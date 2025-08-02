@@ -1,4 +1,4 @@
-import "@/lib/undici-proxy-setup";
+// import "@/lib/undici-proxy-setup";
 import NextAuth from "next-auth";
 import { cache } from "react";
 

@@ -21,3 +21,7 @@ binding = "ASSETS"
 binding = "DB" # i.e. available in your Worker on env.DB
 database_name = "blog-dev" # When you create your D1 DB, you choose the name
 database_id = "992fe911-50a5-4327-b594-4a205d6790c0"
+
+[[r2_buckets]]
+binding = "NEXT_INC_CACHE_R2_BUCKET"
+bucket_name = "blog"
