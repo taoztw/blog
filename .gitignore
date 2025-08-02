@@ -13,6 +13,8 @@
 .open-next
 .dev.vars
 .wrangler
+wrangler.toml
+
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal

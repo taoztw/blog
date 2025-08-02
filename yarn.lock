@@ -6443,7 +6443,7 @@ workerd@1.20250730.0:
     "@cloudflare/workerd-linux-arm64" "1.20250730.0"
     "@cloudflare/workerd-windows-64" "1.20250730.0"
 
-wrangler@^4.26.1:
+wrangler@^4.27.0:
   version "4.27.0"
   resolved "https://registry.npmmirror.com/wrangler/-/wrangler-4.27.0.tgz#f6e60082eb9fab72793facd8e44bfd94174a2949"
   integrity sha512-YNHZyMNWebFt9jD6dc20tQrCmnSzJj3SoB0FFa90w11Cx4lbP3d+rUZYjb18Zt+OGSMay1wT2PzwT2vCTskkmg==
