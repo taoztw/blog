@@ -1,0 +1,16 @@
+{
+  "HomePage": {
+    "Header": {
+      "navItems": {
+        "about": "About",
+        "blog": "Blog",
+        "contact": "Contact",
+        "archives": "Archives",
+        "qas": "Q&As",
+        "projects": "Projects"
+      },
+      "themeSwitcher": "Switch Theme",
+      "signIn": "Sign In"
+    }
+  }
+}

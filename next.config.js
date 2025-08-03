@@ -3,11 +3,13 @@
  * for Docker builds.
  */
 import "./src/env.js";
+import createNextIntlPlugin from "next-intl/plugin";
 
 /** @type {import("next").NextConfig} */
 const config = {};
+const withNextIntl = createNextIntlPlugin();
 
-export default config;
+export default withNextIntl(config);
 
 import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 initOpenNextCloudflareForDev();

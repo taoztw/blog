@@ -4,16 +4,16 @@ import { redirect } from "next/navigation";
 import React from "react";
 
 export const metadata = {
-	title: "Sign Up",
-	description: "Create a new account"
+  title: "Sign Up",
+  description: "Create a new account",
 };
 
 const SignUp = async () => {
-	const session = await auth();
-	if (session?.user) {
-		redirect("/"); // Redirect to home if already signed in
-	}
-	return <SignUpForm />;
+  const session = await auth();
+  if (session?.user) {
+    redirect("/"); // Redirect to home if already signed in
+  }
+  return <SignUpForm />;
 };
 
 export default SignUp;

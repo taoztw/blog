@@ -1,0 +1,16 @@
+{
+  "HomePage": {
+    "Header": {
+      "navItems": {
+        "about": "关于",
+        "blog": "博客",
+        "contact": "联系",
+        "archives": "归档",
+        "qas": "问答",
+        "projects": "项目"
+      },
+      "themeSwitcher": "Switch Theme",
+      "signIn": "登录"
+    }
+  }
+}

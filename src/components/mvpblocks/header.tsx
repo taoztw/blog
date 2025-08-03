@@ -8,6 +8,7 @@ import { Logo } from "../logo";
 import { ThemeSwitcher } from "../theme-switcher";
 import { useTheme } from "next-themes";
 import ROUTES from "@/constants/routes";
+import { useTranslations } from "next-intl";
 
 interface NavItem {
   name: string;
@@ -15,11 +16,11 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { name: "Blog", href: "/blog" },
-  { name: "QAs", href: "/qas" },
-  { name: "Projects", href: "/projects" },
-  { name: "Archives", href: "/archives" },
-  { name: "About", href: "/about" },
+  { name: "blog", href: "/blog" },
+  { name: "qas", href: "/qas" },
+  { name: "projects", href: "/projects" },
+  { name: "archives", href: "/archives" },
+  { name: "about", href: "/about" },
 ];
 
 export default function Header2() {
@@ -28,6 +29,7 @@ export default function Header2() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const t = useTranslations("HomePage.Header");
 
   useEffect(() => {
     setMounted(true);
@@ -141,7 +143,7 @@ export default function Header2() {
                         }}
                       />
                     )}
-                    <span className="relative z-10">{item.name}</span>
+                    <span className="relative z-10">{t(`navItems.${item.name}`)}</span>
                   </Link>
                 </motion.div>
               ))}
@@ -162,9 +164,9 @@ export default function Header2() {
               )}
               <Link
                 href={ROUTES.SIGN_IN}
-                className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200"
+                className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200 bg-secondary rounded-lg"
               >
-                Sign In
+                {t("signIn")}
               </Link>
 
               {/* <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
