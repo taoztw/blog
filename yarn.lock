@@ -1742,6 +1742,54 @@
   resolved "https://registry.npmmirror.com/@floating-ui/utils/-/utils-0.2.10.tgz#a2a1e3812d14525f725d011a73eceb41fef5bc1c"
   integrity sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==
 
+"@formatjs/ecma402-abstract@2.3.4":
+  version "2.3.4"
+  resolved "https://registry.npmmirror.com/@formatjs/ecma402-abstract/-/ecma402-abstract-2.3.4.tgz#e90c5a846ba2b33d92bc400fdd709da588280fbc"
+  integrity sha512-qrycXDeaORzIqNhBOx0btnhpD1c+/qFIHAN9znofuMJX6QBwtbrmlpWfD4oiUUD2vJUOIYFA/gYtg2KAMGG7sA==
+  dependencies:
+    "@formatjs/fast-memoize" "2.2.7"
+    "@formatjs/intl-localematcher" "0.6.1"
+    decimal.js "^10.4.3"
+    tslib "^2.8.0"
+
+"@formatjs/fast-memoize@2.2.7", "@formatjs/fast-memoize@^2.2.0":
+  version "2.2.7"
+  resolved "https://registry.npmmirror.com/@formatjs/fast-memoize/-/fast-memoize-2.2.7.tgz#707f9ddaeb522a32f6715bb7950b0831f4cc7b15"
+  integrity sha512-Yabmi9nSvyOMrlSeGGWDiH7rf3a7sIwplbvo/dlz9WCIjzIQAfy1RMf4S0X3yG724n5Ghu2GmEl5NJIV6O9sZQ==
+  dependencies:
+    tslib "^2.8.0"
+
+"@formatjs/icu-messageformat-parser@2.11.2":
+  version "2.11.2"
+  resolved "https://registry.npmmirror.com/@formatjs/icu-messageformat-parser/-/icu-messageformat-parser-2.11.2.tgz#85aea211bea40aa81ee1d44ac7accc3cf5500a73"
+  integrity sha512-AfiMi5NOSo2TQImsYAg8UYddsNJ/vUEv/HaNqiFjnI3ZFfWihUtD5QtuX6kHl8+H+d3qvnE/3HZrfzgdWpsLNA==
+  dependencies:
+    "@formatjs/ecma402-abstract" "2.3.4"
+    "@formatjs/icu-skeleton-parser" "1.8.14"
+    tslib "^2.8.0"
+
+"@formatjs/icu-skeleton-parser@1.8.14":
+  version "1.8.14"
+  resolved "https://registry.npmmirror.com/@formatjs/icu-skeleton-parser/-/icu-skeleton-parser-1.8.14.tgz#b9581d00363908efb29817fdffc32b79f41dabe5"
+  integrity sha512-i4q4V4qslThK4Ig8SxyD76cp3+QJ3sAqr7f6q9VVfeGtxG9OhiAk3y9XF6Q41OymsKzsGQ6OQQoJNY4/lI8TcQ==
+  dependencies:
+    "@formatjs/ecma402-abstract" "2.3.4"
+    tslib "^2.8.0"
+
+"@formatjs/intl-localematcher@0.6.1":
+  version "0.6.1"
+  resolved "https://registry.npmmirror.com/@formatjs/intl-localematcher/-/intl-localematcher-0.6.1.tgz#25dc30675320bf65a9d7f73876fc1e4064c0e299"
+  integrity sha512-ePEgLgVCqi2BBFnTMWPfIghu6FkbZnnBVhO2sSxvLfrdFw7wCHAHiDoM2h4NRgjbaY7+B7HgOLZGkK187pZTZg==
+  dependencies:
+    tslib "^2.8.0"
+
+"@formatjs/intl-localematcher@^0.5.4":
+  version "0.5.10"
+  resolved "https://registry.npmmirror.com/@formatjs/intl-localematcher/-/intl-localematcher-0.5.10.tgz#1e0bd3fc1332c1fe4540cfa28f07e9227b659a58"
+  integrity sha512-af3qATX+m4Rnd9+wHcjJ4w2ijq+rAVP3CCinJQvFv1kgSu1W6jypUmvleJxcewdxmutM8dmIRZFxO/IQBZmP2Q==
+  dependencies:
+    tslib "2"
+
 "@hookform/resolvers@^5.1.1":
   version "5.2.1"
   resolved "https://registry.npmmirror.com/@hookform/resolvers/-/resolvers-5.2.1.tgz#3332b4662fe301a969ac1b795d663cf728329166"
@@ -2901,6 +2949,11 @@
   version "1.1.0"
   resolved "https://registry.npmmirror.com/@rtsao/scc/-/scc-1.1.0.tgz#927dd2fae9bc3361403ac2c7a00c32ddce9ad7e8"
   integrity sha512-zt6OdqaDoOnJ1ZYsCYGt9YmWzDXl4vQdKTyJev62gFhRGKdx7mcT54V9KIjg+d2wi9EXsPvAPKe7i7WjfVWB8g==
+
+"@schummar/icu-type-parser@1.21.5":
+  version "1.21.5"
+  resolved "https://registry.npmmirror.com/@schummar/icu-type-parser/-/icu-type-parser-1.21.5.tgz#75989085bbbf80ee325874a0137437bde77e9baf"
+  integrity sha512-bXHSaW5jRTmke9Vd0h5P7BtWZG9Znqb8gSDxZnxaGSJnGwPLDPfS+3g0BKzeWqzgZPsIVZkM7m2tbo18cm5HBw==
 
 "@sindresorhus/is@^7.0.2":
   version "7.0.2"
@@ -4486,6 +4539,11 @@ debug@^4.3.4, debug@^4.3.5, debug@^4.4.0:
   dependencies:
     ms "^2.1.3"
 
+decimal.js@^10.4.3:
+  version "10.6.0"
+  resolved "https://registry.npmmirror.com/decimal.js/-/decimal.js-10.6.0.tgz#e649a43e3ab953a72192ff5983865e509f37ed9a"
+  integrity sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==
+
 decompress-response@^6.0.0:
   version "6.0.0"
   resolved "https://registry.npmmirror.com/decompress-response/-/decompress-response-6.0.0.tgz#ca387612ddb7e104bd16d85aab00d5ecf09c66fc"
@@ -5375,6 +5433,16 @@ internal-slot@^1.1.0:
     hasown "^2.0.2"
     side-channel "^1.1.0"
 
+intl-messageformat@^10.5.14:
+  version "10.7.16"
+  resolved "https://registry.npmmirror.com/intl-messageformat/-/intl-messageformat-10.7.16.tgz#d909f9f9f4ab857fbe681d559b958dd4dd9f665a"
+  integrity sha512-UmdmHUmp5CIKKjSoE10la5yfU+AYJAaiYLsodbjL4lji83JNvgOQUjGaGhGrpFCb0Uh7sl7qfP1IyILa8Z40ug==
+  dependencies:
+    "@formatjs/ecma402-abstract" "2.3.4"
+    "@formatjs/fast-memoize" "2.2.7"
+    "@formatjs/icu-messageformat-parser" "2.11.2"
+    tslib "^2.8.0"
+
 ipaddr.js@1.9.1:
   version "1.9.1"
   resolved "https://registry.npmmirror.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
@@ -5729,10 +5797,10 @@ lru.min@^1.0.0:
   resolved "https://registry.npmmirror.com/lru.min/-/lru.min-1.1.2.tgz#01ce1d72cc50c7faf8bd1f809ebf05d4331021eb"
   integrity sha512-Nv9KddBcQSlQopmBHXSsZVY5xsdlZkdH/Iey0BlcBYggMd4two7cZnKOK9vmy3nY0O5RGH99z1PCeTpPqszUYg==
 
-lucide-react@^0.526.0:
-  version "0.526.0"
-  resolved "https://registry.npmmirror.com/lucide-react/-/lucide-react-0.526.0.tgz#05aa6a13be05b0777f2e27c22b6dcfd123c41eed"
-  integrity sha512-uGWG/2RKuDLeQHCodn5cmJ9Zij80EstOdcBP+j//B2sr78w7woiEL4aMu6CRlRkyOyJ8sZry8QLhQTmZjynLdA==
+lucide-react@^0.536.0:
+  version "0.536.0"
+  resolved "https://registry.npmmirror.com/lucide-react/-/lucide-react-0.536.0.tgz#0c15c0ec67b6b0b3f0d6eb65df559bb72ed9c81d"
+  integrity sha512-2PgvNa9v+qz4Jt/ni8vPLt4jwoFybXHuubQT8fv4iCW5TjDxkbZjNZZHa485ad73NSEn/jdsEtU57eE1g+ma8A==
 
 magic-string@^0.30.17:
   version "0.30.17"
@@ -5900,7 +5968,7 @@ motion-utils@^12.23.6:
   resolved "https://registry.npmmirror.com/motion-utils/-/motion-utils-12.23.6.tgz#fafef80b4ea85122dd0d6c599a0c63d72881f312"
   integrity sha512-eAWoPgr4eFEOFfg2WjIsMoqJTW6Z8MTUCgn/GZ3VRpClWBdnbjryiA3ZSNLyxCTmCQx4RmYX6jX1iWHbenUPNQ==
 
-motion@^12.23.9:
+motion@^12.23.12:
   version "12.23.12"
   resolved "https://registry.npmmirror.com/motion/-/motion-12.23.12.tgz#9f3552636c1e94911eee42e6f85db8f60db83c19"
   integrity sha512-8jCD8uW5GD1csOoqh1WhH1A6j5APHVE15nuBkFeRiMzYBdRwyAHmSP/oXSuW0WJPZRXTFdBoG4hY9TFWNhhwng==
@@ -5961,6 +6029,15 @@ next-auth@5.0.0-beta.25:
   integrity sha512-2dJJw1sHQl2qxCrRk+KTQbeH+izFbGFPuJj5eGgBZFYyiYYtvlrBeUw1E/OJJxTRjuxbSYGnCTkUIRsIIW0bog==
   dependencies:
     "@auth/core" "0.37.2"
+
+next-intl@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.npmmirror.com/next-intl/-/next-intl-4.3.4.tgz#247ae789f1490b6518e8b18fe13d44cce703098b"
+  integrity sha512-VWLIDlGbnL/o4LnveJTJD1NOYN8lh3ZAGTWw2krhfgg53as3VsS4jzUVnArJdqvwtlpU/2BIDbWTZ7V4o1jFEw==
+  dependencies:
+    "@formatjs/intl-localematcher" "^0.5.4"
+    negotiator "^1.0.0"
+    use-intl "^4.3.4"
 
 next-themes@^0.4.6:
   version "0.4.6"
@@ -7049,15 +7126,15 @@ tsconfig-paths@^3.15.0:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
+tslib@2, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.2, tslib@^2.8.0:
+  version "2.8.1"
+  resolved "https://registry.npmmirror.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
+  integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
+
 tslib@^1.11.1:
   version "1.14.1"
   resolved "https://registry.npmmirror.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
-
-tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.2, tslib@^2.8.0:
-  version "2.8.1"
-  resolved "https://registry.npmmirror.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
-  integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
 tunnel-agent@^0.6.0:
   version "0.6.0"
@@ -7192,6 +7269,15 @@ use-callback-ref@^1.3.3:
   integrity sha512-jQL3lRnocaFtu3V00JToYz/4QkNWswxijDaCVNZRiRTO3HQDLsdu1ZtmIUvV4yPp+rvWm5j0y0TG/S61cuijTg==
   dependencies:
     tslib "^2.0.0"
+
+use-intl@^4.3.4:
+  version "4.3.4"
+  resolved "https://registry.npmmirror.com/use-intl/-/use-intl-4.3.4.tgz#42bb2141480032623ffe412799c62cbdf306ed0f"
+  integrity sha512-sHfiU0QeJ1rirNWRxvCyvlSh9+NczcOzRnPyMeo2rtHXhVnBsvMRjE+UG4eh3lRhCxrvcqei/I0lBxsc59on1w==
+  dependencies:
+    "@formatjs/fast-memoize" "^2.2.0"
+    "@schummar/icu-type-parser" "1.21.5"
+    intl-messageformat "^10.5.14"
 
 use-sidecar@^1.1.3:
   version "1.1.3"
