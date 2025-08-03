@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Logo } from "../logo";
 import { ThemeSwitcher } from "../theme-switcher";
 import { useTheme } from "next-themes";
+import ROUTES from "@/constants/routes";
 
 interface NavItem {
   name: string;
@@ -160,7 +161,7 @@ export default function Header2() {
                 />
               )}
               <Link
-                href="/login"
+                href={ROUTES.SIGN_IN}
                 className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200"
               >
                 Sign In
