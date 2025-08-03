@@ -9,3 +9,6 @@ This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3
 - [schadcn/ui](https://ui.shadcn.com)
 - [tRPC](https://trpc.io)
 - [OpenNEXT](https://opennext.js.org/cloudflare)
+- [Cloudflare Workers](https://workers.cloudflare.com/)
+- [Cloudflare D1](https://developers.cloudflare.com/d1/)
+- [next-intl](https://next-intl.dev/): 当前支持英, 中

@@ -9,6 +9,7 @@ import { ThemeSwitcher } from "../theme-switcher";
 import { useTheme } from "next-themes";
 import ROUTES from "@/constants/routes";
 import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "../language-switcher";
 
 interface NavItem {
   name: string;
@@ -156,12 +157,16 @@ export default function Header2() {
               >
                 <Search className="h-5 w-5" />
               </motion.button>
+
               {mounted && (
                 <ThemeSwitcher
                   value={theme as "light" | "dark" | "system"}
                   onChange={(newTheme) => setTheme(newTheme)}
                 />
               )}
+
+              <LanguageSwitcher />
+
               <Link
                 href={ROUTES.SIGN_IN}
                 className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200 bg-secondary rounded-lg"
