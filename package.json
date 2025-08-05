@@ -21,6 +21,7 @@
 	"dependencies": {
 		"@auth/drizzle-adapter": "^1.7.2",
 		"@hookform/resolvers": "^5.1.1",
+		"@next/eslint-plugin-next": "^15.4.5",
 		"@opennextjs/cloudflare": "^1.6.2",
 		"@radix-ui/react-dialog": "^1.1.14",
 		"@radix-ui/react-dropdown-menu": "^2.1.15",

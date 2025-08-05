@@ -93,7 +93,7 @@ export function HeroPersonalColorful() {
       <div className="absolute inset-0 bg-grid-slate-100/[0.02] dark:bg-grid-slate-700/[0.02]" />
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-screen items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 min-h-screen items-center pb-16">
           {/* Left Side - Photos */}
           <div className="lg:col-span-4 space-y-6">
             {/* Main Photo Display */}

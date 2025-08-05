@@ -6,7 +6,17 @@ import "./src/env.js";
 import createNextIntlPlugin from "next-intl/plugin";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
+    ],
+  },
+  allowedDevOrigins: ["https://localhost:3000", "http://localhost:3000"],
+};
 const withNextIntl = createNextIntlPlugin();
 
 export default withNextIntl(config);
