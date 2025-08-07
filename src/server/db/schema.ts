@@ -1,6 +1,7 @@
 import { relations, sql } from "drizzle-orm";
 import { index, integer, primaryKey, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
 import type { AdapterAccount } from "next-auth/adapters";
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -48,10 +49,14 @@ export const categorys = createTable("category", {
 export const posts = createTable(
   "post",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: text("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
     title: text("title", { length: 512 }).notNull(),
+    slug: text("slug", { length: 512 }).notNull(),
+    excerpt: text("excerpt").notNull(),
     content: text("content").notNull(),
-    excerpt: text("excerpt"),
     imageUrl: text("image_url", { length: 512 }),
     status: text("status", { enum: POST_STATUS_TUPLE }).default(POST_STATUS_ENUM.DRAFT),
     viewCount: integer("view_count").default(0).notNull(),
@@ -64,6 +69,13 @@ export const posts = createTable(
   },
   (t) => [index("created_by_idx").on(t.createdById)]
 );
+
+export const postInsertSchema = createInsertSchema(posts).omit({
+  updateCounter: true,
+});
+export const postSelectSchema = createSelectSchema(posts).omit({
+  updateCounter: true,
+});
 
 // 评论表
 

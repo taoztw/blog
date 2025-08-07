@@ -9,85 +9,220 @@ import { Calendar, Clock, ArrowRight, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import SearchInput from "../ui/search-input";
-import { BlogCard } from "./blog-card";
+import { BlogCard } from "../cards/post-card";
+import type { PostWithRelations } from "@/global";
+import image from "next/image";
+import { title } from "process";
+import { email } from "zod";
 
 // 示例博客文章数据
-const blogPosts = [
+export const blogPosts: PostWithRelations[] = [
   {
-    id: "email-marketing-automation",
-    title: "10 Email Marketing Automation Workflows Every Business Needs",
+    id: "clx1a2b3c4d5e6f7g8h9i0j1",
+    title: "AI-Powered Marketing: The Future of Customer Engagement",
+    slug: "ai-powered-marketing-future",
     excerpt:
-      "Implement these essential automation workflows to save time and boost your email marketing effectiveness.",
-    image: "/placeholder.svg?height=200&width=300&text=Email+Marketing",
-    category: "Email",
-    categoryColor: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-    date: "April 22, 2023",
-    readTime: "7 min read",
-    trending: true,
-    slug: "email-marketing-automation",
+      "Explore how artificial intelligence is revolutionizing marketing strategies and creating personalized customer experiences at scale.",
+    content: "Full content about AI-powered marketing...",
+    imageUrl: "/placeholder.svg?height=200&width=300&text=AI+Marketing",
+    status: "PUBLISHED",
+    viewCount: 1247,
+    likeCount: 89,
+    createdById: "usr_123456789",
+    categoryId: "1",
+    author: {
+      id: "usr_123456789",
+      name: "Sarah Chen",
+      email: "sarah.chen@example.com",
+      image: "/avatars/sarah-chen.jpg",
+    },
+    category: {
+      id: 1,
+      name: "Artificial Intelligence",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: "content-distribution-guide",
-    title: "The Complete Guide to Content Distribution Strategies",
+    id: "clx2b3c4d5e6f7g8h9i0j1k2",
+    title: "Building Brand Loyalty Through Social Media Storytelling",
+    slug: "brand-loyalty-social-media",
     excerpt:
-      "Creating great content is only half the battle. Learn how to effectively distribute your content for maximum impact.",
-    image: "/placeholder.svg?height=200&width=300&text=Content+Strategy",
-    category: "Content",
-    categoryColor: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-    date: "April 20, 2023",
-    readTime: "9 min read",
-    trending: false,
-    slug: "content-distribution-guide",
+      "Discover the art of crafting compelling brand narratives that resonate with your audience and drive long-term loyalty.",
+    content: "Full content about social media storytelling...",
+    imageUrl: "/placeholder.svg?height=200&width=300&text=Brand+Storytelling",
+    status: "PUBLISHED",
+    viewCount: 892,
+    likeCount: 156,
+    createdById: "usr_987654321",
+    categoryId: "2",
+    author: {
+      id: "usr_987654321",
+      name: "Marcus Rodriguez",
+      email: "marcus.r@example.com",
+      image: "/avatars/marcus-rodriguez.jpg",
+    },
+    category: {
+      id: 2,
+      name: "Social Media",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: "data-driven-conversion-methods",
-    title: "5 Data-Driven Methods to Improve Your Conversion Rates",
+    id: "clx3c4d5e6f7g8h9i0j1k2l3",
+    title: "The Rise of Voice Commerce: Optimizing for Audio Shopping",
+    slug: "voice-commerce-optimization",
     excerpt:
-      "Use these proven analytical approaches to identify and fix conversion bottlenecks in your marketing funnel.",
-    image: "/placeholder.svg?height=200&width=300&text=Analytics+Dashboard",
-    category: "Analytics",
-    categoryColor: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-    date: "April 18, 2023",
-    readTime: "8 min read",
-    trending: false,
-    slug: "data-driven-conversion-methods",
+      "Learn how voice assistants are changing the e-commerce landscape and how to optimize your business for voice commerce.",
+    content: "Full content about voice commerce...",
+    imageUrl: "/placeholder.svg?height=200&width=300&text=Voice+Commerce",
+    status: "PUBLISHED",
+    viewCount: 634,
+    likeCount: 78,
+    createdById: "usr_456789123",
+    categoryId: "3",
+    author: {
+      id: "usr_456789123",
+      name: "Emily Watson",
+      email: "emily.watson@example.com",
+      image: "/avatars/emily-watson.jpg",
+    },
+    category: {
+      id: 3,
+      name: "E-commerce",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: "customer-journey-mapping",
-    title: "Building a Customer Journey Map That Actually Drives Results",
-    excerpt: "Learn how to create actionable customer journey maps that improve user experience and boost conversions.",
-    image: "/placeholder.svg?height=200&width=300&text=Customer+Journey",
-    category: "Strategy",
-    categoryColor: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-    date: "April 15, 2023",
-    readTime: "11 min read",
-    trending: true,
-    slug: "customer-journey-mapping",
-  },
-  {
-    id: "mobile-first-marketing",
-    title: "Mobile-First Marketing: Strategies for a Mobile-Dominated World",
+    id: "clx4d5e6f7g8h9i0j1k2l3m4",
+    title: "Sustainable Marketing: Connecting with Eco-Conscious Consumers",
+    slug: "sustainable-marketing-eco-conscious",
     excerpt:
-      "Discover how to optimize your marketing strategies for mobile users and capitalize on the mobile-first trend.",
-    image: "/placeholder.svg?height=200&width=300&text=Mobile+Marketing",
-    category: "Mobile",
-    categoryColor: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
-    date: "April 5, 2023",
-    readTime: "6 min read",
-    trending: true,
-    slug: "mobile-first-marketing",
+      "Understand how sustainability messaging can differentiate your brand and attract environmentally conscious customers.",
+    content: "Full content about sustainable marketing...",
+    imageUrl: "/placeholder.svg?height=200&width=300&text=Sustainable+Marketing",
+    status: "PUBLISHED",
+    viewCount: 1089,
+    likeCount: 203,
+    createdById: "usr_789123456",
+    categoryId: "4",
+    author: {
+      id: "usr_789123456",
+      name: "David Kim",
+      email: "david.kim@example.com",
+      image: "/avatars/david-kim.jpg",
+    },
+    category: {
+      id: 4,
+      name: "Sustainability",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: "psychology-of-pricing",
-    title: "The Psychology of Pricing: Strategies for Marketers",
-    excerpt: "Understand the psychological principles behind pricing and how to use them to increase your revenue.",
-    image: "/placeholder.svg?height=200&width=300&text=Pricing+Psychology",
-    category: "Psychology",
-    categoryColor: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200",
-    date: "March 28, 2023",
-    readTime: "10 min read",
-    trending: false,
-    slug: "psychology-of-pricing",
+    id: "clx5e6f7g8h9i0j1k2l3m4n5",
+    title: "Micro-Influencer Marketing: Quality Over Quantity",
+    slug: "micro-influencer-marketing",
+    excerpt:
+      "Why partnering with micro-influencers often delivers better ROI than celebrity endorsements and how to find the right partners.",
+    content: "Full content about micro-influencer marketing...",
+    imageUrl: "/placeholder.svg?height=200&width=300&text=Micro+Influencers",
+    status: "PUBLISHED",
+    viewCount: 756,
+    likeCount: 124,
+    createdById: "usr_321654987",
+    categoryId: "2",
+    author: {
+      id: "usr_321654987",
+      name: "Jessica Liu",
+      email: "jessica.liu@example.com",
+      image: "/avatars/jessica-liu.jpg",
+    },
+    category: {
+      id: 2,
+      name: "Social Media",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "clx6f7g8h9i0j1k2l3m4n5o6",
+    title: "The Psychology of Color in Digital Marketing",
+    slug: "color-psychology-digital-marketing",
+    excerpt:
+      "Explore how color choices impact consumer behavior and learn to use color psychology to improve your marketing effectiveness.",
+    content: "Full content about color psychology...",
+    imageUrl: "/placeholder.svg?height=200&width=300&text=Color+Psychology",
+    status: "DRAFT",
+    viewCount: 0,
+    likeCount: 0,
+    createdById: "usr_654987321",
+    categoryId: "5",
+    author: {
+      id: "usr_654987321",
+      name: "Alex Thompson",
+      email: "alex.thompson@example.com",
+      image: "/avatars/alex-thompson.jpg",
+    },
+    category: {
+      id: 5,
+      name: "Design",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "clx7g8h9i0j1k2l3m4n5o6p7",
+    title: "Cross-Platform Attribution: Measuring Modern Customer Journeys",
+    slug: "cross-platform-attribution",
+    excerpt:
+      "Navigate the complexity of multi-touchpoint customer journeys and implement effective attribution models for better insights.",
+    content: "Full content about cross-platform attribution...",
+    imageUrl: "/placeholder.svg?height=200&width=300&text=Attribution+Modeling",
+    status: "PUBLISHED",
+    viewCount: 1432,
+    likeCount: 267,
+    createdById: "usr_147258369",
+    categoryId: null,
+    author: {
+      id: "usr_147258369",
+      name: "Rachel Green",
+      email: "rachel.green@example.com",
+      image: "/avatars/rachel-green.jpg",
+    },
+    category: {
+      id: 6,
+      name: "Analytics",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  },
+  {
+    id: "clx8h9i0j1k2l3m4n5o6p7q8",
+    title: "Personalization at Scale: Dynamic Content Strategies",
+    slug: "personalization-dynamic-content",
+    excerpt: "Learn how to deliver personalized experiences to thousands of customers without losing the human touch.",
+    content: "Full content about personalization strategies...",
+    imageUrl: "/placeholder.svg?height=200&width=300&text=Personalization",
+    status: "PUBLISHED",
+    viewCount: 923,
+    likeCount: 178,
+    createdById: "usr_963852741",
+    categoryId: "1",
+    author: {
+      id: "usr_963852741",
+      name: "Michael Chang",
+      email: "michael.chang@example.com",
+      image: null,
+    },
+    category: {
+      id: 1,
+      name: "Artificial Intelligence",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
@@ -105,19 +240,19 @@ export function BlogListPage() {
         (post) =>
           post.title.toLowerCase().includes(query.toLowerCase()) ||
           post.excerpt.toLowerCase().includes(query.toLowerCase()) ||
-          post.category.toLowerCase().includes(query.toLowerCase())
+          post.category.name.toLowerCase().includes(query.toLowerCase())
       );
       setFilteredPosts(filtered);
     }
   };
 
   // 获取热门文章
-  const trendingPosts = blogPosts.filter((post) => post.trending).slice(0, 3);
+  // const trendingPosts = blogPosts.filter((post) => post.trending).slice(0, 3);
 
   // 获取最受欢迎的文章（按阅读时间排序）
-  const popularPosts = [...blogPosts]
-    .sort((a, b) => Number.parseInt(b.readTime) - Number.parseInt(a.readTime))
-    .slice(0, 2);
+  // const popularPosts = [...blogPosts]
+  //   .sort((a, b) => Number.parseInt(b.readTime) - Number.parseInt(a.readTime))
+  //   .slice(0, 2);
 
   return (
     <div className="min-h-screen bg-background">

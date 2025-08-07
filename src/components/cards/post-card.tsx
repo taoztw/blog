@@ -6,24 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, ArrowRight, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { index } from "drizzle-orm/gel-core";
-
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  image: string;
-  category: string;
-  categoryColor: string;
-  date: string;
-  readTime: string;
-  trending: boolean;
-  slug: string;
-}
+import { z } from "zod";
+import type { PostWithRelations } from "@/global";
 
 interface BlogCardProps {
-  post: BlogPost;
+  post: PostWithRelations;
 }
 
 export function BlogCard({ post }: BlogCardProps) {
@@ -47,7 +34,7 @@ export function BlogCard({ post }: BlogCardProps) {
               color: "transparent",
             }}
             sizes="100vw"
-            src={post.image || "/placeholder.svg"}
+            src={post.imageUrl || "/placeholder.svg"}
             fill
           />
         </div>
@@ -57,18 +44,20 @@ export function BlogCard({ post }: BlogCardProps) {
       <div className="flex flex-col sm:w-3/4">
         {/* 分类和元数据 */}
         <div className="mb-1 flex items-center gap-2">
-          <Badge className={`${post.categoryColor} border-0 text-xs`}>{post.category}</Badge>
-          {post.trending && (
+          <Badge className={`bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-0 text-xs`}>
+            {post.category.name}
+          </Badge>
+          {/* {post.trending && (
             <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-0 text-xs">
               <TrendingUp className="w-3 h-3 mr-1" />
               Trending
             </Badge>
-          )}
+          )} */}
         </div>
 
         {/* 标题 */}
         <h3 className="group-hover:text-primary mb-1 text-lg font-semibold transition-colors">
-          <Link href={`/blog/${post.slug}`} className="hover:text-blue-600 dark:hover:text-blue-400">
+          <Link href={`/blog/${post.title}`} className="hover:text-blue-600 dark:hover:text-blue-400">
             {post.title}
           </Link>
         </h3>
@@ -83,11 +72,11 @@ export function BlogCard({ post }: BlogCardProps) {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
               <Calendar className="w-3 h-3" />
-              <span>{post.date}</span>
+              <span>{post.createdAt.getDate()}</span>
             </div>
             <div className="flex items-center space-x-1">
               <Clock className="w-3 h-3" />
-              <span>{post.readTime}</span>
+              <span>2分钟</span>
             </div>
           </div>
           <div className="ml-auto">
