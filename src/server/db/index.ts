@@ -11,17 +11,17 @@ import * as schema from "./schema";
 export let db: DrizzleD1Database<typeof schema> | null = null;
 
 export const getDB = () => {
-	if (db) {
-		return db;
-	}
+  if (db) {
+    return db;
+  }
 
-	const { env: cf_env } = getCloudflareContext();
+  const { env: cf_env } = getCloudflareContext();
 
-	if (!cf_env.DB) {
-		throw new Error("D1 database not found");
-	}
+  if (!cf_env.DB) {
+    throw new Error("D1 database not found");
+  }
 
-	db = drizzle(cf_env.DB, { schema, logger: true });
+  db = drizzle(cf_env.DB, { schema, logger: true });
 
-	return db;
+  return db;
 };

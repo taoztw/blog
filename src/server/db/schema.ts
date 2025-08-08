@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { index, integer, primaryKey, sqliteTableCreator, text } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, text, sqliteTable } from "drizzle-orm/sqlite-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 
@@ -9,7 +9,7 @@ import { createInsertSchema, createSelectSchema, createUpdateSchema } from "driz
  *
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
-export const createTable = sqliteTableCreator((name) => `blog_${name}`);
+// export const createTable = sqliteTableCreator((name) => `blog_${name}`);
 
 export const ROLES_ENUM = {
   ADMIN: "admin",
@@ -19,9 +19,14 @@ export const POST_STATUS_ENUM = {
   DRAFT: "draft",
   PUBLISHED: "published",
 };
+export const REACTION_ENUM = {
+  LIKE: "like",
+  DISLIKE: "dislike",
+};
 
 const roleTuple = Object.values(ROLES_ENUM) as [string, ...string[]];
 const POST_STATUS_TUPLE = Object.values(POST_STATUS_ENUM) as [string, ...string[]];
+const reactionTuple = Object.values(REACTION_ENUM) as [string, ...string[]];
 
 const commonColumns = {
   createdAt: integer({
@@ -39,14 +44,14 @@ const commonColumns = {
     .$onUpdate(() => sql`updateCounter + 1`),
 };
 
-export const categorys = createTable("category", {
+export const categorys = sqliteTable("category", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   name: text("name", { length: 255 }).notNull(),
   description: text("description", { length: 512 }),
   ...commonColumns,
 });
 
-export const posts = createTable(
+export const posts = sqliteTable(
   "post",
   {
     id: text("id", { length: 255 })
@@ -70,6 +75,17 @@ export const posts = createTable(
   (t) => [index("created_by_idx").on(t.createdById)]
 );
 
+export const postReactions = sqliteTable("post_reactions", {
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  postId: text("post_id")
+    .notNull()
+    .references(() => posts.id),
+  type: text("type", { enum: reactionTuple }).default(""),
+  ...commonColumns,
+});
+
 export const postInsertSchema = createInsertSchema(posts).omit({
   updateCounter: true,
 });
@@ -79,7 +95,7 @@ export const postSelectSchema = createSelectSchema(posts).omit({
 
 // 评论表
 
-export const users = createTable(
+export const users = sqliteTable(
   "user",
   {
     id: text("id", { length: 255 })
@@ -100,7 +116,7 @@ export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
 }));
 
-export const accounts = createTable(
+export const accounts = sqliteTable(
   "account",
   {
     userId: text("user_id", { length: 255 })
