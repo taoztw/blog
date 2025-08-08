@@ -3,11 +3,12 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, ArrowRight, TrendingUp } from "lucide-react";
+import { Calendar, Clock, ArrowRight, TrendingUp, ChevronRightIcon, Eye } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { z } from "zod";
 import type { PostWithRelations } from "@/global";
+import { getTimeStamp } from "@/lib/utils";
 
 interface BlogCardProps {
   post: PostWithRelations;
@@ -44,7 +45,7 @@ export function BlogCard({ post }: BlogCardProps) {
       <div className="flex flex-col sm:w-3/4">
         {/* 分类和元数据 */}
         <div className="mb-1 flex items-center gap-2">
-          <Badge className={`bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200 border-0 text-xs`}>
+          <Badge variant="outline" className="text-xs text-muted-foreground font-normal">
             {post.category.name}
           </Badge>
           {/* {post.trending && (
@@ -56,8 +57,8 @@ export function BlogCard({ post }: BlogCardProps) {
         </div>
 
         {/* 标题 */}
-        <h3 className="group-hover:text-primary mb-1 text-lg font-semibold transition-colors">
-          <Link href={`/blog/${post.title}`} className="hover:text-blue-600 dark:hover:text-blue-400">
+        <h3 className="group-hover:text-primary/80 mb-1 text-base font-semibold transition-colors">
+          <Link href={`/blog/${post.title}`} className="hover:text-primary">
             {post.title}
           </Link>
         </h3>
@@ -72,22 +73,25 @@ export function BlogCard({ post }: BlogCardProps) {
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-1">
               <Calendar className="w-3 h-3" />
-              <span>{post.createdAt.getDate()}</span>
+              <span>{getTimeStamp(post.createdAt)}</span>
             </div>
             <div className="flex items-center space-x-1">
               <Clock className="w-3 h-3" />
               <span>2分钟</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <Eye className="w-3 h-3" />
+              <span>{post.viewCount}</span>
             </div>
           </div>
           <div className="ml-auto">
             <Link href={`/blog/${post.slug}`}>
               <Button
                 variant="ghost"
-                size="sm"
-                className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 p-0 h-auto font-medium group/btn"
+                className="text-muted-foreground/80 h-auto text-xs group/btn font-normal hover:text-muted-foreground"
               >
-                Read Article
-                <ArrowRight className="w-3 h-3 ml-1 group-hover/btn:translate-x-1 transition-transform" />
+                Read
+                <ChevronRightIcon className="opacity-60 w-3 h-3 group-hover/btn:translate-x-0.5 transition-transform" />
               </Button>
             </Link>
           </div>

@@ -21,6 +21,7 @@ import { Card } from "@/components/ui/card";
 import Image from "next/image";
 import { MusicVisualizer } from "./music-visualizer";
 import { FloatingParticles } from "./floating-particles";
+import MusicPlayer from "./music-player";
 
 const photos = [
   {
@@ -341,7 +342,8 @@ export function HeroPersonalColorful() {
 
             {/* 合并的博客统计 */}
             <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
-              <Card className="p-6 bg-gradient-to-br from-indigo-50 to-blue-100 dark:from-indigo-950/50 dark:to-blue-900/50 border-indigo-200 dark:border-indigo-800 hover:shadow-lg transition-all duration-300">
+              <MusicPlayer />
+              {/* <Card className="p-6 bg-gradient-to-br from-indigo-50 to-blue-100 dark:from-indigo-950/50 dark:to-blue-900/50 border-indigo-200 dark:border-indigo-800 hover:shadow-lg transition-all duration-300">
                 <div className="flex items-center space-x-3 mb-4">
                   <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center border border-indigo-200 dark:border-indigo-700">
                     <TrendingUp className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
@@ -362,7 +364,7 @@ export function HeroPersonalColorful() {
                     <div className="text-sm text-indigo-700 dark:text-indigo-300">总阅读量</div>
                   </div>
                 </div>
-              </Card>
+              </Card> */}
             </motion.div>
           </div>
         </div>

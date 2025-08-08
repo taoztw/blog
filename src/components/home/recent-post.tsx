@@ -7,76 +7,165 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon, ArrowRightIcon } from "lucide-react";
+import type { PostWithRelations } from "@/global";
+import PostLatestCard from "../cards/post-latest-card";
 
-interface BlogPost {
-  id: number;
-  title: string;
-  category: string;
-  date: string;
-  imageUrl: string;
-  excerpt: string;
-}
-
-const blogPosts: BlogPost[] = [
+export const blogPosts: PostWithRelations[] = [
   {
-    id: 1,
-    title: "How Marketing Analytics is Reshaping Business Strategies",
-    category: "Analytics",
-    date: "April 18, 2023",
-    imageUrl:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    id: "clx1a2b3c4d5e6f7g8h9i0j1",
+    title: "AI-Powered Marketing: The Future of Customer Engagement",
+    slug: "ai-powered-marketing-future",
     excerpt:
-      "Data-driven marketing is changing how companies make decisions. Learn how to leverage analytics for better results.",
+      "Explore how artificial intelligence is revolutionizing marketing strategies and creating personalized customer experiences at scale.",
+    content: "Full content about AI-powered marketing...",
+    imageUrl: "/tmp/p1.jpg",
+    status: "PUBLISHED",
+    viewCount: 1247,
+    likeCount: 89,
+    createdById: "usr_123456789",
+    categoryId: "1",
+    author: {
+      id: "usr_123456789",
+      name: "Sarah Chen",
+      email: "sarah.chen@example.com",
+      image: "/avatars/sarah-chen.jpg",
+    },
+    category: {
+      id: 1,
+      name: "Artificial Intelligence",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: 2,
-    title: "The Rise of Video Marketing: Why You Can't Ignore It",
-    category: "Video",
-    date: "April 12, 2023",
-    imageUrl:
-      "https://images.unsplash.com/photo-1626785774573-4b799315345d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2071&q=80",
+    id: "clx2b3c4d5e6f7g8h9i0j1k2",
+    title: "Building Brand Loyalty Through Social Media Storytelling",
+    slug: "brand-loyalty-social-media",
     excerpt:
-      "Video content has become an essential part of modern marketing strategies. Find out why and how to get started.",
+      "Discover the art of crafting compelling brand narratives that resonate with your audience and drive long-term loyalty.",
+    content: "Full content about social media storytelling...",
+    imageUrl: "/tmp/p2.jpg",
+    status: "PUBLISHED",
+    viewCount: 892,
+    likeCount: 156,
+    createdById: "usr_987654321",
+    categoryId: "2",
+    author: {
+      id: "usr_987654321",
+      name: "Marcus Rodriguez",
+      email: "marcus.r@example.com",
+      image: "/avatars/marcus-rodriguez.jpg",
+    },
+    category: {
+      id: 2,
+      name: "Social Media",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: 3,
-    title: "Building Customer Loyalty Through Content Marketing",
-    category: "Content",
-    date: "April 5, 2023",
-    imageUrl:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    id: "clx3c4d5e6f7g8h9i0j1k2l3",
+    title: "The Rise of Voice Commerce: Optimizing for Audio Shopping",
+    slug: "voice-commerce-optimization",
     excerpt:
-      "Create content that not only attracts but retains customers. Strategies for building long-term relationships through your content.",
+      "Learn how voice assistants are changing the e-commerce landscape and how to optimize your business for voice commerce.",
+    content: "Full content about voice commerce...",
+    imageUrl: "/tmp/p3.jpg",
+    status: "PUBLISHED",
+    viewCount: 634,
+    likeCount: 78,
+    createdById: "usr_456789123",
+    categoryId: "3",
+    author: {
+      id: "usr_456789123",
+      name: "Emily Watson",
+      email: "emily.watson@example.com",
+      image: "/avatars/emily-watson.jpg",
+    },
+    category: {
+      id: 3,
+      name: "E-commerce",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: 4,
-    title: "Social Media Trends That Will Dominate in 2023",
-    category: "Social Media",
-    date: "March 29, 2023",
-    imageUrl:
-      "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2074&q=80",
+    id: "clx4d5e6f7g8h9i0j1k2l3m4",
+    title: "Sustainable Marketing: Connecting with Eco-Conscious Consumers",
+    slug: "sustainable-marketing-eco-conscious",
     excerpt:
-      "Stay ahead of the curve with these emerging social media trends that will shape the digital landscape this year.",
+      "Understand how sustainability messaging can differentiate your brand and attract environmentally conscious customers.",
+    content: "Full content about sustainable marketing...",
+    imageUrl: "/tmp/p4.jpg",
+    status: "PUBLISHED",
+    viewCount: 1089,
+    likeCount: 203,
+    createdById: "usr_789123456",
+    categoryId: "4",
+    author: {
+      id: "usr_789123456",
+      name: "David Kim",
+      email: "david.kim@example.com",
+      image: "/avatars/david-kim.jpg",
+    },
+    category: {
+      id: 4,
+      name: "Sustainability",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: 5,
-    title: "Email Marketing Personalization: Going Beyond First Name",
-    category: "Email",
-    date: "March 22, 2023",
-    imageUrl:
-      "https://images.unsplash.com/photo-1596526131083-e8c633c948d2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1074&q=80",
+    id: "clx5e6f7g8h9i0j1k2l3m4n5",
+    title: "Micro-Influencer Marketing: Quality Over Quantity",
+    slug: "micro-influencer-marketing",
     excerpt:
-      "Advanced techniques for personalizing your email campaigns that go well beyond simply using a subscriber's name.",
+      "Why partnering with micro-influencers often delivers better ROI than celebrity endorsements and how to find the right partners.",
+    content: "Full content about micro-influencer marketing...",
+    imageUrl: "/tmp/p2.jpg",
+    status: "PUBLISHED",
+    viewCount: 756,
+    likeCount: 124,
+    createdById: "usr_321654987",
+    categoryId: "2",
+    author: {
+      id: "usr_321654987",
+      name: "Jessica Liu",
+      email: "jessica.liu@example.com",
+      image: "/avatars/jessica-liu.jpg",
+    },
+    category: {
+      id: 2,
+      name: "Social Media",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
   {
-    id: 6,
-    title: "Sustainable Marketing: Building Eco-Friendly Campaigns",
-    category: "Sustainability",
-    date: "March 15, 2023",
-    imageUrl:
-      "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80",
+    id: "clx6f7g8h9i0j1k2l3m4n5o6",
+    title: "The Psychology of Color in Digital Marketing",
+    slug: "color-psychology-digital-marketing",
     excerpt:
-      "How to integrate sustainability into your marketing strategy and connect with environmentally conscious consumers.",
+      "Explore how color choices impact consumer behavior and learn to use color psychology to improve your marketing effectiveness.",
+    content: "Full content about color psychology...",
+    imageUrl: "/tmp/p4.jpg",
+    status: "DRAFT",
+    viewCount: 0,
+    likeCount: 0,
+    createdById: "usr_654987321",
+    categoryId: "5",
+    author: {
+      id: "usr_654987321",
+      name: "Alex Thompson",
+      email: "alex.thompson@example.com",
+      image: "/avatars/alex-thompson.jpg",
+    },
+    category: {
+      id: 5,
+      name: "Design",
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
@@ -247,39 +336,7 @@ export default function RecentBlogSection() {
             onTouchEnd={handleTouchEnd}
           >
             {blogPosts.map((post) => (
-              <div key={post.id} className="carousel-item w-full flex-none snap-start px-2 sm:w-1/2 sm:px-4 lg:w-1/3">
-                <Card className="flex h-full flex-col overflow-hidden p-0 shadow-sm transition-shadow hover:shadow-md">
-                  <div className="relative h-40 overflow-hidden sm:h-48 md:h-52">
-                    <Image
-                      src={post.imageUrl}
-                      alt={post.title}
-                      fill
-                      className="object-cover transition-transform duration-300 hover:scale-105"
-                    />
-                    <div className="absolute top-3 left-3">
-                      <Badge className="bg-primary hover:bg-primary/90">{post.category}</Badge>
-                    </div>
-                  </div>
-                  <CardContent className="flex-grow">
-                    <div className="text-muted-foreground mb-2 flex items-center text-xs sm:mb-3 sm:text-sm">
-                      <CalendarIcon className="mr-1 h-3 w-3" />
-                      <span>{post.date}</span>
-                    </div>
-                    <h3 className="mb-2 line-clamp-2 text-base font-semibold sm:text-lg">{post.title}</h3>
-                    <p className="text-muted-foreground line-clamp-2 text-xs sm:line-clamp-3 sm:text-sm">
-                      {post.excerpt}
-                    </p>
-                  </CardContent>
-                  <CardFooter className="pb-6">
-                    <Button variant="ghost" size="sm" className="w-full text-sm" asChild>
-                      <Link href="#" className="flex items-center justify-center">
-                        Read Article
-                        <ArrowRightIcon className="ml-1 h-4 w-4" />
-                      </Link>
-                    </Button>
-                  </CardFooter>
-                </Card>
-              </div>
+              <PostLatestCard post={post} />
             ))}
           </div>
 

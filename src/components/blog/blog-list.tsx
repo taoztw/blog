@@ -2,18 +2,11 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, ArrowRight, TrendingUp } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
 import SearchInput from "../ui/search-input";
 import { BlogCard } from "../cards/post-card";
 import type { PostWithRelations } from "@/global";
-import image from "next/image";
-import { title } from "process";
-import { email } from "zod";
 
 // 示例博客文章数据
 export const blogPosts: PostWithRelations[] = [
@@ -24,7 +17,7 @@ export const blogPosts: PostWithRelations[] = [
     excerpt:
       "Explore how artificial intelligence is revolutionizing marketing strategies and creating personalized customer experiences at scale.",
     content: "Full content about AI-powered marketing...",
-    imageUrl: "/placeholder.svg?height=200&width=300&text=AI+Marketing",
+    imageUrl: "/tmp/p1.jpg",
     status: "PUBLISHED",
     viewCount: 1247,
     likeCount: 89,
@@ -50,7 +43,7 @@ export const blogPosts: PostWithRelations[] = [
     excerpt:
       "Discover the art of crafting compelling brand narratives that resonate with your audience and drive long-term loyalty.",
     content: "Full content about social media storytelling...",
-    imageUrl: "/placeholder.svg?height=200&width=300&text=Brand+Storytelling",
+    imageUrl: "/tmp/p2.jpg",
     status: "PUBLISHED",
     viewCount: 892,
     likeCount: 156,
@@ -76,7 +69,7 @@ export const blogPosts: PostWithRelations[] = [
     excerpt:
       "Learn how voice assistants are changing the e-commerce landscape and how to optimize your business for voice commerce.",
     content: "Full content about voice commerce...",
-    imageUrl: "/placeholder.svg?height=200&width=300&text=Voice+Commerce",
+    imageUrl: "/tmp/p3.jpg",
     status: "PUBLISHED",
     viewCount: 634,
     likeCount: 78,
@@ -102,7 +95,7 @@ export const blogPosts: PostWithRelations[] = [
     excerpt:
       "Understand how sustainability messaging can differentiate your brand and attract environmentally conscious customers.",
     content: "Full content about sustainable marketing...",
-    imageUrl: "/placeholder.svg?height=200&width=300&text=Sustainable+Marketing",
+    imageUrl: "/tmp/p4.jpg",
     status: "PUBLISHED",
     viewCount: 1089,
     likeCount: 203,
@@ -128,7 +121,7 @@ export const blogPosts: PostWithRelations[] = [
     excerpt:
       "Why partnering with micro-influencers often delivers better ROI than celebrity endorsements and how to find the right partners.",
     content: "Full content about micro-influencer marketing...",
-    imageUrl: "/placeholder.svg?height=200&width=300&text=Micro+Influencers",
+    imageUrl: "/tmp/p2.jpg",
     status: "PUBLISHED",
     viewCount: 756,
     likeCount: 124,
@@ -154,7 +147,7 @@ export const blogPosts: PostWithRelations[] = [
     excerpt:
       "Explore how color choices impact consumer behavior and learn to use color psychology to improve your marketing effectiveness.",
     content: "Full content about color psychology...",
-    imageUrl: "/placeholder.svg?height=200&width=300&text=Color+Psychology",
+    imageUrl: "/tmp/p4.jpg",
     status: "DRAFT",
     viewCount: 0,
     likeCount: 0,
@@ -169,57 +162,6 @@ export const blogPosts: PostWithRelations[] = [
     category: {
       id: 5,
       name: "Design",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "clx7g8h9i0j1k2l3m4n5o6p7",
-    title: "Cross-Platform Attribution: Measuring Modern Customer Journeys",
-    slug: "cross-platform-attribution",
-    excerpt:
-      "Navigate the complexity of multi-touchpoint customer journeys and implement effective attribution models for better insights.",
-    content: "Full content about cross-platform attribution...",
-    imageUrl: "/placeholder.svg?height=200&width=300&text=Attribution+Modeling",
-    status: "PUBLISHED",
-    viewCount: 1432,
-    likeCount: 267,
-    createdById: "usr_147258369",
-    categoryId: null,
-    author: {
-      id: "usr_147258369",
-      name: "Rachel Green",
-      email: "rachel.green@example.com",
-      image: "/avatars/rachel-green.jpg",
-    },
-    category: {
-      id: 6,
-      name: "Analytics",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "clx8h9i0j1k2l3m4n5o6p7q8",
-    title: "Personalization at Scale: Dynamic Content Strategies",
-    slug: "personalization-dynamic-content",
-    excerpt: "Learn how to deliver personalized experiences to thousands of customers without losing the human touch.",
-    content: "Full content about personalization strategies...",
-    imageUrl: "/placeholder.svg?height=200&width=300&text=Personalization",
-    status: "PUBLISHED",
-    viewCount: 923,
-    likeCount: 178,
-    createdById: "usr_963852741",
-    categoryId: "1",
-    author: {
-      id: "usr_963852741",
-      name: "Michael Chang",
-      email: "michael.chang@example.com",
-      image: null,
-    },
-    category: {
-      id: 1,
-      name: "Artificial Intelligence",
     },
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -256,18 +198,18 @@ export function BlogListPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
         <div className="grid grid-cols-1 lg:grid-cols-3">
           {/* 主内容区域 */}
           <div className="lg:col-span-2">
             {/* 页面标题 */}
-            <div className="mb-8 flex items-center justify-between">
-              <h2 className="text-2xl font-semibold tracking-tight">Latest Posts</h2>
+            <div className="mb-4 flex items-center justify-between">
+              <h2 className="text-2xl font-semibold tracking-tight">Posts</h2>
               <SearchInput />
             </div>
 
             {/* 文章列表 */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               {filteredPosts.map((post, index) => (
                 <motion.div
                   key={post.id}

@@ -1,5 +1,5 @@
 import { relations, sql } from "drizzle-orm";
-import { index, integer, primaryKey, text, sqliteTable } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, text, sqliteTable, foreignKey } from "drizzle-orm/sqlite-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 
@@ -10,6 +10,8 @@ import { createInsertSchema, createSelectSchema, createUpdateSchema } from "driz
  * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
  */
 // export const createTable = sqliteTableCreator((name) => `blog_${name}`);
+
+// === ENUM
 
 export const ROLES_ENUM = {
   ADMIN: "admin",
@@ -43,57 +45,6 @@ const commonColumns = {
     .default(0)
     .$onUpdate(() => sql`updateCounter + 1`),
 };
-
-export const categorys = sqliteTable("category", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
-  name: text("name", { length: 255 }).notNull(),
-  description: text("description", { length: 512 }),
-  ...commonColumns,
-});
-
-export const posts = sqliteTable(
-  "post",
-  {
-    id: text("id", { length: 255 })
-      .notNull()
-      .primaryKey()
-      .$defaultFn(() => crypto.randomUUID()),
-    title: text("title", { length: 512 }).notNull(),
-    slug: text("slug", { length: 512 }).notNull(),
-    excerpt: text("excerpt").notNull(),
-    content: text("content").notNull(),
-    imageUrl: text("image_url", { length: 512 }),
-    status: text("status", { enum: POST_STATUS_TUPLE }).default(POST_STATUS_ENUM.DRAFT),
-    viewCount: integer("view_count").default(0).notNull(),
-    likeCount: integer("like_count").default(0).notNull(),
-    createdById: text("created_by_id", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    categoryId: text("category_id", { length: 255 }).references(() => categorys.id),
-    ...commonColumns,
-  },
-  (t) => [index("created_by_idx").on(t.createdById)]
-);
-
-export const postReactions = sqliteTable("post_reactions", {
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id),
-  postId: text("post_id")
-    .notNull()
-    .references(() => posts.id),
-  type: text("type", { enum: reactionTuple }).default(""),
-  ...commonColumns,
-});
-
-export const postInsertSchema = createInsertSchema(posts).omit({
-  updateCounter: true,
-});
-export const postSelectSchema = createSelectSchema(posts).omit({
-  updateCounter: true,
-});
-
-// 评论表
 
 export const users = sqliteTable(
   "user",
@@ -148,3 +99,99 @@ export const accounts = sqliteTable(
 export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
+
+export const categorys = sqliteTable("category", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  name: text("name", { length: 255 }).notNull(),
+  description: text("description", { length: 512 }),
+  ...commonColumns,
+});
+
+export const posts = sqliteTable(
+  "post",
+  {
+    id: text("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    title: text("title", { length: 512 }).notNull(),
+    slug: text("slug", { length: 512 }).notNull(),
+    excerpt: text("excerpt").notNull(),
+    content: text("content").notNull(),
+    imageUrl: text("image_url", { length: 512 }),
+    status: text("status", { enum: POST_STATUS_TUPLE }).default(POST_STATUS_ENUM.DRAFT),
+    viewCount: integer("view_count").default(0).notNull(),
+    likeCount: integer("like_count").default(0).notNull(),
+    createdById: text("created_by_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    categoryId: text("category_id", { length: 255 }).references(() => categorys.id),
+    ...commonColumns,
+  },
+  (t) => [index("created_by_idx").on(t.createdById)]
+);
+
+export const postReactions = sqliteTable("post_reactions", {
+  userId: text("user_id")
+    .notNull()
+    .references(() => users.id),
+  postId: text("post_id")
+    .notNull()
+    .references(() => posts.id),
+  type: text("type", { enum: reactionTuple }).default(""),
+  ...commonColumns,
+});
+
+export const postInsertSchema = createInsertSchema(posts).omit({
+  updateCounter: true,
+});
+export const postSelectSchema = createSelectSchema(posts).omit({
+  updateCounter: true,
+});
+
+// 评论表
+export const comments = sqliteTable(
+  "comments",
+  {
+    id: text("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    postId: text("post_id", { length: 255 })
+      .notNull()
+      .references(() => posts.id),
+    parentId: text("parent_id", { length: 255 }),
+    content: text("content").notNull(),
+    ...commonColumns,
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.parentId],
+      foreignColumns: [table.id],
+      name: "comments_parent_id_fk",
+    }),
+  ]
+);
+
+export const commentReactions = sqliteTable(
+  "comment_reactions",
+  {
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id),
+    commentId: text("comment_id")
+      .notNull()
+      .references(() => comments.id),
+    type: text("type", { enum: reactionTuple }).default(""),
+    ...commonColumns,
+  },
+  (table) => [
+    primaryKey({
+      name: "comment_reactions_pk",
+      columns: [table.userId, table.commentId],
+    }),
+  ]
+);
