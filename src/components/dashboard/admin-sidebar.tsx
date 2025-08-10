@@ -13,6 +13,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import ROUTES from "@/constants/routes";
 import {
   Activity,
   BarChart3,
@@ -33,16 +34,16 @@ import Link from "next/link";
 import { memo } from "react";
 
 const menuItems = [
-  { title: "Dashboard", icon: LayoutDashboard, href: "#dashboard" },
-  { title: "Analytics", icon: BarChart3, href: "#analytics" },
-  { title: "Users", icon: Users, href: "#users" },
-  { title: "Content", icon: FileText, href: "#content" },
-  { title: "Activity", icon: Activity, href: "#activity" },
-  { title: "Database", icon: Database, href: "#database" },
-  { title: "Security", icon: Shield, href: "#security" },
-  { title: "Performance", icon: Zap, href: "#performance" },
-  { title: "Notifications", icon: Bell, href: "#notifications" },
-  { title: "Settings", icon: Settings, href: "#settings" },
+  { title: "Dashboard", icon: LayoutDashboard, href: `${ROUTES.DASHBOARD}` },
+  { title: "Analytics", icon: BarChart3, href: `${ROUTES.DASHBOARD}/analytics` },
+  { title: "Users", icon: Users, href: `${ROUTES.DASHBOARD}/users` },
+  { title: "Posts", icon: FileText, href: `${ROUTES.DASHBOARD}/posts` },
+  // { title: "Activity", icon: Activity, href: "#activity" },
+  // { title: "Database", icon: Database, href: "#database" },
+  // { title: "Security", icon: Shield, href: "#security" },
+  // { title: "Performance", icon: Zap, href: "#performance" },
+  // { title: "Notifications", icon: Bell, href: "#notifications" },
+  // { title: "Settings", icon: Settings, href: "#settings" },
 ];
 
 export const AdminSidebar = memo(() => {

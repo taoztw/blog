@@ -6,6 +6,7 @@ import localFont from "next/font/local";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/constants";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SessionProvider } from "next-auth/react";
+import NextTopLoader from "nextjs-toploader";
 
 const geistSans = localFont({
   src: [
@@ -41,6 +42,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       {/* <html lang="en" suppressHydrationWarning> */}
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <NextTopLoader
+            initialPosition={0.08}
+            crawlSpeed={200}
+            height={3}
+            crawl={true}
+            showSpinner={true}
+            easing="ease"
+            speed={200}
+          />
           <SessionProvider>
             <Toaster position="top-right" />
             <TRPCReactProvider>{children}</TRPCReactProvider>
