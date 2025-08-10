@@ -15,29 +15,31 @@ import {
   Users,
   Users2,
   TrendingUp,
+  FolderOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Image from "next/image";
-import { MusicVisualizer } from "./music-visualizer";
-import { FloatingParticles } from "./floating-particles";
 import MusicPlayer from "./music-player";
+import { AnimatedNumber, AnimatedNumberK } from "../ui_custom/animated-number";
+import Link from "next/link";
+import { formatK } from "@/lib/utils";
 
 const photos = [
   {
-    src: "/logo-64.png",
-    caption: "深夜编程时光 ☕",
-    location: "Home Office",
+    src: "/tmp/home3.jpg",
+    caption: "放空",
+    location: "月球",
   },
   {
-    src: "/logo-512.png",
-    caption: "技术分享现场 🎤",
-    location: "Tech Conference",
+    src: "/tmp/home2.jpg",
+    caption: "故宫的雪",
+    location: "BeiJing",
   },
   {
-    src: "/logo-512.png",
-    caption: "周末的咖啡时光 ☕",
-    location: "Local Café",
+    src: "/tmp/home1.jpg",
+    caption: "香山一角",
+    location: "香山",
   },
 ];
 
@@ -169,7 +171,7 @@ export function HeroPersonalColorful() {
             >
               <div className="flex items-center justify-center lg:justify-start space-x-2 mb-2">
                 <span className="text-2xl">👋</span>
-                <span className="text-lg text-gray-600 dark:text-gray-400">
+                <span className="text-base text-gray-600 dark:text-gray-400">
                   {getGreeting()}，现在是 {currentTime}
                 </span>
               </div>
@@ -178,7 +180,7 @@ export function HeroPersonalColorful() {
                 我是 Tz
               </h1>
 
-              <p className="text-xl text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+              <p className="text-base text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                 全栈开发工程师 · AI 技术爱好者✨
                 <br />
                 {/* <span className="text-gray-800 dark:text-gray-300 font-medium">用代码创造价值，用文字分享知识</span> ✨ */}
@@ -193,27 +195,27 @@ export function HeroPersonalColorful() {
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               {/* 实时访客 */}
-              <Card className="p-4 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/50 dark:to-cyan-950/50 border-blue-200 dark:border-blue-800">
+              <Card className="p-4 hover:shadow-lg transition-all duration-300  dark:from-blue-950/50 dark:to-cyan-950/50">
                 <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center border border-blue-200 dark:border-blue-700">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center">
                     <Users2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-blue-600 dark:text-blue-400">当前在线</p>
-                    <p className="font-medium text-blue-900 dark:text-blue-100">{1000} 位访客</p>
+                    <p className="text-xs text-muted-foreground">当前在线</p>
+                    <p className="font-medium text-sm">{1000} 位访客</p>
                   </div>
                 </div>
               </Card>
 
               {/* 今日访问 */}
-              <Card className="p-4 hover:shadow-lg transition-all duration-300 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 border-purple-200 dark:border-purple-800">
+              <Card className="p-4 hover:shadow-lg transition-all duration-300">
                 <div className="flex items-center space-x-3">
                   <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center border border-purple-200 dark:border-purple-700">
                     <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                   </div>
                   <div>
-                    <p className="text-sm text-purple-600 dark:text-purple-400">今日访问</p>
-                    <p className="font-medium text-purple-900 dark:text-purple-100">{3992938} 次浏览</p>
+                    <p className="text-xs text-muted-foreground">今日访问</p>
+                    <p className="font-medium text-sm">{formatK(123123)} 次浏览</p>
                   </div>
                 </div>
               </Card>
@@ -226,20 +228,23 @@ export function HeroPersonalColorful() {
               transition={{ delay: 0.6 }}
               className="flex flex-col sm:flex-row gap-4"
             >
-              <Button
-                size="lg"
-                className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                <Heart className="w-4 h-4 mr-2" />
-                关注我的博客
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="flex-1 border-gray-300 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all duration-300 bg-transparent"
-              >
-                查看我的项目
-              </Button>
+              <div className="flex flex-col sm:flex-row gap-3">
+                {/* 查看我的博客 - 主按钮（绿色渐变） */}
+                <Link href="/blog">
+                  <Button variant="default" className="shadow-md hover:opacity-90">
+                    <Heart className="w-4 h-4 mr-1" />
+                    进入博客
+                  </Button>
+                </Link>
+
+                {/* 查看我的项目 - 次按钮（浅灰） */}
+                <Link href="/projects">
+                  <Button variant="secondary" className="dark:text-gray-400 shadow-md hover:bg-secondary/80">
+                    <FolderOpen className="w-4 h-4 mr-2" />
+                    进入项目
+                  </Button>
+                </Link>
+              </div>
             </motion.div>
           </div>
 
@@ -247,124 +252,37 @@ export function HeroPersonalColorful() {
           <div className="lg:col-span-3 space-y-6">
             {/* Music Player with Visualizer */}
             <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
-              <Card className="relative overflow-hidden bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 p-[1px] shadow-2xl">
-                <div className="bg-white dark:bg-gray-900 rounded-[inherit] p-6 relative">
-                  {/* Floating Particles */}
-                  <FloatingParticles isActive={isPlaying} />
-
-                  <div className="relative z-10">
-                    <div className="flex items-center space-x-2 mb-4">
-                      <div className="relative">
-                        <Music className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                        {isPlaying && (
-                          <motion.div
-                            className="absolute -inset-1 bg-purple-500 rounded-full opacity-20"
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}
-                          />
-                        )}
-                      </div>
-                      <span className="text-sm font-medium bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-                        正在播放
-                      </span>
-                      <Volume2 className="w-4 h-4 text-gray-400" />
-                    </div>
-
-                    <div className="flex items-center space-x-3 mb-4">
-                      <div className="relative">
-                        <Image
-                          src={currentMusic.cover || "/placeholder.svg"}
-                          alt="Album cover"
-                          width={50}
-                          height={50}
-                          className="rounded-lg shadow-lg"
-                        />
-                        {isPlaying && (
-                          <motion.div
-                            className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg"
-                            animate={{ opacity: [0.2, 0.5, 0.2] }}
-                            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY }}
-                          />
-                        )}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium text-gray-900 dark:text-gray-100 truncate">{currentMusic.title}</p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 truncate">{currentMusic.artist}</p>
-                      </div>
-                    </div>
-
-                    {/* Music Visualizer */}
-                    <div className="mb-4">
-                      <MusicVisualizer isPlaying={isPlaying} />
-                    </div>
-
-                    <div className="flex items-center justify-center space-x-4">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={() => setIsPlaying(!isPlaying)}
-                        className="w-12 h-12 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                      >
-                        {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-950/20"
-                      >
-                        <SkipForward className="w-4 h-4" />
-                      </Button>
-                    </div>
-
-                    {/* Progress Bar */}
-                    <div className="mt-4">
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <motion.div
-                          className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full relative overflow-hidden"
-                          initial={{ width: "0%" }}
-                          animate={{ width: isPlaying ? "60%" : "30%" }}
-                          transition={{ duration: 2 }}
-                        >
-                          {isPlaying && (
-                            <motion.div
-                              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                              animate={{ x: ["-100%", "100%"] }}
-                              transition={{ duration: 1.5, repeat: Number.POSITIVE_INFINITY }}
-                            />
-                          )}
-                        </motion.div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
+              <MusicPlayer />
             </motion.div>
 
             {/* 合并的博客统计 */}
             <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
-              <MusicPlayer />
-              {/* <Card className="p-6 bg-gradient-to-br from-indigo-50 to-blue-100 dark:from-indigo-950/50 dark:to-blue-900/50 border-indigo-200 dark:border-indigo-800 hover:shadow-lg transition-all duration-300">
-                <div className="flex items-center space-x-3 mb-4">
-                  <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900 rounded-full flex items-center justify-center border border-indigo-200 dark:border-indigo-700">
-                    <TrendingUp className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+              <Card className="p-6 bg-gradient-to-br gap-3  hover:shadow-lg transition-all duration-300">
+                <div className="flex items-center space-x-3">
+                  <div className="w-6 h-6 rounded-full flex items-center justify-center border border-gray-400 ">
+                    <TrendingUp className="w-4 h-4 text-muted-foreground" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-indigo-900 dark:text-indigo-100">博客数据</h3>
-                    <p className="text-sm text-indigo-600 dark:text-indigo-400">内容统计</p>
+                    <h3 className="font-normal text-sm text-gray-600 dark:text-gray-400">数据</h3>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">127+</div>
-                    <div className="text-sm text-indigo-700 dark:text-indigo-300">技术文章</div>
+                  <div className="text-center space-y-1">
+                    <div className="text-sm text-muted-foreground">技术文章</div>
+                    <p className="text-base font-medium text-gray-600 dark:text-gray-400">
+                      <AnimatedNumber value={127} />+
+                    </p>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">45.2K</div>
-                    <div className="text-sm text-indigo-700 dark:text-indigo-300">总阅读量</div>
+                  <div className="text-center space-y-1">
+                    <div className="text-sm text-muted-foreground">总阅读量</div>
+
+                    <p className="text-base font-medium text-gray-600 dark:text-gray-400">
+                      <AnimatedNumberK value={3992938} />+
+                    </p>
                   </div>
                 </div>
-              </Card> */}
+              </Card>
             </motion.div>
           </div>
         </div>

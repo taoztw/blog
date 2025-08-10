@@ -336,7 +336,7 @@ export default function RecentBlogSection() {
             onTouchEnd={handleTouchEnd}
           >
             {blogPosts.map((post) => (
-              <PostLatestCard post={post} />
+              <PostLatestCard post={post} key={post.id} />
             ))}
           </div>
 

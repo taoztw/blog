@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
-import { Music2, Pause, Play, SkipForward } from "lucide-react";
+import { Ghost, Music2, Pause, Play, SkipForward } from "lucide-react";
 
 type Track = {
   title: string;
@@ -274,9 +274,9 @@ export default function MusicPlayer({ tracks: initialTracks }: { tracks?: Track[
 
   return (
     <>
-      <Card className="w-[300px] h-[400px] overflow-hidden">
+      <Card className="h-[380px] overflow-hidden">
         {/* Header: 正在播放 + 控制按钮（暂停/下一首）放在一行 */}
-        <CardHeader className="p-3">
+        <CardHeader className="px-3">
           <div className="flex items-center justify-between gap-2">
             <div className="min-w-0 flex items-center gap-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -291,11 +291,11 @@ export default function MusicPlayer({ tracks: initialTracks }: { tracks?: Track[
                   <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500" aria-hidden="true" />
                   <span>正在播放</span>
                 </div>
-                <p className="truncate text-sm font-medium">{currentTrack!.title}</p>
+                <p className="truncate text-sm font-normal text-gray-800 dark:text-gray-400">{currentTrack!.title}</p>
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <Button size="icon" onClick={handlePlayPause} aria-label={isPlaying ? "暂停" : "播放"}>
+              <Button size="icon" variant="ghost" onClick={handlePlayPause} aria-label={isPlaying ? "暂停" : "播放"}>
                 {isPlaying ? <Pause className="h-5 w-5" /> : <Play className="h-5 w-5" />}
               </Button>
               <Button size="icon" variant="outline" onClick={handleNext} aria-label="下一首">
@@ -305,7 +305,7 @@ export default function MusicPlayer({ tracks: initialTracks }: { tracks?: Track[
           </div>
         </CardHeader>
 
-        <CardContent className="p-3 pt-0">
+        <CardContent className="p-3  pt-0">
           {/* Slim visualizer */}
           <div className="mb-2 relative overflow-hidden rounded-md border bg-muted">
             {/* 示例动态效果：流动渐变层 */}
@@ -329,7 +329,7 @@ export default function MusicPlayer({ tracks: initialTracks }: { tracks?: Track[
               <Music2 className="h-3.5 w-3.5" />
               播放列表
             </div>
-            <ScrollArea className="h-[220px]">
+            <ScrollArea className="h-[142px]">
               <ul className="divide-y">
                 {tracks.map((t, idx) => {
                   const active = idx === currentIndex;
@@ -353,7 +353,14 @@ export default function MusicPlayer({ tracks: initialTracks }: { tracks?: Track[
                         {idx + 1}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className={cn("truncate", active && "font-medium")}>{t.title}</p>
+                        <p
+                          className={cn(
+                            "truncate font-normal text-muted-foreground",
+                            active && "font-medium text-primary/80 "
+                          )}
+                        >
+                          {t.title}
+                        </p>
                         <p className="truncate text-xs text-muted-foreground">{t.artist || "未知艺术家"}</p>
                       </div>
                       {active ? <span className="text-[10px] text-muted-foreground">播放中</span> : null}

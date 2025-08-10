@@ -32,7 +32,7 @@ export function LanguageSwitcher() {
   const currentLanguage = languages.find((lang) => lang.code === locale) || languages[0];
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"

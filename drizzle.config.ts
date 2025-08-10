@@ -24,7 +24,7 @@ function getLocalD1DB() {
 }
 
 export default {
-  schema: "./src/server/db/schemas",
+  schema: "./src/server/db/schema.ts",
   out: "./migrations",
   dialect: "sqlite",
   ...(env.NODE_ENV === "production"

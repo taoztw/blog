@@ -1,4 +1,4 @@
-import AdminDashboard from "@/components/mvpblocks/dashboard";
+import AdminDashboard from "@/components/dashboard/dashboard";
 import React from "react";
 
 const page = () => {

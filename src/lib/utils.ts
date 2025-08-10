@@ -28,3 +28,7 @@ export const getTimeStamp = (createdAt: Date) => {
   }
   return "just now";
 };
+
+export function formatK(num: number) {
+  return num >= 1000 ? `${(num / 1000).toFixed(1)}K` : num;
+}

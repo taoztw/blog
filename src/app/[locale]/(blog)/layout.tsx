@@ -2,7 +2,7 @@ import React from "react";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { routing } from "@/i18n/routing";
 import { notFound } from "next/navigation";
-import Header2 from "@/components/mvpblocks/header";
+import Header2 from "@/components/layouts/header";
 import { Footer } from "@/components/layouts/footer";
 
 interface LayoutProps {

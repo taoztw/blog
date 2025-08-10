@@ -106,9 +106,7 @@ export default function Header2() {
             >
               <Link href="/" className="flex items-center space-x-3">
                 <div className="relative">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br  shadow-md">
-                    <Logo size="md" className="" />
-                  </div>
+                  <Logo size="md" className="" />
                   {/* <div className="absolute -top-1 -right-1 h-3 w-3 animate-pulse rounded-full bg-green-400"></div> */}
                 </div>
                 {/* <div className="flex flex-col">
