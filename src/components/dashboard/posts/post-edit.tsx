@@ -20,6 +20,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2Icon, SparklesIcon, UploadCloud, X } from "lucide-react";
 import { MarkdownPreview } from "@/components/blog/post-preview";
+import { markdownString } from "@/lib/fake-data";
 
 // 1. 定义 Zod Schema 用于表单验证，与您的数据库 schema 对应
 const postCreateSchema = z.object({
@@ -369,7 +370,7 @@ const CreatePostForm = () => {
                         </TabsContent>
                         <TabsContent value="preview">
                           <div className="prose prose-stone dark:prose-invert mt-2 min-h-[400px] rounded-md border p-4">
-                            <MarkdownPreview content={field.value || "还没有内容可供预览"} />
+                            <MarkdownPreview content={markdownString} />
                           </div>
                         </TabsContent>
                       </Tabs>
