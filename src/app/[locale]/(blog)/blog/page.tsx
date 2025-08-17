@@ -1,7 +1,7 @@
 import { BlogListPage } from "@/components/blog/blog-list";
 import React from "react";
 
-const BlogPage = () => {
+const BlogPage = async () => {
   return (
     <div>
       <BlogListPage />

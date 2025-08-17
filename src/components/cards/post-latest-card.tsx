@@ -27,7 +27,7 @@ const PostLatestCard = ({ post }: PostLatestCardProps) => {
             className="object-cover transition-transform duration-300 hover:scale-105"
           />
           <div className="absolute top-3 left-3">
-            <Badge className="bg-primary hover:bg-primary/90 text-white">{post.category.name}</Badge>
+            <Badge className="bg-primary hover:bg-primary/90 text-white">{post.category!.name}</Badge>
           </div>
         </div>
         <CardContent className="flex-grow">

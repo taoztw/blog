@@ -2,199 +2,34 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import SearchInput from "../ui/search-input";
 import { BlogCard } from "../cards/post-card";
-import type { PostWithRelations } from "@/global";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { api } from "@/trpc/react";
 
 // 示例博客文章数据
-export const blogPosts: PostWithRelations[] = [
-  {
-    id: "clx1a2b3c4d5e6f7g8h9i0j1",
-    title: "AI-Powered Marketing: The Future of Customer Engagement",
-    slug: "ai-powered-marketing-future",
-    excerpt:
-      "Explore how artificial intelligence is revolutionizing marketing strategies and creating personalized customer experiences at scale.",
-    content: "Full content about AI-powered marketing...",
-    imageUrl: "/tmp/p1.jpg",
-    status: "PUBLISHED",
-    viewCount: 1247,
-    likeCount: 89,
-    createdById: "usr_123456789",
-    categoryId: "1",
-    author: {
-      id: "usr_123456789",
-      name: "Sarah Chen",
-      email: "sarah.chen@example.com",
-      image: "/avatars/sarah-chen.jpg",
-    },
-    category: {
-      id: 1,
-      name: "Artificial Intelligence",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "clx2b3c4d5e6f7g8h9i0j1k2",
-    title: "Building Brand Loyalty Through Social Media Storytelling",
-    slug: "brand-loyalty-social-media",
-    excerpt:
-      "Discover the art of crafting compelling brand narratives that resonate with your audience and drive long-term loyalty.",
-    content: "Full content about social media storytelling...",
-    imageUrl: "/tmp/p2.jpg",
-    status: "PUBLISHED",
-    viewCount: 892,
-    likeCount: 156,
-    createdById: "usr_987654321",
-    categoryId: "2",
-    author: {
-      id: "usr_987654321",
-      name: "Marcus Rodriguez",
-      email: "marcus.r@example.com",
-      image: "/avatars/marcus-rodriguez.jpg",
-    },
-    category: {
-      id: 2,
-      name: "Social Media",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "clx3c4d5e6f7g8h9i0j1k2l3",
-    title: "The Rise of Voice Commerce: Optimizing for Audio Shopping",
-    slug: "voice-commerce-optimization",
-    excerpt:
-      "Learn how voice assistants are changing the e-commerce landscape and how to optimize your business for voice commerce.",
-    content: "Full content about voice commerce...",
-    imageUrl: "/tmp/p3.jpg",
-    status: "PUBLISHED",
-    viewCount: 634,
-    likeCount: 78,
-    createdById: "usr_456789123",
-    categoryId: "3",
-    author: {
-      id: "usr_456789123",
-      name: "Emily Watson",
-      email: "emily.watson@example.com",
-      image: "/avatars/emily-watson.jpg",
-    },
-    category: {
-      id: 3,
-      name: "E-commerce",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "clx4d5e6f7g8h9i0j1k2l3m4",
-    title: "Sustainable Marketing: Connecting with Eco-Conscious Consumers",
-    slug: "sustainable-marketing-eco-conscious",
-    excerpt:
-      "Understand how sustainability messaging can differentiate your brand and attract environmentally conscious customers.",
-    content: "Full content about sustainable marketing...",
-    imageUrl: "/tmp/p4.jpg",
-    status: "PUBLISHED",
-    viewCount: 1089,
-    likeCount: 203,
-    createdById: "usr_789123456",
-    categoryId: "4",
-    author: {
-      id: "usr_789123456",
-      name: "David Kim",
-      email: "david.kim@example.com",
-      image: "/avatars/david-kim.jpg",
-    },
-    category: {
-      id: 4,
-      name: "Sustainability",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "clx5e6f7g8h9i0j1k2l3m4n5",
-    title: "Micro-Influencer Marketing: Quality Over Quantity",
-    slug: "micro-influencer-marketing",
-    excerpt:
-      "Why partnering with micro-influencers often delivers better ROI than celebrity endorsements and how to find the right partners.",
-    content: "Full content about micro-influencer marketing...",
-    imageUrl: "/tmp/p2.jpg",
-    status: "PUBLISHED",
-    viewCount: 756,
-    likeCount: 124,
-    createdById: "usr_321654987",
-    categoryId: "2",
-    author: {
-      id: "usr_321654987",
-      name: "Jessica Liu",
-      email: "jessica.liu@example.com",
-      image: "/avatars/jessica-liu.jpg",
-    },
-    category: {
-      id: 2,
-      name: "Social Media",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-  {
-    id: "clx6f7g8h9i0j1k2l3m4n5o6",
-    title: "The Psychology of Color in Digital Marketing",
-    slug: "color-psychology-digital-marketing",
-    excerpt:
-      "Explore how color choices impact consumer behavior and learn to use color psychology to improve your marketing effectiveness.",
-    content: "Full content about color psychology...",
-    imageUrl: "/tmp/p4.jpg",
-    status: "DRAFT",
-    viewCount: 0,
-    likeCount: 0,
-    createdById: "usr_654987321",
-    categoryId: "5",
-    author: {
-      id: "usr_654987321",
-      name: "Alex Thompson",
-      email: "alex.thompson@example.com",
-      image: "/avatars/alex-thompson.jpg",
-    },
-    category: {
-      id: 5,
-      name: "Design",
-    },
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  },
-];
 
 export function BlogListPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [filteredPosts, setFilteredPosts] = useState(blogPosts);
 
-  // 搜索功能
-  const handleSearch = (query: string) => {
-    setSearchQuery(query);
-    if (query.trim() === "") {
-      setFilteredPosts(blogPosts);
-    } else {
-      const filtered = blogPosts.filter(
-        (post) =>
-          post.title.toLowerCase().includes(query.toLowerCase()) ||
-          post.excerpt.toLowerCase().includes(query.toLowerCase()) ||
-          post.category.name.toLowerCase().includes(query.toLowerCase())
-      );
-      setFilteredPosts(filtered);
-    }
+  const pathname = usePathname();
+  const search = searchParams.get("q") ?? "";
+  const page = parseInt(searchParams.get("page") ?? "1", 10);
+
+  const { data, isLoading } = api.post.getByPage.useQuery({
+    page,
+    limit: 5, // 每页数量
+    search,
+  });
+  const posts = data?.items;
+  const totalPages = data?.totalPages;
+  const goToPage = (p: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("page", String(p));
+    router.push(`${pathname}?${params.toString()}`);
   };
-
-  // 获取热门文章
-  // const trendingPosts = blogPosts.filter((post) => post.trending).slice(0, 3);
-
-  // 获取最受欢迎的文章（按阅读时间排序）
-  // const popularPosts = [...blogPosts]
-  //   .sort((a, b) => Number.parseInt(b.readTime) - Number.parseInt(a.readTime))
-  //   .slice(0, 2);
 
   return (
     <div className="min-h-screen bg-background">
@@ -205,12 +40,23 @@ export function BlogListPage() {
             {/* 页面标题 */}
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-2xl font-semibold tracking-tight">Posts</h2>
-              <SearchInput />
+              <SearchInput
+                defaultValue={search}
+                onChange={(q) => {
+                  const params = new URLSearchParams(searchParams.toString());
+                  params.set("q", q);
+                  params.set("page", "1"); // 重置到第一页
+                  router.push(`${pathname}?${params.toString()}`);
+                }}
+              />
             </div>
 
             {/* 文章列表 */}
             <div className="space-y-4">
-              {filteredPosts.map((post, index) => (
+              {isLoading && <p>加载中...</p>}
+              {data?.items?.length === 0 && <p>没有找到文章</p>}
+
+              {posts?.map((post, index) => (
                 <motion.div
                   key={post.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -224,9 +70,14 @@ export function BlogListPage() {
 
             {/* 加载更多按钮 */}
             <div className="mt-12 text-center">
-              <Button variant="outline" size="lg" className="bg-transparent">
-                Load More Articles
-              </Button>
+              <div>
+                {/* 上一页 */}
+                <button disabled={page <= 1} onClick={() => goToPage(page - 1)}>
+                  Prev
+                </button>
+                {/* 下一页 */}
+                <button onClick={() => goToPage(page + 1)}>Next</button>
+              </div>
             </div>
           </div>
 

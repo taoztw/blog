@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
-import { posts, postInsertSchema, postUpdateSchema } from "@/server/db/schema";
+import { posts, postInsertSchema, postUpdateSchema, categorys, users } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, lt, or } from "drizzle-orm";
+import { and, desc, eq, ilike, like, lt, or, sql } from "drizzle-orm";
 import z from "zod";
 
 export const postRouter = createTRPCRouter({
@@ -111,5 +111,69 @@ export const postRouter = createTRPCRouter({
         items,
         nextCursor,
       };
+    }),
+
+  getByPage: publicProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(10),
+        search: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, limit, search } = input;
+      const offset = (page - 1) * limit;
+
+      const where = search
+        ? or(
+            like(sql`LOWER(${posts.title})`, `%${search.toLowerCase()}%`),
+            like(sql`LOWER(${posts.excerpt})`, `%${search.toLowerCase()}%`),
+            like(sql`LOWER(${categorys.name})`, `%${search.toLowerCase()}%`)
+          )
+        : undefined;
+
+      // 主查询+关联
+      const items = await ctx.db
+        .select({
+          id: posts.id,
+          title: posts.title,
+          excerpt: posts.excerpt,
+          createdAt: posts.createdAt,
+          updatedAt: posts.updatedAt,
+          imageUrl: posts.imageUrl,
+          status: posts.status,
+          viewCount: posts.viewCount,
+          likeCount: posts.likeCount,
+          author: {
+            id: users.id,
+            name: users.name,
+            email: users.email,
+            image: users.image,
+          },
+          category: {
+            id: categorys.id,
+            name: categorys.name,
+          },
+        })
+        .from(posts)
+        .leftJoin(categorys, eq(posts.categoryId, categorys.id))
+        .leftJoin(users, eq(posts.createdById, users.id))
+        .where(where)
+        .orderBy(desc(posts.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+      const totalResult = await ctx.db
+        .select({ count: sql<number>`count(*)` })
+        .from(posts)
+        .leftJoin(categorys, eq(posts.categoryId, categorys.id))
+        .leftJoin(users, eq(posts.createdById, users.id))
+        .where(where);
+
+      const total = totalResult[0]?.count ?? 0;
+      const totalPages = Math.ceil(total / limit);
+
+      return { items, page, totalPages };
     }),
 });

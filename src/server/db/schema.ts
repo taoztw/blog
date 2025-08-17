@@ -100,6 +100,7 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
   user: one(users, { fields: [accounts.userId], references: [users.id] }),
 }));
 
+// 英语单词拼错了,... 其他文件都需要改，先不改了
 export const categorys = sqliteTable("category", {
   id: text("id", { length: 255 })
     .notNull()

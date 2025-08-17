@@ -9,6 +9,7 @@ import Link from "next/link";
 import { z } from "zod";
 import type { PostWithRelations } from "@/global";
 import { getTimeStamp } from "@/lib/utils";
+import { ImageService } from "../dashboard/upload/image-service";
 
 interface BlogCardProps {
   post: PostWithRelations;
@@ -35,7 +36,7 @@ export function BlogCard({ post }: BlogCardProps) {
               color: "transparent",
             }}
             sizes="100vw"
-            src={post.imageUrl || "/placeholder.svg"}
+            src={post.imageUrl ? ImageService.getImageUrl(post.imageUrl) : "/placeholder.svg"}
             fill
           />
         </div>
