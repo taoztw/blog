@@ -10,6 +10,8 @@ import { useTheme } from "next-themes";
 import ROUTES from "@/constants/routes";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "../language-switcher";
+import { useSession } from "next-auth/react";
+import UserAvatar from "../user-avatar";
 
 interface NavItem {
   name: string;
@@ -30,6 +32,10 @@ export default function Header2() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const session = useSession();
+
+  console.log("Header2 session:", session);
+
   const t = useTranslations("HomePage.Header");
 
   useEffect(() => {
@@ -165,12 +171,20 @@ export default function Header2() {
 
               <LanguageSwitcher />
 
-              <Link
-                href={ROUTES.SIGN_IN}
-                className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200 bg-secondary rounded-lg"
-              >
-                {t("signIn")}
-              </Link>
+              {session.data?.user?.id ? (
+                <UserAvatar
+                  id={session.data.user.id}
+                  name={session.data.user.name!}
+                  imageUrl={session.data.user?.image}
+                />
+              ) : (
+                <Link
+                  href={ROUTES.SIGN_IN}
+                  className="text-foreground/80 hover:text-foreground px-4 py-2 text-sm font-medium transition-colors duration-200 bg-secondary rounded-lg"
+                >
+                  {t("signIn")}
+                </Link>
+              )}
 
               {/* <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                 <Link

@@ -229,6 +229,7 @@
 .markdown-body img {
   border-style: none;
   max-width: 100%;
+  height: auto
   box-sizing: content-box;
 }
 
@@ -324,9 +325,9 @@
   border-spacing: 0;
   border-collapse: collapse;
   display: block;
-  width: max-content;
+  width: 100%;
   max-width: 100%;
-  overflow: auto;
+  overflow-x: auto;
   font-variant: tabular-nums;
 }
 

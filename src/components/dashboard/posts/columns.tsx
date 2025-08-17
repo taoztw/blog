@@ -2,7 +2,7 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { ArrowUpDown, Eye, MoreHorizontal, ThumbsUp } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Edit, Trash2, Eye, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -14,9 +14,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { PostWithRelations } from "@/global";
+import { ImageService } from "../upload/image-service";
 
-// ✅ 这里直接使用全局的 PostWithRelations 类型
-export const columns: ColumnDef<PostWithRelations>[] = [
+interface PostColumnsProps {
+  onEdit: (post: PostWithRelations) => void;
+  onDelete: (post: PostWithRelations) => void;
+}
+
+export const createPostColumns = ({ onEdit, onDelete }: PostColumnsProps): ColumnDef<PostWithRelations>[] => [
   {
     accessorKey: "imageUrl",
     header: "封面",
@@ -24,7 +29,7 @@ export const columns: ColumnDef<PostWithRelations>[] = [
       const url = row.getValue("imageUrl") as string | null;
       return url ? (
         <div className="relative h-[40px] w-[60px]">
-          <Image src={url} alt="post cover" fill className="rounded object-cover " />
+          <Image src={ImageService.getImageUrl(url)} alt="post cover" fill className="rounded object-cover" />
         </div>
       ) : (
         <div className="w-[60px] h-[40px] bg-gray-200 rounded" />
@@ -34,10 +39,21 @@ export const columns: ColumnDef<PostWithRelations>[] = [
   },
   {
     accessorKey: "title",
-    header: "标题",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="w-full justify-start px-0 hover:bg-transparent"
+        >
+          标题
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
-    accessorKey: "category.name", // 从关联 category 获取分类名
+    accessorKey: "category.name",
     header: "分类",
     cell: ({ row }) => row.original.category?.name ?? "未分类",
   },
@@ -47,9 +63,9 @@ export const columns: ColumnDef<PostWithRelations>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       const variant = {
-        published: "default",
-        draft: "secondary",
-        review: "outline",
+        PUBLISHED: "default",
+        DRAFT: "secondary",
+        REVIEW: "outline",
       }[status] as "default" | "secondary" | "outline";
 
       return (
@@ -61,55 +77,21 @@ export const columns: ColumnDef<PostWithRelations>[] = [
   },
   {
     accessorKey: "viewCount",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="w-full justify-start px-0 hover:bg-transparent"
-        >
-          <div className="flex items-center justify-end w-full">
-            <Eye className="mr-2 h-4 w-4 text-muted-foreground" />
-            Views
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </div>
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return <span className="text-center flex items-center justify-center">{row.getValue("viewCount")}</span>;
-    },
+    header: "浏览",
+    cell: ({ row }) => <span>{row.getValue("viewCount")}</span>,
   },
   {
     accessorKey: "likeCount",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="w-full justify-start px-0 hover:bg-transparent"
-        >
-          <div className="flex items-center justify-end w-full">
-            <ThumbsUp className="mr-2 h-4 w-4 text-muted-foreground" />
-            Likes
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </div>
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return <span className="text-center flex items-center justify-center">{row.getValue("likeCount")}</span>;
-    },
+    header: "点赞",
+    cell: ({ row }) => <span>{row.getValue("likeCount")}</span>,
   },
   {
     accessorKey: "createdAt",
     header: "创建时间",
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
-      const formatted = date.toLocaleDateString("en-US");
-      return <div className="text-right font-base">{formatted}</div>;
+      return <div>{date.toLocaleDateString("zh-CN")}</div>;
     },
-    enableSorting: true,
   },
   {
     id: "actions",
@@ -129,8 +111,14 @@ export const columns: ColumnDef<PostWithRelations>[] = [
             <DropdownMenuLabel>操作</DropdownMenuLabel>
             <DropdownMenuItem onClick={() => navigator.clipboard.writeText(post.id)}>复制文章 ID</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>编辑</DropdownMenuItem>
-            <DropdownMenuItem className="text-red-500">删除</DropdownMenuItem>
+            <DropdownMenuItem onClick={() => onEdit(post)}>
+              <Edit className="mr-2 h-4 w-4" />
+              编辑
+            </DropdownMenuItem>
+            <DropdownMenuItem className="text-red-500" onClick={() => onDelete(post)}>
+              <Trash2 className="mr-2 h-4 w-4" />
+              删除
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

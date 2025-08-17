@@ -32,7 +32,6 @@
     "**/.vscode": true,
     "next-env.d.ts": true,
     "**/.open-next": true,
-    ".wrangler": true,
     "drizzle": true,
     "migrations": true
   }

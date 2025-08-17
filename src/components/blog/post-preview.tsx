@@ -15,7 +15,7 @@ interface MarkdownPreviewProps {
 
 export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
   const { theme } = useTheme();
-  console.log("Current theme:", theme);
+
   return (
     <div
       className={cn("markdown-body", className)}
@@ -23,9 +23,12 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
       style={{
         boxSizing: "border-box",
         minWidth: "200px",
-        maxWidth: "980px",
+        width: "100%",
+        maxWidth: "100%",
+        overflowWrap: "break-word",
+        wordBreak: "break-word",
         margin: "0 auto",
-        padding: "45px",
+        padding: "25px",
       }}
     >
       <ReactMarkdown
@@ -37,7 +40,7 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
 
             if (!inline && language) {
               return (
-                <div className="relative">
+                <div className="relative overflow-x-auto max-w-full">
                   <SyntaxHighlighter
                     style={theme === "dark" ? oneDark : oneLight}
                     language={language}
@@ -61,14 +64,6 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
       >
         {content}
       </ReactMarkdown>
-
-      <style jsx>{`
-        @media (max-width: 767px) {
-          .markdown-body {
-            padding: 15px !important;
-          }
-        }
-      `}</style>
     </div>
   );
 }

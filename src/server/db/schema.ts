@@ -101,11 +101,19 @@ export const accountsRelations = relations(accounts, ({ one }) => ({
 }));
 
 export const categorys = sqliteTable("category", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+  id: text("id", { length: 255 })
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   name: text("name", { length: 255 }).notNull(),
   description: text("description", { length: 512 }),
   ...commonColumns,
 });
+
+export const categorySelectSchema = createSelectSchema(categorys).omit({
+  updateCounter: true,
+});
+export const categoryInsertSchema = createInsertSchema(categorys);
 
 export const posts = sqliteTable(
   "post",
@@ -131,6 +139,17 @@ export const posts = sqliteTable(
   (t) => [index("created_by_idx").on(t.createdById)]
 );
 
+export const postRelations = relations(posts, ({ one }) => ({
+  category: one(categorys, {
+    fields: [posts.categoryId],
+    references: [categorys.id],
+  }),
+  author: one(users, {
+    fields: [posts.createdById],
+    references: [users.id],
+  }),
+}));
+
 export const postReactions = sqliteTable("post_reactions", {
   userId: text("user_id")
     .notNull()
@@ -143,6 +162,12 @@ export const postReactions = sqliteTable("post_reactions", {
 });
 
 export const postInsertSchema = createInsertSchema(posts).omit({
+  updateCounter: true,
+  createdById: true,
+});
+export const postUpdateSchema = createUpdateSchema(posts).omit({
+  createdAt: true,
+  updatedAt: true,
   updateCounter: true,
 });
 export const postSelectSchema = createSelectSchema(posts).omit({

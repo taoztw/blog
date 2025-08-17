@@ -21,75 +21,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Loader2Icon, SparklesIcon, UploadCloud, X } from "lucide-react";
 import { MarkdownPreview } from "@/components/blog/post-preview";
 import { markdownString } from "@/lib/fake-data";
+import { POST_STATUS_ENUM, postInsertSchema } from "@/server/db/schema";
+import router from "next/router";
+import { api } from "@/trpc/react";
 
-// 1. 定义 Zod Schema 用于表单验证，与您的数据库 schema 对应
-const postCreateSchema = z.object({
-  title: z.string().min(3, { message: "标题至少需要3个字符。" }),
-  slug: z.string().min(3, { message: "Slug 至少需要3个字符。" }),
-  excerpt: z.string().min(10, { message: "摘要至少需要10个字符。" }).max(300, { message: "摘要不能超过300个字符。" }),
-  content: z.string().min(1, { message: "内容不能为空。" }),
-  status: z.enum(["DRAFT", "PUBLISHED"]),
-  categoryId: z.string({ message: "请选择一个分类。" }),
-  imageUrl: z.string().url({ message: "无效的图片链接。" }).optional(),
-});
-
-type PostCreateValues = z.infer<typeof postCreateSchema>;
-
-// 模拟的 tRPC hooks，您可以替换成真实的 tRPC 调用
-const useMockTrpc = () => {
-  const router = useRouter();
-  const createPost = {
-    mutate: (data: PostCreateValues) => {
-      console.log("Submitting data:", data);
-      toast.promise(new Promise((resolve) => setTimeout(resolve, 1500)), {
-        loading: "正在保存文章...",
-        success: () => {
-          router.push("/admin/posts");
-          return "文章已成功创建！";
-        },
-        error: "创建失败，请重试。",
-      });
-    },
-    isPending: false, // 模拟加载状态
-  };
-
-  const generateSlug = {
-    mutate: (data: { title: string }, { onSuccess }: { onSuccess: (data: { slug: string }) => void }) => {
-      toast.info("正在生成 Slug...");
-      setTimeout(() => {
-        const slug = data.title
-          .toLowerCase()
-          .replace(/\s+/g, "-")
-          .replace(/[^\w-]+/g, "");
-        onSuccess({ slug });
-        toast.success("Slug 已生成！");
-      }, 800);
-    },
-    isPending: false,
-  };
-
-  const generateExcerpt = {
-    mutate: (data: { content: string }, { onSuccess }: { onSuccess: (data: { excerpt: string }) => void }) => {
-      toast.info("正在使用 AI 生成摘要...");
-      setTimeout(() => {
-        const excerpt = data.content.slice(0, 150).split(" ").slice(0, -1).join(" ") + "...";
-        onSuccess({ excerpt });
-        toast.success("摘要已生成！");
-      }, 1200);
-    },
-    isPending: false,
-  };
-
-  const getCategories = {
-    data: [
-      { id: "clgq5b1z00000u2p4h3g8a2b1", name: "技术分享" },
-      { id: "clgq5b1z10001u2p4h3g8a2b2", name: "生活随笔" },
-      { id: "clgq5b1z20002u2p4h3g8a2b3", name: "学习笔记" },
-    ],
-  };
-
-  return { createPost, generateSlug, generateExcerpt, getCategories };
-};
+type PostInsertValues = z.infer<typeof postInsertSchema>;
 
 // 主页面组件，处理 Suspense 和 ErrorBoundary
 const CreatePostPage = () => {
@@ -172,28 +108,38 @@ const CreatePostPageSkeleton = () => {
 
 // 核心表单逻辑组件
 const CreatePostForm = () => {
-  const { createPost, generateSlug, generateExcerpt, getCategories } = useMockTrpc();
   const [imagePreview, setImagePreview] = React.useState<string | null>(null);
   const [imageFile, setImageFile] = React.useState<File | null>(null);
-  const form = useForm<PostCreateValues>({
-    resolver: zodResolver(postCreateSchema),
+
+  const { data: categories } = api.category.getAll.useQuery();
+  const createPost = api.post.create.useMutation({
+    onSuccess: () => {
+      toast.success("文章已创建！");
+    },
+    onError: (error) => {
+      toast.error(`创建失败: ${error.message}`);
+    },
+  });
+  const form = useForm<PostInsertValues>({
+    resolver: zodResolver(postInsertSchema),
     defaultValues: {
-      title: "",
-      slug: "",
-      excerpt: "",
-      content: "",
-      status: "DRAFT",
+      title: "文章标题",
+      slug: "slug-1",
+      excerpt: "简要内容",
+      content: markdownString,
+      status: POST_STATUS_ENUM.DRAFT,
     },
     mode: "onChange",
   });
 
-  const onSubmit = (data: PostCreateValues) => {
+  const onSubmit = (data: PostInsertValues) => {
     // 在真实场景中，您会先上传图片（如果存在），获取 URL，然后将其设置到 data.imageUrl
     if (imageFile) {
       console.log("Uploading image:", imageFile.name);
       // 假设上传后得到 URL
       data.imageUrl = "https://example.com/path/to/image.jpg";
     }
+    // createPost.mutate(data);
     createPost.mutate(data);
   };
 
@@ -214,33 +160,9 @@ const CreatePostForm = () => {
     if (fileInput) fileInput.value = "";
   };
 
-  const handleGenerateSlug = () => {
-    const title = form.getValues("title");
-    if (!title) {
-      toast.error("请先���入标题以生成 Slug。");
-      return;
-    }
-    generateSlug.mutate(
-      { title },
-      {
-        onSuccess: (data) => form.setValue("slug", data.slug, { shouldValidate: true }),
-      }
-    );
-  };
+  const handleGenerateSlug = () => {};
 
-  const handleGenerateExcerpt = () => {
-    const content = form.getValues("content");
-    if (!content || content.length < 50) {
-      toast.error("请先输入足够的内容（至少50个字符）以生成摘要。");
-      return;
-    }
-    generateExcerpt.mutate(
-      { content },
-      {
-        onSuccess: (data) => form.setValue("excerpt", data.excerpt, { shouldValidate: true }),
-      }
-    );
-  };
+  const handleGenerateExcerpt = () => {};
 
   const triggerSubmit = (status: "DRAFT" | "PUBLISHED") => {
     form.setValue("status", status);
@@ -303,9 +225,9 @@ const CreatePostForm = () => {
                           type="button"
                           className="rounded-full size-6 [&_svg]:size-3"
                           onClick={handleGenerateSlug}
-                          disabled={generateSlug.isPending}
+                          disabled={createPost.isPending}
                         >
-                          {generateSlug.isPending ? <Loader2Icon className="animate-spin" /> : <SparklesIcon />}
+                          {createPost.isPending ? <Loader2Icon className="animate-spin" /> : <SparklesIcon />}
                         </Button>
                       </FormLabel>
                       <FormControl>
@@ -328,9 +250,9 @@ const CreatePostForm = () => {
                           type="button"
                           className="rounded-full size-6 [&_svg]:size-3"
                           onClick={handleGenerateExcerpt}
-                          disabled={generateExcerpt.isPending}
+                          disabled={createPost.isPending}
                         >
-                          {generateExcerpt.isPending ? <Loader2Icon className="animate-spin" /> : <SparklesIcon />}
+                          {createPost.isPending ? <Loader2Icon className="animate-spin" /> : <SparklesIcon />}
                         </Button>
                       </FormLabel>
                       <FormControl>
@@ -369,7 +291,7 @@ const CreatePostForm = () => {
                           </FormControl>
                         </TabsContent>
                         <TabsContent value="preview">
-                          <div className="prose prose-stone dark:prose-invert mt-2 min-h-[400px] rounded-md border p-4">
+                          <div className="prose ! prose-stone dark:prose-invert mt-2 min-h-[400px] rounded-md border p-4">
                             <MarkdownPreview content={markdownString} />
                           </div>
                         </TabsContent>
@@ -394,7 +316,7 @@ const CreatePostForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>状态</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue="DRAFT">
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="选择状态" />
@@ -415,14 +337,14 @@ const CreatePostForm = () => {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>分类</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select onValueChange={field.onChange} defaultValue="">
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="选择分类" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {getCategories.data?.map((cat) => (
+                          {categories?.map((cat) => (
                             <SelectItem key={cat.id} value={cat.id}>
                               {cat.name}
                             </SelectItem>

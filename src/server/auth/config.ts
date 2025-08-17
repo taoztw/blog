@@ -2,7 +2,7 @@ import { signInSchema } from "@/lib/validations";
 import { getDB } from "@/server/db";
 import { accounts, users } from "@/server/db/schema";
 import bcrypt from "bcryptjs";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
@@ -50,21 +50,31 @@ export const authConfig = {
   callbacks: {
     async session({ session, token }) {
       session.user.id = token.sub as string;
+      session.user.role = token.role as string;
       return session;
     },
     async jwt({ token, account }) {
       const db = getDB();
       if (account) {
         const providerAccountId = account.type === "credentials" ? token.email : account.providerAccountId;
+
         if (providerAccountId) {
-          const [existingAccount] = await db
-            .select()
-            .from(accounts)
-            .where(eq(accounts.providerAccountId, providerAccountId));
-          const userId = existingAccount?.userId;
-          if (userId) token.sub = userId.toString();
+          const [existingUser] = await db.query.accounts.findMany({
+            where: eq(accounts.providerAccountId, providerAccountId),
+            with: {
+              user: true,
+            },
+          });
+
+          if (existingUser) {
+            token.sub = existingUser?.user.id.toString();
+            token.role = existingUser.user.role;
+          }
         }
       }
+      // 删除不需要的字段
+      // delete token.picture; // 就这样删
+      // delete token.name;
       return token;
     },
     async signIn({ user, profile, account }) {
@@ -109,7 +119,10 @@ export const authConfig = {
         _createdUser = existingUser;
       }
 
-      const [existingAccount] = await db.select().from(accounts).where(eq(accounts.providerAccountId, user.email!));
+      const [existingAccount] = await db
+        .select()
+        .from(accounts)
+        .where(and(eq(accounts.provider, account.provider), eq(accounts.providerAccountId, account.providerAccountId)));
       if (!existingAccount) {
         await db.insert(accounts).values({
           userId: _createdUser.id,
@@ -120,7 +133,6 @@ export const authConfig = {
           image,
         });
       }
-
       return true;
     },
   },
