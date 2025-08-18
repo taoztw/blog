@@ -47,7 +47,7 @@ export function BlogCard({ post }: BlogCardProps) {
         {/* 分类和元数据 */}
         <div className="mb-1 flex items-center gap-2">
           <Badge variant="outline" className="text-xs text-muted-foreground font-normal">
-            {post.category.name}
+            {post.category!.name}
           </Badge>
           {/* {post.trending && (
             <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-0 text-xs">

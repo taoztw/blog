@@ -29,7 +29,6 @@ export const postRouter = createTRPCRouter({
       post: insertedPost,
     };
   }),
-
   // 🔹 删除文章
   delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
     const [deletedPost] = await ctx.db.delete(posts).where(eq(posts.id, input.id)).returning();

@@ -6,6 +6,7 @@ import SearchInput from "../ui/search-input";
 import { BlogCard } from "../cards/post-card";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
+import type { PostWithRelations } from "@/global";
 
 // 示例博客文章数据
 
@@ -63,7 +64,7 @@ export function BlogListPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
                 >
-                  <BlogCard post={post} />
+                  <BlogCard post={post as PostWithRelations} />
                 </motion.div>
               ))}
             </div>
