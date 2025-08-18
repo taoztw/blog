@@ -10,12 +10,16 @@ import { z } from "zod";
 import type { PostWithRelations } from "@/global";
 import { getTimeStamp } from "@/lib/utils";
 import { ImageService } from "../dashboard/upload/image-service";
+import { usePathname } from "next/navigation";
 
 interface BlogCardProps {
   post: PostWithRelations;
 }
 
 export function BlogCard({ post }: BlogCardProps) {
+  const pathname = usePathname();
+  console.log(post);
+  const blogUrl = `${pathname}/${post.id}/${post.slug}`;
   return (
     // <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
     <article key={post.id} className="group flex flex-col gap-4 py-5 sm:flex-row">
@@ -59,7 +63,7 @@ export function BlogCard({ post }: BlogCardProps) {
 
         {/* 标题 */}
         <h3 className="group-hover:text-primary/80 mb-1 text-base font-semibold transition-colors">
-          <Link href={`/blog/${post.title}`} className="hover:text-primary">
+          <Link href={blogUrl} className="hover:text-primary">
             {post.title}
           </Link>
         </h3>
@@ -86,7 +90,7 @@ export function BlogCard({ post }: BlogCardProps) {
             </div>
           </div>
           <div className="ml-auto">
-            <Link href={`/blog/${post.slug}`}>
+            <Link href={blogUrl}>
               <Button
                 variant="ghost"
                 className="text-muted-foreground/80 h-auto text-xs group/btn font-normal hover:text-muted-foreground"

@@ -144,6 +144,7 @@ export const postRouter = createTRPCRouter({
           status: posts.status,
           viewCount: posts.viewCount,
           likeCount: posts.likeCount,
+          slug: posts.slug,
           author: {
             id: users.id,
             name: users.name,
