@@ -7,8 +7,8 @@ import { BlogCard } from "../cards/post-card";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
 import type { PostWithRelations } from "@/global";
-
-// 示例博客文章数据
+import { BlogSidebar } from "./blog-sidebar";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function BlogListPage() {
   const searchParams = useSearchParams();
@@ -34,13 +34,16 @@ export function BlogListPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-3">
+      <div className="container mx-auto px-4 py-12 max-w-7xl">
+        {/* 调整栅格比例：主内容区更宽，侧边栏更窄 */}
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-8 lg:gap-10">
           {/* 主内容区域 */}
-          <div className="lg:col-span-2">
-            {/* 页面标题 */}
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-2xl font-semibold tracking-tight">Posts</h2>
+          <div className="w-full min-w-0">
+            {" "}
+            {/* 添加 min-w-0 防止内容溢出 */}
+            {/* 页面标题和搜索栏 */}
+            <div className="mb-8 space-y-4">
+              <h1 className="text-3xl font-bold tracking-tight">Posts</h1>
               <SearchInput
                 defaultValue={search}
                 onChange={(q) => {
@@ -51,7 +54,6 @@ export function BlogListPage() {
                 }}
               />
             </div>
-
             {/* 文章列表 */}
             <div className="space-y-4">
               {isLoading && <p>加载中...</p>}
@@ -68,7 +70,6 @@ export function BlogListPage() {
                 </motion.div>
               ))}
             </div>
-
             {/* 加载更多按钮 */}
             <div className="mt-12 text-center">
               <div>
@@ -82,10 +83,10 @@ export function BlogListPage() {
             </div>
           </div>
 
-          {/* 侧边栏 */}
-          <div className="pl-4 lg:pl-8">
-            <div className="sticky top-8 space-y-8 bg-amber-100 w-full h-[100px]"></div>
-          </div>
+          {/* 侧边栏 - 缩小宽度 */}
+          <aside className="w-full lg:sticky lg:top-20 ml-10 lg:h-fit">
+            <BlogSidebar />
+          </aside>
         </div>
       </div>
     </div>
