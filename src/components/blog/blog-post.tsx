@@ -1,13 +1,12 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { motion, useScroll } from "framer-motion";
 import { MarkdownPreview } from "./post-preview";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Clock, Calendar, User, MessageCircle, Heart, Share2 } from "lucide-react";
+import { Clock, Calendar, User, MessageCircle, Heart, Share2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TableOfContentsItem {
