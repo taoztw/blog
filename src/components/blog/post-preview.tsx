@@ -3,6 +3,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkBreaks from "remark-breaks";
+import rehypeSlug from "rehype-slug"; // ✅ 自动生成标题 id
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useTheme } from "next-themes";
@@ -28,11 +29,12 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
         overflowWrap: "break-word",
         wordBreak: "break-word",
         margin: "0 auto",
-        padding: "25px",
+        // padding: "25px",
       }}
     >
       <ReactMarkdown
         remarkPlugins={[remarkGfm, remarkBreaks]}
+        rehypePlugins={[rehypeSlug]} // ✅ 自动为 h1-h6 添加 id
         components={{
           code({ node, inline, className, children, ...props }) {
             const match = /language-(\w+)/.exec(className || "");
