@@ -43,7 +43,10 @@ const UserAvatar = ({ id, name, imageUrl, className = "size-9", fallbackClassNam
             <AvatarImage src={imageUrl} alt={name} />
           ) : (
             <AvatarFallback
-              className={cn("primary-gradient font-bold tracking-wider text-black/80", fallbackClassName)}
+              className={cn(
+                "primary-gradient font-bold tracking-wider dark:text-gray-300 text-black/80",
+                fallbackClassName
+              )}
             >
               {initials}
             </AvatarFallback>

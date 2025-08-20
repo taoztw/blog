@@ -7,8 +7,7 @@ const mockArticle = {
   publishDate: "2024年1月15日",
   readTime: "8分钟阅读",
   tags: ["React", "Next.js", "前端开发", "服务端渲染"],
-  content: `# 深入理解 React Server Components
-
+  content: `
 React Server Components (RSC) 是 React 18 引入的一个革命性特性，它改变了我们构建 React 应用的方式。
 
 ## 什么是 Server Components？
@@ -151,6 +150,5 @@ interface PageProps {
 export default async function page({ params }: PageProps) {
   const { slug } = await params;
   const id = slug[0]; // 假设第一个部分是文章 ID
-  console.log("Post ID:", id);
   return <BlogPostPage {...mockArticle} />;
 }

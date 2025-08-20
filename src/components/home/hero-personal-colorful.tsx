@@ -269,13 +269,13 @@ export function HeroPersonalColorful() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center space-y-1">
-                    <div className="text-sm text-muted-foreground">技术文章</div>
+                    <div className="text-xs text-muted-foreground">技术文章</div>
                     <p className="text-base font-medium text-gray-600 dark:text-gray-400">
                       <AnimatedNumber value={127} />+
                     </p>
                   </div>
                   <div className="text-center space-y-1">
-                    <div className="text-sm text-muted-foreground">总阅读量</div>
+                    <div className="text-xs text-muted-foreground">总阅读量</div>
 
                     <p className="text-base font-medium text-gray-600 dark:text-gray-400">
                       <AnimatedNumberK value={3992938} />+

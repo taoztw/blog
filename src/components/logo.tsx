@@ -27,7 +27,7 @@ export interface LogoProps extends React.HTMLAttributes<HTMLSpanElement>, Varian
 export function Logo({ size, href, className, alt = "Go Home", ...rest }: LogoProps) {
   const img = (
     <img
-      src="/logo-512.png"
+      src="/logo.jpeg"
       alt={alt}
       className={cn(logoVariants({ size }), className, "h-9 w-9 rounded-md shadow-md")}
       width={0}

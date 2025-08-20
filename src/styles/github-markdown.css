@@ -29,7 +29,7 @@ h1, h2, h3, h4, h5, h6 {
   --fgColor-attention: #d29922;
   --fgColor-danger: #f85149;
   --fgColor-done: #ab7df8;
-  --bgColor-default: #0d1117;
+  --bgColor-default: oklch(0.145 0 0);
   --bgColor-muted: #151b23;
   --bgColor-neutral-muted: #656c7633;
   --bgColor-attention-muted: #bb800926;
@@ -413,13 +413,13 @@ h1, h2, h3, h4, h5, h6 {
 .markdown-body h2 {
   font-weight: var(--base-text-weight-semibold, 600);
   padding-bottom: 0.3em;
-  font-size: 1.5em;
+  font-size: 1.25em;
   border-bottom: 1px solid var(--borderColor-muted);
 }
 
 .markdown-body h3 {
   font-weight: var(--base-text-weight-semibold, 600);
-  font-size: 1.25em;
+  font-size: 1.125em;
 }
 
 .markdown-body h4 {
