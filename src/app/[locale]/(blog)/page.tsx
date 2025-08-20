@@ -9,7 +9,7 @@ const Page = () => {
   return (
     <div>
       <HeroPersonalColorful />
-      <RecentBlogSection />
+      {/* <RecentBlogSection /> */}
       {/* 最近的开源项目 */}
       {/* 哪些正在学习的开源项目 */}
     </div>
