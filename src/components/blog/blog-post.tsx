@@ -207,15 +207,6 @@ export function BlogPostPage({ title, content, author, publishDate, readTime, ta
         {/* 右侧目录 */}
         <div className="lg:col-span-1">
           <div className="sticky top-24 space-y-4">
-            {/* ✅ sticky 放在列里的内层 div */}
-            <div className="flex gap-2">
-              <Button variant="ghost" size="sm" className="gap-2">
-                <Heart className="h-4 w-4" /> 收藏
-              </Button>
-              <Button variant="ghost" size="sm" className="gap-2">
-                <Share2 className="h-4 w-4" /> 分享
-              </Button>
-            </div>
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">目录</CardTitle>
