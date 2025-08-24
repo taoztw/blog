@@ -3,17 +3,18 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, ArrowRight, TrendingUp, ChevronRightIcon, Eye } from "lucide-react";
+import { Calendar, Clock, ArrowRight, TrendingUp, ChevronRightIcon, Eye, MessageCircleIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { z } from "zod";
-import type { PostWithRelations } from "@/global";
+import type { Post, PostWithRelations } from "@/global";
 import { getTimeStamp } from "@/lib/utils";
 import { ImageService } from "../dashboard/upload/image-service";
 import { usePathname } from "next/navigation";
+import type { PostListItem } from "@/server/api/types";
 
 interface BlogCardProps {
-  post: PostWithRelations;
+  post: PostListItem;
 }
 
 export function BlogCard({ post }: BlogCardProps) {
@@ -52,12 +53,6 @@ export function BlogCard({ post }: BlogCardProps) {
           <Badge variant="outline" className="text-xs text-muted-foreground font-normal">
             {post.category!.name}
           </Badge>
-          {/* {post.trending && (
-            <Badge className="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200 border-0 text-xs">
-              <TrendingUp className="w-3 h-3 mr-1" />
-              Trending
-            </Badge>
-          )} */}
         </div>
 
         {/* 标题 */}
@@ -80,12 +75,12 @@ export function BlogCard({ post }: BlogCardProps) {
               <span>{getTimeStamp(post.createdAt)}</span>
             </div>
             <div className="flex items-center space-x-1">
-              <Clock className="w-3 h-3" />
-              <span>2分钟</span>
-            </div>
-            <div className="flex items-center space-x-1">
               <Eye className="w-3 h-3" />
               <span>{post.viewCount}</span>
+            </div>
+            <div className="flex items-center space-x-1">
+              <MessageCircleIcon className="w-3 h-3" />
+              <span>{post.commentCount}</span>
             </div>
           </div>
           <div className="ml-auto">
@@ -102,6 +97,5 @@ export function BlogCard({ post }: BlogCardProps) {
         </div>
       </div>
     </article>
-    // </motion.div>
   );
 }

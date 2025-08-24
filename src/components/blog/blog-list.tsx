@@ -5,7 +5,7 @@ import SearchInput from "../ui/search-input";
 import { BlogCard } from "../cards/post-card";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
-import type { PostWithRelations } from "@/global";
+import type { Post, PostWithRelations } from "@/global";
 import { BlogSidebar } from "./blog-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -18,6 +18,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useEffect, useState, type JSX } from "react";
+import type { PostListItem } from "@/server/api/types";
 
 export function BlogListPage() {
   const searchParams = useSearchParams();
@@ -103,7 +104,7 @@ export function BlogListPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <BlogCard post={post as PostWithRelations} />
+                    <BlogCard post={post as PostListItem} />
                   </motion.div>
                 ))}
             </div>
