@@ -141,41 +141,37 @@ export const postRouter = createTRPCRouter({
           )
         : undefined;
 
-      // 主查询+关联
+      // 这里直接用聚合函数一次性统计
       const items = await ctx.db
         .select({
-          id: posts.id,
-          title: posts.title,
-          excerpt: posts.excerpt,
-          createdAt: posts.createdAt,
-          updatedAt: posts.updatedAt,
-          imageUrl: posts.imageUrl,
-          status: posts.status,
-          slug: posts.slug,
-          author: {
-            id: users.id,
-            name: users.name,
-            email: users.email,
-            image: users.image,
-          },
-          category: {
-            id: categorys.id,
-            name: categorys.name,
-          },
+          ...getTableColumns(posts), // 所有 posts 列
+          author: users,
+          category: categorys,
+          viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
+          likeCount: ctx.db.$count(
+            postReactions,
+            and(eq(postReactions.postId, posts.id), eq(postReactions.type, "like"))
+          ),
+          commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
         })
         .from(posts)
-        .leftJoin(categorys, eq(posts.categoryId, categorys.id))
         .leftJoin(users, eq(posts.createdById, users.id))
+        .leftJoin(categorys, eq(posts.categoryId, categorys.id))
+        // 额外 join，才能统计浏览、点赞、评论
+        .leftJoin(postViews, eq(postViews.postId, posts.id))
+        .leftJoin(postReactions, eq(postReactions.postId, posts.id))
+        .leftJoin(comments, eq(comments.postId, posts.id))
         .where(where)
+        .groupBy(posts.id, users.id, categorys.id) // 分组聚合
         .orderBy(desc(posts.createdAt))
         .limit(limit)
         .offset(offset);
 
+      // 总数
       const totalResult = await ctx.db
         .select({ count: sql<number>`count(*)` })
         .from(posts)
         .leftJoin(categorys, eq(posts.categoryId, categorys.id))
-        .leftJoin(users, eq(posts.createdById, users.id))
         .where(where);
 
       const total = totalResult[0]?.count ?? 0;

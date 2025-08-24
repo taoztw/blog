@@ -3,7 +3,7 @@ import { userRouter } from "@/server/api/routers/user";
 import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { categoryRouter } from "./routers/categories";
 import { commentsRouter } from "./routers/comments";
-import { commentReactionRouter } from "./routers/comment-reaction";
+import { commentReactionRouter } from "../../components/comments/comment-reaction";
 
 /**
  * This is the primary router for your server.

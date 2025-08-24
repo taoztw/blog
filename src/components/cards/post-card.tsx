@@ -18,7 +18,6 @@ interface BlogCardProps {
 
 export function BlogCard({ post }: BlogCardProps) {
   const pathname = usePathname();
-  console.log(post);
   const blogUrl = `${pathname}/${post.id}/${post.slug}`;
   return (
     // <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>

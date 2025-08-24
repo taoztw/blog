@@ -1,5 +1,5 @@
 import z from "zod";
-import { createTRPCRouter, protectedProcedure } from "../trpc";
+import { createTRPCRouter, protectedProcedure } from "../../server/api/trpc";
 import { commentReactions } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 
