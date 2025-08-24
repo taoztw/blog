@@ -3,6 +3,8 @@ import React, { Suspense } from "react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import CommentsForm from "./comments-form";
+import { api } from "@/trpc/react";
+import CommentItem from "./comment-item";
 
 interface CommentsSectionProps {
   postId: string;
@@ -11,7 +13,7 @@ interface CommentsSectionProps {
 const CommentsSection = ({ postId }: CommentsSectionProps) => {
   return (
     <Suspense fallback={<CommentsSectionSkeleton />}>
-      <CommentsSectionSuspense />
+      <CommentsSectionSuspense postId={postId} />
     </Suspense>
   );
 };
@@ -23,7 +25,24 @@ const CommentsSectionSkeleton = () => {
   );
 };
 
-const CommentsSectionSuspense = () => {
+const CommentsSectionSuspense = ({ postId }: CommentsSectionProps) => {
+  const [comments, query] = api.comment.getMany.useSuspenseInfiniteQuery(
+    {
+      postId,
+      limit: 10,
+    },
+    {
+      getNextPageParam: (lastPage) => {
+        if (lastPage.nextCursor) {
+          return {
+            ...lastPage.nextCursor,
+            updatedAt: lastPage.nextCursor.updateAt, // Map updateAt to updatedAt
+          };
+        }
+        return null;
+      },
+    }
+  );
   const [sortBy, setSortBy] = React.useState<"top" | "newest" | "oldest">("top");
   const sortLabels = {
     top: "热门评论",
@@ -33,7 +52,7 @@ const CommentsSectionSuspense = () => {
   return (
     <div className="space-y-6 mt-5">
       <div className="flex items-center justify-between">
-        <h1 className="text-base font-bold">12 comments</h1>
+        <h1 className="text-base font-bold">{comments.pages[0]?.totalCount} comments</h1>
         <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="gap-2">
@@ -49,7 +68,13 @@ const CommentsSectionSuspense = () => {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <CommentsForm postId="" />
+      <CommentsForm postId={postId} />
+
+      {comments.pages
+        .flatMap((page) => page.items)
+        .map((comment) => (
+          <CommentItem key={comment.id} comment={comment} />
+        ))}
     </div>
   );
 };

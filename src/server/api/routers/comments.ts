@@ -67,7 +67,7 @@ export const commentsRouter = createTRPCRouter({
       const { postId, parentId, cursor, limit = 10 } = input;
       const userId = ctx.session?.user.id;
 
-      const userReactions = ctx.db.$with("comment_reactions").as(
+      const userReactions = ctx.db.$with("user_comment_reactions").as(
         ctx.db
           .select({
             commentId: commentReactions.commentId,
@@ -99,7 +99,7 @@ export const commentsRouter = createTRPCRouter({
           .with(userReactions, replies)
           .select({
             ...getTableColumns(comments),
-            viewerReaction: userReactions.type,
+            userReaction: userReactions.type,
             user: users,
             replyCount: replies.count,
             likeCount: ctx.db.$count(

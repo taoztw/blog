@@ -109,7 +109,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
               </div>
               <div className="flex items-center gap-2">
                 <MessageCircle className="h-4 w-4" />
-                {123}
+                {post.commentCount}
               </div>
             </div>
             <div className="flex gap-3 items-center">

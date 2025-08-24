@@ -7,6 +7,7 @@ import {
   users,
   postReactions,
   postViews,
+  comments,
 } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, getTableColumns, ilike, inArray, like, lt, or, sql } from "drizzle-orm";
@@ -206,6 +207,7 @@ export const postRouter = createTRPCRouter({
           postReactions,
           and(eq(postReactions.postId, posts.id), eq(postReactions.type, "like"))
         ),
+        commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
         userReaction: userPostReactions.type,
       })
       .from(posts)

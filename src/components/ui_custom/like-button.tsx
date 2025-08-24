@@ -17,6 +17,7 @@ async function sendLikesToServer(likesToAdd: number) {
 }
 
 export function LikeButton({ initialCount }: LikeButtonProps) {
+  if (!initialCount || initialCount < 0) initialCount = 0;
   const [count, setCount] = useState(initialCount);
   const [pendingLikes, setPendingLikes] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);

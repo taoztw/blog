@@ -28,5 +28,6 @@ export type Post = z.infer<typeof postSelectSchema> & {
   category: z.infer<typeof categorySelectSchema>;
   viewCount: number;
   likeCount: number;
+  commentCount: number;
   userReaction?: string | null;
 };

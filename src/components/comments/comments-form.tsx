@@ -9,6 +9,8 @@ import { Textarea } from "../ui/textarea";
 import { motion } from "framer-motion";
 import EmojiPicker from "emoji-picker-react";
 import { Button } from "../ui/button";
+import { api } from "@/trpc/react";
+import { toast } from "sonner";
 
 interface CommentsFormProps {
   postId: string;
@@ -19,6 +21,22 @@ interface CommentsFormProps {
 }
 
 const CommentsForm = ({ postId, parentId, onSuccess, onCancel, variant = "comment" }: CommentsFormProps) => {
+  const utils = api.useUtils();
+  const create = api.comment.create.useMutation({
+    onSuccess: () => {
+      utils.comment.getMany.invalidate({ postId });
+      form.reset();
+      toast.success("Comment submitted successfully!");
+      onSuccess?.();
+    },
+    onError: (error) => {
+      if (error.data?.code === "UNAUTHORIZED") {
+        toast.error("Please sign in to comment.");
+      } else {
+        toast.error("Failed to submit comment. Please try again.");
+      }
+    },
+  });
   const form = useForm<z.infer<typeof commentInsertSchema>>({
     resolver: zodResolver(commentInsertSchema),
     defaultValues: {
@@ -27,33 +45,9 @@ const CommentsForm = ({ postId, parentId, onSuccess, onCancel, variant = "commen
       parentId: parentId || null,
     },
   });
-  const [content, setContent] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
-  const [showEmoji, setShowEmoji] = useState(false);
-  const pickerRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  const addEmoji = (emojiData: any) => {
-    setContent((prev) => prev + emojiData.emoji);
-  };
-  // 监听点击外部
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        pickerRef.current &&
-        !pickerRef.current.contains(event.target as Node) &&
-        buttonRef.current &&
-        !buttonRef.current.contains(event.target as Node)
-      ) {
-        setShowEmoji(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const onSubmit = (values: z.infer<typeof commentInsertSchema>) => {
-    console.log(values);
+    create.mutate(values);
   };
 
   function handleCancel() {
