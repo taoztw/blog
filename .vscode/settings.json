@@ -31,8 +31,6 @@
     "**/node_modules": true,
     "**/.vscode": true,
     "next-env.d.ts": true,
-    "**/.open-next": true,
-    "drizzle": true,
-    "migrations": true
+    "**/.open-next": true
   }
 }

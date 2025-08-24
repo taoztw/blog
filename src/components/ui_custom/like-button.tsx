@@ -6,14 +6,18 @@ import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
+interface LikeButtonProps {
+  initialCount: number;
+}
+
 // 模拟 API 请求
 async function sendLikesToServer(likesToAdd: number) {
   console.log("✅ 发送到服务器:", likesToAdd);
   await new Promise((res) => setTimeout(res, 300)); // 模拟延迟
 }
 
-export function LikeButton() {
-  const [count, setCount] = useState(40);
+export function LikeButton({ initialCount }: LikeButtonProps) {
+  const [count, setCount] = useState(initialCount);
   const [pendingLikes, setPendingLikes] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [floaters, setFloaters] = useState<{ id: number }[]>([]);

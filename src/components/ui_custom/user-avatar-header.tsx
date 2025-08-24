@@ -23,7 +23,7 @@ interface Props {
   fallbackClassName?: string;
 }
 
-const UserAvatar = ({ id, name, imageUrl, className = "size-9", fallbackClassName }: Props) => {
+const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackClassName }: Props) => {
   // 安全生成用户名字缩写
   const initials = name
     ? name
@@ -65,4 +65,4 @@ const UserAvatar = ({ id, name, imageUrl, className = "size-9", fallbackClassNam
   );
 };
 
-export default UserAvatar;
+export default UserAvatarHeader;

@@ -8,6 +8,7 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
 
 interface MarkdownPreviewProps {
   content: string;
@@ -20,7 +21,7 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
   return (
     <div
       className={cn("markdown-body", className)}
-      data-theme={theme}
+      data-theme={theme === "dark" ? "dark" : "light"}
       style={{
         boxSizing: "border-box",
         minWidth: "200px",

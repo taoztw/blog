@@ -63,6 +63,10 @@ export const users = sqliteTable(
   (table) => [index("email_idx").on(table.email)]
 );
 
+export const userSelectSchema = createSelectSchema(users).omit({
+  updateCounter: true,
+});
+
 export const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
 }));
@@ -129,8 +133,6 @@ export const posts = sqliteTable(
     content: text("content").notNull(),
     imageUrl: text("image_url", { length: 512 }),
     status: text("status", { enum: POST_STATUS_TUPLE }).default(POST_STATUS_ENUM.DRAFT),
-    viewCount: integer("view_count").default(0).notNull(),
-    likeCount: integer("like_count").default(0).notNull(),
     createdById: text("created_by_id", { length: 255 })
       .notNull()
       .references(() => users.id),
@@ -138,6 +140,23 @@ export const posts = sqliteTable(
     ...commonColumns,
   },
   (t) => [index("created_by_idx").on(t.createdById)]
+);
+
+export const postViews = sqliteTable(
+  "post_views",
+  {
+    postId: text("post_id")
+      .notNull()
+      .references(() => posts.id),
+    ip: text("ip", { length: 255 }).notNull(),
+    ...commonColumns,
+  },
+  (table) => [
+    primaryKey({
+      name: "post_views_pk",
+      columns: [table.postId, table.ip],
+    }),
+  ]
 );
 
 export const postRelations = relations(posts, ({ one }) => ({
@@ -201,6 +220,24 @@ export const comments = sqliteTable(
     }),
   ]
 );
+
+export const commentInsertSchema = createInsertSchema(comments).omit({
+  updateCounter: true,
+  createdAt: true,
+  updatedAt: true,
+  userId: true,
+});
+export const commentSelectSchema = createSelectSchema(comments).omit({
+  updateCounter: true,
+});
+export const commentUpdateSchema = createUpdateSchema(comments).omit({
+  createdAt: true,
+  updatedAt: true,
+  updateCounter: true,
+  userId: true,
+  postId: true,
+  parentId: true,
+});
 
 export const commentReactions = sqliteTable(
   "comment_reactions",

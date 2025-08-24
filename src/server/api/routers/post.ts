@@ -1,7 +1,15 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
-import { posts, postInsertSchema, postUpdateSchema, categorys, users } from "@/server/db/schema";
+import {
+  posts,
+  postInsertSchema,
+  postUpdateSchema,
+  categorys,
+  users,
+  postReactions,
+  postViews,
+} from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, ilike, like, lt, or, sql } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, ilike, inArray, like, lt, or, sql } from "drizzle-orm";
 import z from "zod";
 
 export const postRouter = createTRPCRouter({
@@ -142,8 +150,6 @@ export const postRouter = createTRPCRouter({
           updatedAt: posts.updatedAt,
           imageUrl: posts.imageUrl,
           status: posts.status,
-          viewCount: posts.viewCount,
-          likeCount: posts.likeCount,
           slug: posts.slug,
           author: {
             id: users.id,
@@ -176,4 +182,42 @@ export const postRouter = createTRPCRouter({
 
       return { items, page, totalPages };
     }),
+  getOne: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
+    const userId = ctx.session?.user.id;
+
+    const userPostReactions = ctx.db.$with("postReactions").as(
+      ctx.db
+        .select({
+          postId: postReactions.postId,
+          type: postReactions.type,
+        })
+        .from(postReactions)
+        .where(inArray(postReactions.userId, userId ? [userId] : []))
+    );
+
+    const [post] = await ctx.db
+      .with(userPostReactions)
+      .select({
+        ...getTableColumns(posts),
+        user: users,
+        category: categorys,
+        viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
+        likeCount: ctx.db.$count(
+          postReactions,
+          and(eq(postReactions.postId, posts.id), eq(postReactions.type, "like"))
+        ),
+        userReaction: userPostReactions.type,
+      })
+      .from(posts)
+      .innerJoin(users, eq(posts.createdById, users.id))
+      .innerJoin(categorys, eq(posts.categoryId, categorys.id))
+      .leftJoin(userPostReactions, eq(userPostReactions.postId, posts.id))
+      .where(eq(posts.id, input.id));
+
+    if (!post) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+    }
+
+    return post;
+  }),
 });

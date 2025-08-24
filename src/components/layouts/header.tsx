@@ -11,7 +11,7 @@ import ROUTES from "@/constants/routes";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "../language-switcher";
 import { useSession } from "next-auth/react";
-import UserAvatar from "../user-avatar";
+import UserAvatarHeader from "../ui_custom/user-avatar-header";
 
 interface NavItem {
   name: string;
@@ -33,8 +33,6 @@ export default function Header2() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const session = useSession();
-
-  console.log("Header2 session:", session);
 
   const t = useTranslations("HomePage.Header");
 
@@ -172,7 +170,7 @@ export default function Header2() {
               <LanguageSwitcher />
 
               {session.data?.user?.id ? (
-                <UserAvatar
+                <UserAvatarHeader
                   id={session.data.user.id}
                   name={session.data.user.name!}
                   imageUrl={session.data.user?.image}
