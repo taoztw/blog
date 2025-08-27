@@ -10,7 +10,7 @@ import {
   comments,
 } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, getTableColumns, ilike, inArray, like, lt, or, sql } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, inArray, like, lt, or, sql } from "drizzle-orm";
 import z from "zod";
 
 export const postRouter = createTRPCRouter({
@@ -148,10 +148,13 @@ export const postRouter = createTRPCRouter({
           author: users,
           category: categorys,
           viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
-          likeCount: ctx.db.$count(
-            postReactions,
-            and(eq(postReactions.postId, posts.id), eq(postReactions.type, "like"))
-          ),
+          // likeCount: ctx.db.$count(
+          //   postReactions,
+          //   and(eq(postReactions.postId, posts.id), eq(postReactions.type, "like"))
+          // ),
+          likeCount: sql<number>`
+        COALESCE(SUM(${postReactions.num}), 0)
+      `.mapWith(Number),
           commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
         })
         .from(posts)
@@ -199,10 +202,10 @@ export const postRouter = createTRPCRouter({
         user: users,
         category: categorys,
         viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
-        likeCount: ctx.db.$count(
-          postReactions,
-          and(eq(postReactions.postId, posts.id), eq(postReactions.type, "like"))
-        ),
+        likeCount: ctx.db.$count(postReactions, and(eq(postReactions.postId, posts.id))),
+        //     likeCount: sql<number>`
+        //   COALESCE(SUM(${postReactions.num}), 0)
+        // `.mapWith(Number),
         commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
         userReaction: userPostReactions.type,
       })
@@ -217,5 +220,23 @@ export const postRouter = createTRPCRouter({
     }
 
     return post;
+  }),
+  createView: publicProcedure.input(z.object({ postId: z.string() })).mutation(async ({ ctx, input }) => {
+    const { postId } = input;
+    const ip = ctx.ip;
+
+    const userId = ctx.session?.user.id ?? null;
+    await ctx.db.insert(postViews).values({ postId, ip, userId });
+
+    return { message: "View recorded" };
+  }),
+  postLike: publicProcedure.input(z.object({ postId: z.string(), count: z.int() })).mutation(async ({ ctx, input }) => {
+    const { postId, count } = input;
+    const ip = ctx.ip;
+    const userId = ctx.session?.user.id ?? null;
+
+    await ctx.db.insert(postReactions).values({ postId, userId, ip, num: count });
+
+    return { message: "Post reaction updated" };
   }),
 });

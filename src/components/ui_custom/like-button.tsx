@@ -5,23 +5,26 @@ import { useState, useRef, useEffect } from "react";
 import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { api } from "@/trpc/react";
 
 interface LikeButtonProps {
   initialCount: number;
+  postId: string;
 }
 
-// 模拟 API 请求
-async function sendLikesToServer(likesToAdd: number) {
-  console.log("✅ 发送到服务器:", likesToAdd);
-  await new Promise((res) => setTimeout(res, 300)); // 模拟延迟
-}
-
-export function LikeButton({ initialCount }: LikeButtonProps) {
+export function LikeButton({ initialCount, postId }: LikeButtonProps) {
   if (!initialCount || initialCount < 0) initialCount = 0;
   const [count, setCount] = useState(initialCount);
   const [pendingLikes, setPendingLikes] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [floaters, setFloaters] = useState<{ id: number }[]>([]);
+  const postLike = api.post.postLike.useMutation();
+  const sendLikesToServer = (count: number, postId: string) => {
+    setTimeout(() => {
+      console.log("✅ 点赞成功");
+      postLike.mutate({ postId, count });
+    }, 500);
+  };
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const floaterIdRef = useRef(0);
@@ -35,7 +38,7 @@ export function LikeButton({ initialCount }: LikeButtonProps) {
         const likesToSend = pendingLikes;
         setPendingLikes(0);
         try {
-          await sendLikesToServer(likesToSend);
+          sendLikesToServer(count, postId);
         } catch (err) {
           console.error("❌ 点赞失败", err);
           setCount((prev) => prev - likesToSend); // 回滚
@@ -63,7 +66,7 @@ export function LikeButton({ initialCount }: LikeButtonProps) {
   return (
     <div className="relative flex items-center">
       <div className="relative">
-        <Button variant="ghost" size="sm" onClick={handleLike} className="bg-none">
+        <Button variant="ghost" size="sm" onClick={handleLike} className="bg-none px-1">
           <motion.div
             animate={{ scale: isAnimating ? 1.4 : 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}
@@ -97,7 +100,7 @@ export function LikeButton({ initialCount }: LikeButtonProps) {
         </AnimatePresence>
       </div>
 
-      <span className="text-sm font-medium">{count}</span>
+      <span className="text-sm font-medium font-mono inline-block text-center w-[4ch]">{count}</span>
     </div>
   );
 }

@@ -28,10 +28,15 @@ import { getDB } from "@/server/db";
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
   const session = await auth();
-
+  const ip =
+    opts.headers.get("cf-connecting-ip") || // Cloudflare 添加
+    opts.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || // 备用
+    opts.headers.get("x-real-ip") || // 备用
+    "";
   return {
     db: getDB(),
     session,
+    ip, // 用户 IP 地址
     ...opts,
   };
 };

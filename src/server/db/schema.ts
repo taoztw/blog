@@ -142,22 +142,15 @@ export const posts = sqliteTable(
   (t) => [index("created_by_idx").on(t.createdById)]
 );
 
-export const postViews = sqliteTable(
-  "post_views",
-  {
-    postId: text("post_id")
-      .notNull()
-      .references(() => posts.id),
-    ip: text("ip", { length: 255 }).notNull(),
-    ...commonColumns,
-  },
-  (table) => [
-    primaryKey({
-      name: "post_views_pk",
-      columns: [table.postId, table.ip],
-    }),
-  ]
-);
+export const postViews = sqliteTable("post_views", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  postId: text("post_id")
+    .notNull()
+    .references(() => posts.id),
+  userId: text("user_id").references(() => users.id),
+  ip: text("ip", { length: 255 }).notNull(),
+  ...commonColumns,
+});
 
 export const postRelations = relations(posts, ({ one }) => ({
   category: one(categorys, {
@@ -171,12 +164,13 @@ export const postRelations = relations(posts, ({ one }) => ({
 }));
 
 export const postReactions = sqliteTable("post_reactions", {
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id),
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  ip: text("ip", { length: 255 }).notNull(),
+  userId: text("user_id").references(() => users.id),
   postId: text("post_id")
     .notNull()
     .references(() => posts.id),
+  num: integer("num").default(0),
   type: text("type", { enum: reactionTuple }).default(""),
   ...commonColumns,
 });
@@ -247,7 +241,7 @@ export const commentReactions = sqliteTable(
       .references(() => users.id),
     commentId: text("comment_id")
       .notNull()
-      .references(() => comments.id),
+      .references(() => comments.id, { onDelete: "cascade" }),
     type: text("type", { enum: reactionTuple }).default(""),
     ...commonColumns,
   },

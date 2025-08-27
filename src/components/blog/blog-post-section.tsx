@@ -27,6 +27,8 @@ interface PostSectionProps {
 export const PostSection = ({ post }: PostSectionProps) => {
   const [activeId, setActiveId] = useState("");
   // console.log(post);
+  const createPostView = api.post.createView.useMutation();
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -43,6 +45,23 @@ export const PostSection = ({ post }: PostSectionProps) => {
     });
 
     return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    // 创建文章浏览记录
+    createPostView.mutate(
+      {
+        postId: post.id,
+      },
+      {
+        onSuccess: () => {
+          console.log("Post view created successfully");
+        },
+        onError: (error) => {
+          console.error("Failed to create post view:", error);
+        },
+      }
+    );
   }, []);
   const slugger = new GithubSlugger();
   const share = () => {
@@ -113,7 +132,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
               </div>
             </div>
             <div className="flex gap-3 items-center">
-              <LikeButton initialCount={post.likeCount} />
+              <LikeButton initialCount={post.likeCount} postId={post.id} />
               <Button variant="ghost" onClick={() => share()}>
                 <Share2 className="h-4 w-4 text-gray-900/80 cursor-pointer" />
               </Button>
@@ -130,7 +149,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
         <div className="flex flex-col space-y-2 mt-8">
           <Separator />
           <div className="flex gap-3 items-center justify-end">
-            <LikeButton initialCount={post.likeCount} />
+            <LikeButton initialCount={post.likeCount} postId={post.id} />
             <Button variant="ghost" onClick={() => share()}>
               <Share2 className="h-4 w-4 text-gray-900/80 cursor-pointer" />
             </Button>
