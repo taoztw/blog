@@ -11,7 +11,7 @@ import { createCategoryColumns } from "./columns";
 import { toast } from "sonner";
 
 export function CategoryTable() {
-  const [cursor, setCursor] = React.useState<{ id: string; updateAt: Date } | null>(null);
+  const [cursor, setCursor] = React.useState<{ id: string; createdAt: Date } | null>(null);
   const [prevCursors, setPrevCursors] = React.useState<(typeof cursor)[]>([]);
   const [editCategory, setEditCategory] = React.useState<Category | null>(null);
 

@@ -1,12 +1,15 @@
 import { z } from "zod";
-import { categoryInsertSchema, categorySelectSchema, postSelectSchema, userSelectSchema } from "./server/db/schema";
-import { posts, categorys, users } from "./server/db/schema";
+import { categoryInsertSchema, categorySelectSchema, postSelectSchema, userSelectSchema, tagInsertSchema, tagSelectSchema } from "./server/db/schema";
+import { posts, categorys, users, tags } from "./server/db/schema";
 
 // 基础类型
 type CreatePostData = z.infer<typeof postInsertSchema>;
 
 type Category = z.infer<typeof categorySelectSchema>;
 type CreateCategoryData = z.infer<typeof categoryInsertSchema>;
+
+type Tag = z.infer<typeof tagSelectSchema>;
+type CreateTagData = z.infer<typeof tagInsertSchema>;
 
 // 带完整关联数据的类型
 type PostWithRelations = z.infer<typeof postSelectSchema> & {

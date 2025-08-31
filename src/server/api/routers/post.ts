@@ -3,11 +3,15 @@ import {
   posts,
   postInsertSchema,
   postUpdateSchema,
+  postInsertWithTagsSchema,
+  postUpdateWithTagsSchema,
+  postTags,
   categorys,
   users,
   postReactions,
   postViews,
   comments,
+  tags,
 } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, getTableColumns, inArray, like, lt, or, sql } from "drizzle-orm";
@@ -66,6 +70,81 @@ export const postRouter = createTRPCRouter({
 
       if (!updatedPost) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
+
+      return {
+        message: "Post updated successfully",
+        post: updatedPost,
+      };
+    }),
+
+  // 🔹 创建文章（带标签）
+  createWithTags: protectedProcedure.input(postInsertWithTagsSchema).mutation(async ({ ctx, input }) => {
+    const { tagIds, ...postData } = input;
+    const validate = postInsertSchema.safeParse(postData);
+    if (!validate.success) {
+      throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid post data" });
+    }
+
+    // Create post
+    const [insertedPost] = await ctx.db
+      .insert(posts)
+      .values({
+        ...validate.data,
+        createdById: ctx.session.user.id,
+      })
+      .returning();
+
+    if (!insertedPost) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create post" });
+    }
+
+    // Add tags if provided
+    if (tagIds && tagIds.length > 0) {
+      const tagValues = tagIds.map((tagId) => ({
+        postId: insertedPost.id,
+        tagId,
+      }));
+      await ctx.db.insert(postTags).values(tagValues);
+    }
+
+    return {
+      message: "Post created successfully",
+      post: insertedPost,
+    };
+  }),
+
+  // 🔹 更新文章（带标签）
+  updateWithTags: protectedProcedure
+    .input(z.object({ id: z.string(), data: postUpdateWithTagsSchema }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, data } = input;
+      const { tagIds, ...postData } = data;
+      const validate = postUpdateSchema.safeParse(postData);
+      if (!validate.success) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid post data" });
+      }
+
+      // Update post
+      const [updatedPost] = await ctx.db.update(posts).set(validate.data).where(eq(posts.id, id)).returning();
+
+      if (!updatedPost) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
+
+      // Update tags if provided
+      if (tagIds !== undefined) {
+        // Remove existing tags
+        await ctx.db.delete(postTags).where(eq(postTags.postId, id));
+
+        // Add new tags
+        if (tagIds.length > 0) {
+          const tagValues = tagIds.map((tagId) => ({
+            postId: id,
+            tagId,
+          }));
+          await ctx.db.insert(postTags).values(tagValues);
+        }
       }
 
       return {
@@ -148,10 +227,6 @@ export const postRouter = createTRPCRouter({
           author: users,
           category: categorys,
           viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
-          // likeCount: ctx.db.$count(
-          //   postReactions,
-          //   and(eq(postReactions.postId, posts.id), eq(postReactions.type, "like"))
-          // ),
           likeCount: sql<number>`
         COALESCE(SUM(${postReactions.num}), 0)
       `.mapWith(Number),
@@ -170,6 +245,38 @@ export const postRouter = createTRPCRouter({
         .limit(limit)
         .offset(offset);
 
+      // Get tags for all posts
+      const postIds = items.map((item) => item.id);
+      const postTagsData =
+        postIds.length > 0
+          ? await ctx.db
+              .select({
+                postId: postTags.postId,
+                tag: tags,
+              })
+              .from(postTags)
+              .innerJoin(tags, eq(postTags.tagId, tags.id))
+              .where(inArray(postTags.postId, postIds))
+          : [];
+
+      // Group tags by postId
+      const tagsByPostId = postTagsData.reduce(
+        (acc, { postId, tag }) => {
+          if (!acc[postId]) {
+            acc[postId] = [];
+          }
+          acc[postId].push(tag);
+          return acc;
+        },
+        {} as Record<string, (typeof tags.$inferSelect)[]>
+      );
+
+      // Add tags to items
+      const itemsWithTags = items.map((item) => ({
+        ...item,
+        tags: tagsByPostId[item.id] || [],
+      }));
+
       // 总数
       const totalResult = await ctx.db
         .select({ count: sql<number>`count(*)` })
@@ -180,7 +287,7 @@ export const postRouter = createTRPCRouter({
       const total = totalResult[0]?.count ?? 0;
       const totalPages = Math.ceil(total / limit);
 
-      return { items, page, totalPages };
+      return { items: itemsWithTags, page, totalPages, total };
     }),
   getOne: publicProcedure.input(z.object({ id: z.string() })).query(async ({ ctx, input }) => {
     const userId = ctx.session?.user.id;
@@ -203,9 +310,6 @@ export const postRouter = createTRPCRouter({
         category: categorys,
         viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
         likeCount: ctx.db.$count(postReactions, and(eq(postReactions.postId, posts.id))),
-        //     likeCount: sql<number>`
-        //   COALESCE(SUM(${postReactions.num}), 0)
-        // `.mapWith(Number),
         commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
         userReaction: userPostReactions.type,
       })
@@ -219,7 +323,21 @@ export const postRouter = createTRPCRouter({
       throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
     }
 
-    return post;
+    // Get tags for this post
+    const postTagsData = await ctx.db
+      .select({
+        tag: tags,
+      })
+      .from(postTags)
+      .innerJoin(tags, eq(postTags.tagId, tags.id))
+      .where(eq(postTags.postId, input.id));
+
+    const postTags_array = postTagsData.map(({ tag }) => tag);
+
+    return {
+      ...post,
+      tags: postTags_array,
+    };
   }),
   createView: publicProcedure.input(z.object({ postId: z.string() })).mutation(async ({ ctx, input }) => {
     const { postId } = input;
@@ -239,4 +357,177 @@ export const postRouter = createTRPCRouter({
 
     return { message: "Post reaction updated" };
   }),
+
+  // Get popular posts by view count
+  getPopular: publicProcedure
+    .input(z.object({ limit: z.number().min(1).max(10).default(5) }))
+    .query(async ({ ctx, input }) => {
+      const { limit } = input;
+
+      const popularPosts = await ctx.db
+        .select({
+          id: posts.id,
+          title: posts.title,
+          slug: posts.slug,
+          excerpt: posts.excerpt,
+          createdAt: posts.createdAt,
+          viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
+          category: categorys,
+        })
+        .from(posts)
+        .leftJoin(categorys, eq(posts.categoryId, categorys.id))
+        .leftJoin(postViews, eq(postViews.postId, posts.id))
+        .where(eq(posts.status, "published"))
+        .groupBy(posts.id, categorys.id)
+        .orderBy(sql`COUNT(${postViews.id}) DESC`, desc(posts.createdAt))
+        .limit(limit);
+
+      // Get tags for all popular posts
+      const postIds = popularPosts.map((post) => post.id);
+      const postTagsData =
+        postIds.length > 0
+          ? await ctx.db
+              .select({
+                postId: postTags.postId,
+                tag: tags,
+              })
+              .from(postTags)
+              .innerJoin(tags, eq(postTags.tagId, tags.id))
+              .where(inArray(postTags.postId, postIds))
+          : [];
+
+      // Group tags by postId
+      const tagsByPostId = postTagsData.reduce(
+        (acc, { postId, tag }) => {
+          if (!acc[postId]) {
+            acc[postId] = [];
+          }
+          acc[postId].push(tag);
+          return acc;
+        },
+        {} as Record<string, (typeof tags.$inferSelect)[]>
+      );
+
+      // Add tags to popular posts
+      const popularPostsWithTags = popularPosts.map((post) => ({
+        ...post,
+        tags: tagsByPostId[post.id] || [],
+      }));
+
+      return popularPostsWithTags;
+    }),
+
+  // Get posts with tag and category filters
+  getByPageWithFilters: publicProcedure
+    .input(
+      z.object({
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(10),
+        search: z.string().optional(),
+        tagId: z.string().optional(),
+        categoryId: z.string().optional(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const { page, limit, search, tagId, categoryId } = input;
+      const offset = (page - 1) * limit;
+
+      // Build where conditions
+      const conditions = [eq(posts.status, "published")];
+
+      if (search) {
+        conditions.push(
+          or(
+            like(sql`LOWER(${posts.title})`, `%${search.toLowerCase()}%`),
+            like(sql`LOWER(${posts.excerpt})`, `%${search.toLowerCase()}%`),
+            like(sql`LOWER(${categorys.name})`, `%${search.toLowerCase()}%`)
+          )!
+        );
+      }
+
+      if (categoryId) {
+        conditions.push(eq(posts.categoryId, categoryId));
+      }
+
+      // First get posts without tags to avoid duplicates
+      let baseQuery = ctx.db
+        .select({
+          ...getTableColumns(posts),
+          author: users,
+          category: categorys,
+          viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
+          likeCount: sql<number>`COALESCE(SUM(${postReactions.num}), 0)`.mapWith(Number),
+          commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
+        })
+        .from(posts)
+        .leftJoin(users, eq(posts.createdById, users.id))
+        .leftJoin(categorys, eq(posts.categoryId, categorys.id))
+        .leftJoin(postViews, eq(postViews.postId, posts.id))
+        .leftJoin(postReactions, eq(postReactions.postId, posts.id))
+        .leftJoin(comments, eq(comments.postId, posts.id));
+
+      // Add tag filter condition if provided
+      if (tagId) {
+        baseQuery = baseQuery.leftJoin(postTags, eq(postTags.postId, posts.id));
+        conditions.push(eq(postTags.tagId, tagId));
+      }
+
+      const whereCondition = conditions.length > 1 ? and(...conditions) : conditions[0];
+
+      // Get items
+      const items = await baseQuery
+        .where(whereCondition)
+        .groupBy(posts.id, users.id, categorys.id)
+        .orderBy(desc(posts.createdAt))
+        .limit(limit)
+        .offset(offset);
+
+      // Get tags for all posts
+      const postIds = items.map((item) => item.id);
+      const postTagsData =
+        postIds.length > 0
+          ? await ctx.db
+              .select({
+                postId: postTags.postId,
+                tag: tags,
+              })
+              .from(postTags)
+              .innerJoin(tags, eq(postTags.tagId, tags.id))
+              .where(inArray(postTags.postId, postIds))
+          : [];
+
+      // Group tags by postId
+      const tagsByPostId = postTagsData.reduce(
+        (acc, { postId, tag }) => {
+          if (!acc[postId]) {
+            acc[postId] = [];
+          }
+          acc[postId].push(tag);
+          return acc;
+        },
+        {} as Record<string, (typeof tags.$inferSelect)[]>
+      );
+
+      // Add tags to items
+      const itemsWithTags = items.map((item) => ({
+        ...item,
+        tags: tagsByPostId[item.id] || [],
+      }));
+
+      // Get total count with the same join structure
+      let countQuery = ctx.db
+        .select({ count: sql<number>`count(DISTINCT ${posts.id})` })
+        .from(posts)
+        .leftJoin(categorys, eq(posts.categoryId, categorys.id));
+
+      if (tagId) {
+        countQuery = countQuery.leftJoin(postTags, eq(postTags.postId, posts.id));
+      }
+
+      const totalResult = await countQuery.where(whereCondition);
+      const total = totalResult[0]?.count ?? 0;
+      const totalPages = Math.ceil(total / limit);
+
+      return { items: itemsWithTags, page, totalPages, total };
+    }),
 });

@@ -2,6 +2,7 @@ import { relations, sql } from "drizzle-orm";
 import { index, integer, primaryKey, text, sqliteTable, foreignKey } from "drizzle-orm/sqlite-core";
 import type { AdapterAccount } from "next-auth/adapters";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
+import { z } from "zod";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -120,6 +121,22 @@ export const categorySelectSchema = createSelectSchema(categorys).omit({
 });
 export const categoryInsertSchema = createInsertSchema(categorys);
 
+export const tags = sqliteTable("tag", {
+  id: text("id", { length: 255 })
+    .notNull()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name", { length: 255 }).notNull().unique(),
+  description: text("description", { length: 512 }),
+  color: text("color", { length: 7 }), // hex color code
+  ...commonColumns,
+});
+
+export const tagSelectSchema = createSelectSchema(tags).omit({
+  updateCounter: true,
+});
+export const tagInsertSchema = createInsertSchema(tags);
+
 export const posts = sqliteTable(
   "post",
   {
@@ -152,7 +169,25 @@ export const postViews = sqliteTable("post_views", {
   ...commonColumns,
 });
 
-export const postRelations = relations(posts, ({ one }) => ({
+export const postTags = sqliteTable(
+  "post_tags",
+  {
+    postId: text("post_id", { length: 255 })
+      .notNull()
+      .references(() => posts.id),
+    tagId: text("tag_id", { length: 255 })
+      .notNull()
+      .references(() => tags.id),
+    ...commonColumns,
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.postId, table.tagId],
+    }),
+  ]
+);
+
+export const postRelations = relations(posts, ({ one, many }) => ({
   category: one(categorys, {
     fields: [posts.categoryId],
     references: [categorys.id],
@@ -160,6 +195,22 @@ export const postRelations = relations(posts, ({ one }) => ({
   author: one(users, {
     fields: [posts.createdById],
     references: [users.id],
+  }),
+  tags: many(postTags),
+}));
+
+export const tagRelations = relations(tags, ({ many }) => ({
+  posts: many(postTags),
+}));
+
+export const postTagRelations = relations(postTags, ({ one }) => ({
+  post: one(posts, {
+    fields: [postTags.postId],
+    references: [posts.id],
+  }),
+  tag: one(tags, {
+    fields: [postTags.tagId],
+    references: [tags.id],
   }),
 }));
 
@@ -179,11 +230,21 @@ export const postInsertSchema = createInsertSchema(posts).omit({
   updateCounter: true,
   createdById: true,
 });
+
+export const postInsertWithTagsSchema = postInsertSchema.extend({
+  tagIds: z.array(z.string()).optional(),
+});
+
 export const postUpdateSchema = createUpdateSchema(posts).omit({
   createdAt: true,
   updatedAt: true,
   updateCounter: true,
 });
+
+export const postUpdateWithTagsSchema = postUpdateSchema.extend({
+  tagIds: z.array(z.string()).optional(),
+});
+
 export const postSelectSchema = createSelectSchema(posts).omit({
   updateCounter: true,
 });

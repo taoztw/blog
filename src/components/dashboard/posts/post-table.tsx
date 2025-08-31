@@ -17,14 +17,14 @@ export function PostTable() {
   const utils = api.useUtils();
   const { data, isFetching } = api.post.getMany.useQuery({ limit: 10, cursor });
 
-  const createPost = api.post.create.useMutation({
+  const createPost = api.post.createWithTags.useMutation({
     onSuccess: () => {
       utils.post.getMany.invalidate();
       toast.success("文章创建成功");
     },
   });
 
-  const updatePost = api.post.update.useMutation({
+  const updatePost = api.post.updateWithTags.useMutation({
     onSuccess: () => {
       utils.post.getMany.invalidate();
       toast.success("文章更新成功");

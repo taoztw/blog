@@ -12,9 +12,12 @@ import { getTimeStamp } from "@/lib/utils";
 import { ImageService } from "../dashboard/upload/image-service";
 import { usePathname } from "next/navigation";
 import type { PostListItem } from "@/server/api/types";
+import type { tags } from "@/server/db/schema";
 
 interface BlogCardProps {
-  post: PostListItem;
+  post: PostListItem & {
+    tags?: (typeof tags.$inferSelect)[];
+  };
 }
 
 export function BlogCard({ post }: BlogCardProps) {
@@ -48,11 +51,30 @@ export function BlogCard({ post }: BlogCardProps) {
 
       {/* 内容区域 */}
       <div className="flex flex-col sm:w-3/4">
-        {/* 分类和元数据 */}
-        <div className="mb-1 flex items-center gap-2">
+        {/* 分类和标签 */}
+        <div className="mb-1 flex items-center gap-2 flex-wrap">
           <Badge variant="outline" className="text-xs text-muted-foreground font-normal">
             {post.category!.name}
           </Badge>
+          {post.tags && post.tags.length > 0 && (
+            <>
+              {post.tags.slice(0, 3).map((tag: typeof tags.$inferSelect) => (
+                <Badge
+                  key={tag.id}
+                  variant="secondary"
+                  className="text-xs font-normal"
+                  style={{ backgroundColor: tag.color ? `${tag.color}20` : undefined }}
+                >
+                  {tag.name}
+                </Badge>
+              ))}
+              {post.tags.length > 3 && (
+                <Badge variant="outline" className="text-xs text-muted-foreground font-normal">
+                  +{post.tags.length - 3}
+                </Badge>
+              )}
+            </>
+          )}
         </div>
 
         {/* 标题 */}

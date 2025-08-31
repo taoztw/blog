@@ -1,16 +1,16 @@
-import { UserTable } from "@/components/dashboard/users/user-table";
+import { TagTable } from "@/components/dashboard/tags/tag-table";
 import { api, HydrateClient } from "@/trpc/server";
 import React from "react";
 
 const page = async () => {
-  void api.user.getAll.prefetch({
+  void api.tag.getMany.prefetch({
     page: 1,
-    pageSize: 10,
+    limit: 10,
   });
 
   return (
     <HydrateClient>
-      <UserTable />
+      <TagTable />
     </HydrateClient>
   );
 };

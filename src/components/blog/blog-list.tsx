@@ -18,7 +18,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { useEffect, useState, type JSX } from "react";
-import type { PostListItem } from "@/server/api/types";
+import { PaginationComponent } from "../ui_custom/pagination";
 
 export function BlogListPage() {
   const searchParams = useSearchParams();
@@ -27,6 +27,10 @@ export function BlogListPage() {
   const pathname = usePathname();
   const search = searchParams.get("q") ?? "";
   const page = parseInt(searchParams.get("page") ?? "1", 10);
+  const tagId = searchParams.get("tagId") ?? undefined;
+  const categoryId = searchParams.get("categoryId") ?? undefined;
+  const tagName = searchParams.get("tag") ?? "";
+  const categoryName = searchParams.get("category") ?? "";
 
   // 内部状态（用于受控输入框）
   const [searchValue, setSearchValue] = useState(search);
@@ -46,21 +50,41 @@ export function BlogListPage() {
     return () => clearTimeout(handler);
   }, [searchValue]);
 
-  // 获取数据（带分页和搜索）
-  const { data, isLoading } = api.post.getByPage.useQuery({
+  // 获取数据（带分页、搜索和筛选）
+  const { data, isLoading } = api.post.getByPageWithFilters.useQuery({
     page,
     limit: 5,
     search,
+    tagId,
+    categoryId,
   });
 
   const posts = data?.items ?? [];
-  const totalPages = 100;
+  const totalItems = data?.total ?? 0;
 
-  // 跳转函数
-  const goToPage = (p: number) => {
-    if (p < 1 || p > totalPages) return;
+  console.log("posts", posts);
+
+  // 清除筛选
+  const clearFilter = (type: "tag" | "category") => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(p));
+    if (type === "tag") {
+      params.delete("tagId");
+      params.delete("tag");
+    } else {
+      params.delete("categoryId");
+      params.delete("category");
+    }
+    params.set("page", "1");
+    router.push(`${pathname}?${params.toString()}`);
+  };
+
+  const clearAllFilters = () => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("tagId");
+    params.delete("tag");
+    params.delete("categoryId");
+    params.delete("category");
+    params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`);
   };
 
@@ -82,7 +106,39 @@ export function BlogListPage() {
                 />
               )}
             </div>
-
+            {/* 筛选条件显示 */}
+            {(tagName || categoryName) && (
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className="text-sm text-muted-foreground">当前筛选：</span>
+                {tagName && (
+                  <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-sm rounded-md border">
+                    <span className="text-sm">标签: {tagName}</span>
+                    <button onClick={() => clearFilter("tag")} className="ml-1 hover:bg-blue-100 rounded-full p-0.5">
+                      ×
+                    </button>
+                  </div>
+                )}
+                {categoryName && (
+                  <div className="flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 text-sm rounded-md border">
+                    <span className="text-sm">分类: {categoryName}</span>
+                    <button
+                      onClick={() => clearFilter("category")}
+                      className="ml-1 hover:bg-green-100 rounded-full p-0.5"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+                {(tagName || categoryName) && (
+                  <button
+                    onClick={clearAllFilters}
+                    className="text-sm text-muted-foreground hover:text-foreground underline"
+                  >
+                    清除所有筛选
+                  </button>
+                )}
+              </div>
+            )}
             {/* 文章列表 */}
             <div className="space-y-4">
               {isLoading &&
@@ -104,92 +160,12 @@ export function BlogListPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <BlogCard post={post as PostListItem} />
+                    <BlogCard post={post} />
                   </motion.div>
                 ))}
             </div>
-
             {/* 分页组件 */}
-            {!isLoading && totalPages > 1 && (
-              <Pagination className="mt-12">
-                <PaginationContent>
-                  {/* 上一页 */}
-                  <PaginationItem>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        goToPage(page - 1);
-                      }}
-                    />
-                  </PaginationItem>
-
-                  {/* 页码渲染逻辑 */}
-                  {(() => {
-                    const items: JSX.Element[] = [];
-
-                    if (page <= 3) {
-                      // 前三页场景：显示 1, 2, 3 ...
-                      const endPage = Math.min(3, totalPages);
-                      for (let p = 1; p <= endPage; p++) {
-                        items.push(
-                          <PaginationItem key={p}>
-                            <PaginationLink
-                              href="#"
-                              isActive={p === page}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                goToPage(p);
-                              }}
-                            >
-                              {p}
-                            </PaginationLink>
-                          </PaginationItem>
-                        );
-                      }
-                      if (totalPages > 3) {
-                        items.push(<PaginationEllipsis key="end-ellipsis" />);
-                      }
-                    } else {
-                      // page > 3：显示 ... (p-2) (p-1) p
-                      items.push(<PaginationEllipsis key="start-ellipsis" />);
-
-                      for (let p = page - 2; p <= page; p++) {
-                        if (p >= 1 && p <= totalPages) {
-                          items.push(
-                            <PaginationItem key={p}>
-                              <PaginationLink
-                                href="#"
-                                isActive={p === page}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  goToPage(p);
-                                }}
-                              >
-                                {p}
-                              </PaginationLink>
-                            </PaginationItem>
-                          );
-                        }
-                      }
-                    }
-
-                    return items;
-                  })()}
-
-                  {/* 下一页 */}
-                  <PaginationItem>
-                    <PaginationNext
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        goToPage(page + 1);
-                      }}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            )}
+            <PaginationComponent totalItems={totalItems} itemsPerPage={5} />
           </div>
 
           {/* 侧边栏 */}

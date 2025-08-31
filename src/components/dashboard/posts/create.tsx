@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { z } from "zod";
-import { POST_STATUS_ENUM, postInsertSchema } from "@/server/db/schema";
+import { POST_STATUS_ENUM, postInsertWithTagsSchema } from "@/server/db/schema";
 import type { PostWithRelations } from "@/global";
 import { api } from "@/trpc/react";
 import { toast } from "sonner";
@@ -30,8 +30,9 @@ import { MarkdownPreview } from "@/components/blog/post-preview";
 import { markdownString } from "@/lib/fake-data";
 import { ImageService } from "../upload/image-service";
 import { useSession } from "next-auth/react";
+import { MultiSelect } from "@/components/ui/multi-select";
 
-type CreatePostData = z.infer<typeof postInsertSchema>;
+type CreatePostData = z.infer<typeof postInsertWithTagsSchema>;
 
 interface Props {
   post?: PostWithRelations | null;
@@ -61,14 +62,16 @@ export function CreateOrEditPostDialog({
   const isEditMode = !!post;
 
   const { data: categories } = api.category.getAll.useQuery();
+  const { data: tags } = api.tag.getAll.useQuery();
 
   const form = useForm<CreatePostData>({
-    resolver: zodResolver(postInsertSchema),
+    resolver: zodResolver(postInsertWithTagsSchema),
     defaultValues: isEditMode
       ? {
           ...post!,
           categoryId: post?.category?.id ?? undefined,
           imageUrl: post?.imageUrl ? ImageService.getImageUrl(post.imageUrl) : null,
+          tagIds: [], // We'll load this from the post's tags
         }
       : {
           title: "",
@@ -76,6 +79,7 @@ export function CreateOrEditPostDialog({
           excerpt: "",
           content: markdownString,
           status: POST_STATUS_ENUM.DRAFT,
+          tagIds: [],
         },
   });
 
@@ -84,6 +88,7 @@ export function CreateOrEditPostDialog({
       form.reset({
         ...post,
         categoryId: post.category?.id ?? undefined,
+        tagIds: [], // TODO: Load actual tags from post
       });
       setImagePreview(post.imageUrl ? ImageService.getImageUrl(post.imageUrl) : null);
     } else {
@@ -93,6 +98,7 @@ export function CreateOrEditPostDialog({
         excerpt: "",
         content: markdownString,
         status: POST_STATUS_ENUM.DRAFT,
+        tagIds: [],
       });
       setImagePreview(null);
     }
@@ -292,6 +298,29 @@ export function CreateOrEditPostDialog({
                             ))}
                           </SelectContent>
                         </Select>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="tagIds"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>标签</FormLabel>
+                        <FormControl>
+                          <MultiSelect
+                            options={
+                              tags?.map((tag) => ({
+                                label: tag.name,
+                                value: tag.id,
+                                color: tag.color || undefined,
+                              })) ?? []
+                            }
+                            selected={field.value ?? []}
+                            onChange={field.onChange}
+                            placeholder="选择标签..."
+                          />
+                        </FormControl>
                       </FormItem>
                     )}
                   />

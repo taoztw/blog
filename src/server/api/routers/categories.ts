@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
-import { categoryInsertSchema, categorys, categorySelectSchema } from "@/server/db/schema";
+import { categoryInsertSchema, categorys, categorySelectSchema, posts } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, lt, or } from "drizzle-orm";
+import { and, desc, eq, lt, or, sql } from "drizzle-orm";
 import z from "zod";
 
 export const categoryRouter = createTRPCRouter({
@@ -62,7 +62,7 @@ export const categoryRouter = createTRPCRouter({
   getMany: publicProcedure
     .input(
       z.object({
-        cursor: z.object({ id: z.string(), updateAt: z.date() }).nullish(),
+        cursor: z.object({ id: z.string(), createdAt: z.date() }).nullish(),
         limit: z.number().min(1).max(100),
       })
     )
@@ -74,9 +74,9 @@ export const categoryRouter = createTRPCRouter({
         .where(
           cursor
             ? or(
-                lt(categorys.updatedAt, cursor.updateAt),
+                lt(categorys.createdAt, cursor.createdAt),
                 and(
-                  eq(categorys.updatedAt, cursor.updateAt), // 处理updatedAt相同的情况，通过id进行排序
+                  eq(categorys.createdAt, cursor.createdAt), // 处理createdAt相同的情况，通过id进行排序
                   lt(categorys.id, cursor.id)
                 )
               )
@@ -89,7 +89,7 @@ export const categoryRouter = createTRPCRouter({
       const items = hasMore ? data.slice(0, -1) : data;
 
       const lastItem = items[items.length - 1];
-      const nextCursor = hasMore ? { id: lastItem!.id, updateAt: lastItem!.updatedAt } : null;
+      const nextCursor = hasMore ? { id: lastItem!.id, createdAt: lastItem!.createdAt } : null;
 
       return {
         items,
@@ -99,5 +99,23 @@ export const categoryRouter = createTRPCRouter({
   getAll: publicProcedure.query(async ({ ctx }) => {
     const data = await ctx.db.select().from(categorys).orderBy(desc(categorys.createdAt));
     return data;
+  }),
+
+  // Get categories with post counts
+  getWithPostCounts: publicProcedure.query(async ({ ctx }) => {
+    const categoriesWithCounts = await ctx.db
+      .select({
+        id: categorys.id,
+        name: categorys.name,
+        description: categorys.description,
+        postCount: ctx.db.$count(posts, and(eq(posts.categoryId, categorys.id), eq(posts.status, "published"))),
+      })
+      .from(categorys)
+      .leftJoin(posts, eq(posts.categoryId, categorys.id))
+      .groupBy(categorys.id)
+      .having(sql`COUNT(${posts.id}) > 0`)
+      .orderBy(desc(sql`COUNT(${posts.id})`), categorys.name);
+
+    return categoriesWithCounts;
   }),
 });

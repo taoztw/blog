@@ -4,6 +4,7 @@ import { createCallerFactory, createTRPCRouter } from "@/server/api/trpc";
 import { categoryRouter } from "./routers/categories";
 import { commentsRouter } from "./routers/comments";
 import { commentReactionRouter } from "./routers/comment-reaction";
+import { tagRouter } from "./routers/tags";
 
 /**
  * This is the primary router for your server.
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   post: postRouter,
   user: userRouter,
   category: categoryRouter,
+  tag: tagRouter,
   comment: commentsRouter,
   commentReactions: commentReactionRouter,
 });
