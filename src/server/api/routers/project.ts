@@ -1,9 +1,7 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import {
   projects,
-  projectInsertSchema,
   projectInsertWithTagsSchema,
-  projectUpdateSchema,
   projectUpdateWithTagsSchema,
   projectTags,
   tags,
@@ -140,7 +138,8 @@ export const projectRouter = createTRPCRouter({
         conditions.push(eq(projects.status, status));
       }
 
-      const whereCondition = conditions.length > 0 ? (conditions.length === 1 ? conditions[0] : and(...conditions)) : undefined;
+      const whereCondition =
+        conditions.length > 0 ? (conditions.length === 1 ? conditions[0] : and(...conditions)) : undefined;
 
       const items = await ctx.db.query.projects.findMany({
         where: whereCondition,
@@ -241,11 +240,7 @@ export const projectRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const { id, sortOrder } = input;
 
-      const [updatedProject] = await ctx.db
-        .update(projects)
-        .set({ sortOrder })
-        .where(eq(projects.id, id))
-        .returning();
+      const [updatedProject] = await ctx.db.update(projects).set({ sortOrder }).where(eq(projects.id, id)).returning();
 
       if (!updatedProject) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Project not found" });
@@ -265,16 +260,15 @@ export const projectRouter = createTRPCRouter({
 
   // 🔹 创建标签
   createTag: protectedProcedure
-    .input(z.object({
-      name: z.string().min(1),
-      description: z.string().optional(),
-      color: z.string().optional(),
-    }))
+    .input(
+      z.object({
+        name: z.string().min(1),
+        description: z.string().optional(),
+        color: z.string().optional(),
+      })
+    )
     .mutation(async ({ ctx, input }) => {
-      const [inserted] = await ctx.db
-        .insert(tags)
-        .values(input)
-        .returning();
+      const [inserted] = await ctx.db.insert(tags).values(input).returning();
 
       if (!inserted) {
         throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create tag" });

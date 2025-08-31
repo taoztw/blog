@@ -79,7 +79,7 @@ export function CreateOrEditProjectSheet({
         githubUrl: project.githubUrl || "",
         demoUrl: project.demoUrl || "",
         blogUrl: project.blogUrl || "",
-        tagIds: project.tags ? project.tags.map(pt => pt.tag.id) : [],
+        tagIds: project.tags ? project.tags.map((pt) => pt.tag.id) : [],
         sortOrder: project.sortOrder || 0,
       });
     }
@@ -114,9 +114,7 @@ export function CreateOrEditProjectSheet({
   const toggleTag = (tagId: string) => {
     setFormData((prev) => ({
       ...prev,
-      tagIds: prev.tagIds.includes(tagId)
-        ? prev.tagIds.filter((id) => id !== tagId)
-        : [...prev.tagIds, tagId],
+      tagIds: prev.tagIds.includes(tagId) ? prev.tagIds.filter((id) => id !== tagId) : [...prev.tagIds, tagId],
     }));
   };
 
@@ -386,17 +384,15 @@ export function CreateOrEditProjectSheet({
                     <div
                       key={tag.id}
                       className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${
-                        isSelected 
-                          ? "bg-primary text-primary-foreground border-primary" 
+                        isSelected
+                          ? "bg-primary text-primary-foreground border-primary"
                           : "bg-background hover:bg-muted border-muted"
                       }`}
                       onClick={() => toggleTag(tag.id)}
                     >
-                      <div 
+                      <div
                         className={`w-3 h-3 rounded-full border-2 transition-colors ${
-                          isSelected 
-                            ? "bg-primary-foreground border-primary-foreground" 
-                            : "border-muted-foreground"
+                          isSelected ? "bg-primary-foreground border-primary-foreground" : "border-muted-foreground"
                         }`}
                       />
                       <span className="text-sm font-medium">{tag.name}</span>
@@ -407,7 +403,7 @@ export function CreateOrEditProjectSheet({
               {formData.tagIds.length > 0 && (
                 <div className="flex flex-wrap gap-2">
                   {formData.tagIds.map((tagId) => {
-                    const tag = tags.find(t => t.id === tagId);
+                    const tag = tags.find((t) => t.id === tagId);
                     return tag ? (
                       <Badge key={tagId} variant="secondary" className="flex items-center gap-1">
                         {tag.name}

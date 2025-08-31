@@ -1,129 +1,175 @@
 "use client";
 
-import { useState, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
-import { Search, Calendar, Tag, ExternalLink, Clock } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { Calendar, Tag, ExternalLink, FileText, Folder, Code2, Smartphone, Wrench, Brain, Boxes } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PaginationComponent, getCurrentPageData } from "@/components/ui_custom/pagination";
+import LocalSearch from "@/components/search/LocalSearch";
+import { api } from "@/trpc/react";
 
-// Mock data for blog posts
-const blogPosts = [
-  {
-    id: 1,
-    title: "构建现代化的React应用",
-    description: "深入探讨React 18的新特性，包括并发渲染、Suspense和服务端组件的最佳实践。",
-    date: "2024-03-15",
-    category: "前端开发",
-    tags: ["React", "JavaScript", "前端"],
-    readTime: "8分钟",
-    url: "/blog/modern-react-app",
-  },
-  {
-    id: 2,
-    title: "Next.js 14性能优化指南",
-    description: "全面介绍Next.js 14的性能优化技巧，从代码分割到图片优化的完整解决方案。",
-    date: "2024-03-08",
-    category: "全栈开发",
-    tags: ["Next.js", "性能优化", "Web开发"],
-    readTime: "12分钟",
-    url: "/blog/nextjs-performance",
-  },
-  {
-    id: 3,
-    title: "TypeScript高级类型系统",
-    description: "掌握TypeScript的高级类型特性，提升代码质量和开发效率。",
-    date: "2024-02-28",
-    category: "编程语言",
-    tags: ["TypeScript", "类型系统", "开发工具"],
-    readTime: "15分钟",
-    url: "/blog/typescript-advanced",
-  },
-  {
-    id: 4,
-    title: "微服务架构设计模式",
-    description: "探索微服务架构的核心设计模式，包括服务发现、负载均衡和容错机制。",
-    date: "2024-02-20",
-    category: "系统架构",
-    tags: ["微服务", "架构设计", "后端"],
-    readTime: "20分钟",
-    url: "/blog/microservices-patterns",
-  },
-  {
-    id: 5,
-    title: "CSS Grid与Flexbox布局对比",
-    description: "详细对比CSS Grid和Flexbox的使用场景，帮助你选择最适合的布局方案。",
-    date: "2024-01-25",
-    category: "前端开发",
-    tags: ["CSS", "布局", "响应式设计"],
-    readTime: "10分钟",
-    url: "/blog/css-grid-flexbox",
-  },
-  {
-    id: 6,
-    title: "Docker容器化最佳实践",
-    description: "从基础到进阶的Docker使用指南，包括镜像优化和多阶段构建。",
-    date: "2024-01-18",
-    category: "DevOps",
-    tags: ["Docker", "容器化", "部署"],
-    readTime: "18分钟",
-    url: "/blog/docker-best-practices",
-  },
-  {
-    id: 7,
-    title: "GraphQL API设计指南",
-    description: "学习如何设计高效的GraphQL API，包括Schema设计和查询优化。",
-    date: "2023-12-15",
-    category: "后端开发",
-    tags: ["GraphQL", "API设计", "后端"],
-    readTime: "14分钟",
-    url: "/blog/graphql-api-design",
-  },
-  {
-    id: 8,
-    title: "Vue 3组合式API深度解析",
-    description: "深入理解Vue 3的组合式API，掌握响应式系统和生命周期的新特性。",
-    date: "2023-12-08",
-    category: "前端开发",
-    tags: ["Vue.js", "组合式API", "前端框架"],
-    readTime: "16分钟",
-    url: "/blog/vue3-composition-api",
-  },
-];
+// Project type icons mapping
+const projectTypeIcons = {
+  frontend: Code2,
+  backend: Boxes,
+  mobile: Smartphone,
+  tool: Wrench,
+  ai: Brain,
+  other: Folder,
+} as const;
 
-const categories = ["全部", "前端开发", "后端开发", "全栈开发", "系统架构", "DevOps", "编程语言"];
+// Content type definitions
+type ContentType = "post" | "project";
+type ProjectType = "frontend" | "backend" | "mobile" | "tool" | "ai" | "other";
 
-const POSTS_PER_PAGE = 5;
+interface ArchiveItem {
+  id: string;
+  title: string;
+  description?: string | null;
+  date: Date;
+  type: ContentType;
+  category?: {
+    id: string;
+    name: string;
+  } | null;
+  tags: Array<{
+    id: string;
+    name: string;
+    color?: string | null;
+  }>;
+  projectType?: ProjectType;
+  url: string;
+}
+
+const ITEMS_PER_PAGE = 8;
+const contentTypes = ["全部", "文章", "项目"] as const;
 
 export function BlogArchive() {
   const searchParams = useSearchParams();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("全部");
+  const router = useRouter();
+  
+  // Initialize states from URL parameters
+  const [selectedContentType, setSelectedContentType] = useState(() => {
+    const typeParam = searchParams.get("type");
+    return typeParam === "post" ? "文章" : typeParam === "project" ? "项目" : "全部";
+  });
+  const [selectedCategory, setSelectedCategory] = useState(() => searchParams.get("category") || "全部");
+  const [selectedTag, setSelectedTag] = useState(() => searchParams.get("tag") || "全部");
 
   const currentPage = Number.parseInt(searchParams.get("page") || "1", 10);
+  const searchQuery = searchParams.get("query") || "";
 
-  const { paginatedPosts, totalPosts, filteredPosts } = useMemo(() => {
-    // 先过滤数据
-    const filtered = blogPosts.filter((post) => {
+  // Update URL when filters change
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    // Content type
+    if (selectedContentType === "文章") {
+      params.set("type", "post");
+    } else if (selectedContentType === "项目") {
+      params.set("type", "project");
+    } else {
+      params.delete("type");
+    }
+    
+    // Category
+    if (selectedCategory !== "全部") {
+      params.set("category", selectedCategory);
+    } else {
+      params.delete("category");
+    }
+    
+    // Tag
+    if (selectedTag !== "全部") {
+      params.set("tag", selectedTag);
+    } else {
+      params.delete("tag");
+    }
+    
+    // Reset page when filters change
+    params.delete("page");
+    
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    router.push(newUrl, { scroll: false });
+  }, [selectedContentType, selectedCategory, selectedTag, router, searchParams]);
+
+  // Fetch data
+  const { data: postsData, isLoading: isLoadingPosts } = api.post.getByPage.useQuery({
+    page: 1,
+    limit: 100, // Get all published posts
+  });
+
+  const { data: projects, isLoading: isLoadingProjects } = api.project.getAll.useQuery({
+    search: searchQuery || undefined,
+  });
+
+
+  const posts = postsData?.items || [];
+
+  const isLoading = isLoadingPosts || isLoadingProjects;
+
+  // Transform data into unified format
+  const allItems: ArchiveItem[] = useMemo(() => {
+    const postItems: ArchiveItem[] = (posts || []).map((post: any) => ({
+      id: post.id,
+      title: post.title,
+      description: post.excerpt,
+      date: post.createdAt,
+      type: "post" as const,
+      category: post.category,
+      tags: post.tags || [],
+      url: `/blog/${post.slug}`,
+    }));
+
+    const projectItems: ArchiveItem[] = (projects || []).map((project: any) => ({
+      id: project.id,
+      title: project.title,
+      description: project.description,
+      date: project.createdAt,
+      type: "project" as const,
+      category: null, // Projects don't have categories in the current schema
+      tags: project.tags?.map((pt: any) => pt.tag) || [],
+      projectType: project.type as ProjectType,
+      url: `/projects/${project.id}`,
+    }));
+
+    return [...postItems, ...projectItems];
+  }, [posts, projects]);
+
+  const { paginatedItems, totalItems, availableCategories, availableTags } = useMemo(() => {
+    // Filter data
+    const filtered = allItems.filter((item) => {
       const matchesSearch =
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.tags.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      const matchesCategory = selectedCategory === "全部" || post.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+        searchQuery === "" ||
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+        item.tags.some((tag) => tag.name.toLowerCase().includes(searchQuery.toLowerCase()));
+
+      const matchesContentType =
+        selectedContentType === "全部" ||
+        (selectedContentType === "文章" && item.type === "post") ||
+        (selectedContentType === "项目" && item.type === "project");
+
+      const matchesCategory = selectedCategory === "全部" || (item.category && item.category.name === selectedCategory);
+
+      const matchesTag = selectedTag === "全部" || item.tags.some((tag) => tag.name === selectedTag);
+
+      return matchesSearch && matchesContentType && matchesCategory && matchesTag;
     });
 
-    // 按日期排序
+    // Sort by date (newest first)
     const sorted = filtered.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-    const paginatedData = getCurrentPageData(sorted, currentPage, POSTS_PER_PAGE);
+    // Get paginated data
+    const paginatedData = getCurrentPageData(sorted, currentPage, ITEMS_PER_PAGE);
 
-    // 按年月分组
+    // Group by year and month
     const grouped = paginatedData.reduce(
-      (acc, post) => {
-        const date = new Date(post.date);
+      (acc, item) => {
+        const date = new Date(item.date);
         const year = date.getFullYear();
         const month = date.toLocaleDateString("zh-CN", { month: "long" });
 
@@ -133,90 +179,167 @@ export function BlogArchive() {
         if (!acc[year][month]) {
           acc[year][month] = [];
         }
-        acc[year][month].push(post);
+        acc[year][month].push(item);
         return acc;
       },
-      {} as Record<number, Record<string, typeof blogPosts>>
+      {} as Record<number, Record<string, ArchiveItem[]>>
     );
 
-    // 排序年份和月份
+    // Sort years and months
     const sortedYears = Object.keys(grouped).sort((a, b) => Number(b) - Number(a));
-    const result = sortedYears.map((year) => ({
-      year: Number(year),
-      months: Object.keys(grouped[Number(year)]).map((month) => ({
-        month,
-        posts: grouped[Number(year)][month],
-      })),
-    }));
+    const result = sortedYears.map((year) => {
+      const yearData = grouped[Number(year)];
+      if (!yearData) return { year: Number(year), months: [] };
+
+      return {
+        year: Number(year),
+        months: Object.keys(yearData).map((month) => ({
+          month,
+          items: yearData[month] || [],
+        })),
+      };
+    });
+
+    // Get available categories and tags from filtered data
+    const uniqueCategories = Array.from(
+      new Set(filtered.filter((item) => item.category).map((item) => item.category!.name))
+    );
+    const uniqueTags = Array.from(new Set(filtered.flatMap((item) => item.tags.map((tag) => tag.name))));
 
     return {
-      paginatedPosts: result,
-      totalPosts: filtered.length,
-      filteredPosts: sorted, // 返回完整的过滤后数据用于分页组件
+      paginatedItems: result,
+      totalItems: filtered.length,
+      availableCategories: ["全部", ...uniqueCategories],
+      availableTags: ["全部", ...uniqueTags],
     };
-  }, [searchTerm, selectedCategory, currentPage]);
+  }, [allItems, searchQuery, selectedContentType, selectedCategory, selectedTag, currentPage]);
 
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
+  const handleContentTypeChange = (type: string) => {
+    setSelectedContentType(type);
+    setSelectedCategory("全部"); // Reset category when changing content type
+    setSelectedTag("全部"); // Reset tag when changing content type
   };
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
   };
 
+  const handleTagChange = (tag: string) => {
+    setSelectedTag(tag);
+  };
+
+  const getItemIcon = (item: ArchiveItem) => {
+    if (item.type === "post") {
+      return FileText;
+    }
+    if (item.type === "project" && item.projectType) {
+      return projectTypeIcons[item.projectType];
+    }
+    return Folder;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-muted-foreground">加载中...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-4">
             <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-foreground">博客归档</h1>
+              <h1 className="text-2xl font-bold text-foreground">内容归档</h1>
               <Badge variant="secondary" className="text-sm">
-                {totalPosts} 篇文章
+                {totalItems} 项内容
               </Badge>
             </div>
-            <div className="relative w-full max-w-sm">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="搜索文章..."
-                value={searchTerm}
-                onChange={(e) => handleSearchChange(e.target.value)}
-                className="pl-10"
-              />
+            <div className="w-full max-w-sm">
+              <LocalSearch route="/archive" placeholder="搜索内容..." otherClasses="bg-background border" />
             </div>
           </div>
         </div>
       </header>
 
       <div className="container mx-auto px-4 py-8">
-        {/* Category Filters */}
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-2">
-            {categories.map((category) => (
-              <Button
-                key={category}
-                variant={selectedCategory === category ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleCategoryChange(category)}
-                className="text-sm"
-              >
-                {category}
-              </Button>
-            ))}
+        {/* Filters */}
+        <div className="mb-8 space-y-4">
+          {/* Content Type Filters */}
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-2">内容类型</h3>
+            <div className="flex flex-wrap gap-2">
+              {contentTypes.map((type) => (
+                <Button
+                  key={type}
+                  variant={selectedContentType === type ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleContentTypeChange(type)}
+                  className="text-sm"
+                >
+                  {type}
+                </Button>
+              ))}
+            </div>
           </div>
+
+          {/* Category Filters */}
+          {availableCategories.length > 1 && (
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-2">分类</h3>
+              <div className="flex flex-wrap gap-2">
+                {availableCategories.map((category) => (
+                  <Button
+                    key={category}
+                    variant={selectedCategory === category ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleCategoryChange(category)}
+                    className="text-sm"
+                  >
+                    {category}
+                  </Button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Tag Filters */}
+          {availableTags.length > 1 && (
+            <div>
+              <h3 className="text-sm font-medium text-muted-foreground mb-2">标签</h3>
+              <div className="flex flex-wrap gap-2">
+                {availableTags.slice(0, 10).map((tag) => (
+                  <Button
+                    key={tag}
+                    variant={selectedTag === tag ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleTagChange(tag)}
+                    className="text-sm"
+                  >
+                    {tag}
+                  </Button>
+                ))}
+                {availableTags.length > 10 && (
+                  <span className="text-sm text-muted-foreground self-center">+{availableTags.length - 10} 更多</span>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
-        {totalPosts > 0 && (
+        {totalItems > 0 && (
           <div className="mb-6 text-sm text-muted-foreground">
-            显示第 {(currentPage - 1) * POSTS_PER_PAGE + 1} - {Math.min(currentPage * POSTS_PER_PAGE, totalPosts)}{" "}
-            篇，共 {totalPosts} 篇文章
+            显示第 {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)}{" "}
+            项，共 {totalItems} 项内容
           </div>
         )}
 
         {/* Timeline */}
         <div className="space-y-12">
-          {paginatedPosts.map(({ year, months }) => (
+          {paginatedItems.map(({ year, months }) => (
             <div key={year} className="relative">
               {/* Year Header */}
               <div className="sticky top-20 z-10 mb-8 bg-background/95 backdrop-blur py-2">
@@ -228,7 +351,7 @@ export function BlogArchive() {
 
               {/* Months */}
               <div className="space-y-8 pl-8 border-l-2 border-border">
-                {months.map(({ month, posts }) => (
+                {months.map(({ month, items }) => (
                   <div key={month} className="relative">
                     {/* Month indicator */}
                     <div className="absolute -left-10 top-0 h-4 w-4 rounded-full bg-primary border-4 border-background"></div>
@@ -236,60 +359,68 @@ export function BlogArchive() {
                     {/* Month header */}
                     <h3 className="text-xl font-semibold text-foreground mb-4">{month}</h3>
 
-                    {/* Posts */}
-                    <div className="space-y-4">
-                      {posts.map((post) => (
-                        <Card
-                          key={post.id}
-                          className="group hover:shadow-lg transition-all duration-200 hover:border-primary/20"
-                        >
-                          <CardHeader className="pb-3">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex-1">
-                                <CardTitle className="text-lg group-hover:text-primary transition-colors">
-                                  {post.title}
-                                </CardTitle>
-                                <CardDescription className="mt-2 text-sm leading-relaxed">
-                                  {post.description}
-                                </CardDescription>
-                              </div>
-                              <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0 mt-1" />
-                            </div>
-                          </CardHeader>
-                          <CardContent className="pt-0">
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                                <div className="flex items-center gap-1">
-                                  <Calendar className="h-3 w-3" />
-                                  {new Date(post.date).toLocaleDateString("zh-CN")}
+                    {/* Items */}
+                    <div className="space-y-3">
+                      {(items || []).map((item) => {
+                        const IconComponent = getItemIcon(item);
+                        return (
+                          <Link key={item.id} href={item.url} className="block">
+                            <Card className="group hover:shadow-md transition-all duration-200 hover:border-primary/20 cursor-pointer">
+                              <CardContent className="p-4">
+                              <div className="flex items-center gap-3">
+                                <div className="flex-shrink-0">
+                                  <IconComponent className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
                                 </div>
-                                <div className="flex items-center gap-1">
-                                  <Clock className="h-3 w-3" />
-                                  {post.readTime}
-                                </div>
-                                <Badge variant="outline" className="text-xs">
-                                  {post.category}
-                                </Badge>
-                              </div>
-                              <div className="flex items-center gap-1">
-                                <Tag className="h-3 w-3 text-muted-foreground" />
-                                <div className="flex gap-1">
-                                  {post.tags.slice(0, 2).map((tag) => (
-                                    <Badge key={tag} variant="secondary" className="text-xs">
-                                      {tag}
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center justify-between gap-2">
+                                    <h4 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1 flex-1">
+                                      {item.title}
+                                    </h4>
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                        <Calendar className="h-3 w-3" />
+                                        {new Date(item.date).toLocaleDateString("zh-CN")}
+                                      </div>
+                                      <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                    </div>
+                                  </div>
+
+                                  <div className="flex items-center gap-2 mt-2 flex-wrap">
+                                    <Badge variant="outline" className="text-xs px-2 py-0.5">
+                                      {item.type === "post" ? "文章" : "项目"}
                                     </Badge>
-                                  ))}
-                                  {post.tags.length > 2 && (
-                                    <Badge variant="secondary" className="text-xs">
-                                      +{post.tags.length - 2}
-                                    </Badge>
-                                  )}
+
+                                    {item.category && (
+                                      <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                                        {item.category.name}
+                                      </Badge>
+                                    )}
+
+                                    {item.tags.length > 0 && (
+                                      <div className="flex items-center gap-1">
+                                        <Tag className="h-3 w-3 text-muted-foreground" />
+                                        <div className="flex gap-1 flex-wrap">
+                                          {item.tags.slice(0, 2).map((tag) => (
+                                            <Badge key={tag.id} variant="secondary" className="text-xs px-1.5 py-0.5">
+                                              {tag.name}
+                                            </Badge>
+                                          ))}
+                                          {item.tags.length > 2 && (
+                                            <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
+                                              +{item.tags.length - 2}
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                              </CardContent>
+                            </Card>
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 ))}
@@ -298,13 +429,13 @@ export function BlogArchive() {
           ))}
         </div>
 
-        <PaginationComponent totalItems={totalPosts} itemsPerPage={POSTS_PER_PAGE} />
+        <PaginationComponent totalItems={totalItems} itemsPerPage={ITEMS_PER_PAGE} />
 
         {/* Empty State */}
-        {paginatedPosts.length === 0 && (
+        {paginatedItems.length === 0 && (
           <div className="text-center py-12">
-            <div className="text-muted-foreground text-lg mb-2">没有找到匹配的文章</div>
-            <div className="text-sm text-muted-foreground">尝试调整搜索关键词或选择不同的分类</div>
+            <div className="text-muted-foreground text-lg mb-2">没有找到匹配的内容</div>
+            <div className="text-sm text-muted-foreground">尝试调整搜索关键词或选择不同的筛选条件</div>
           </div>
         )}
       </div>
