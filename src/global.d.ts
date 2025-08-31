@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { categoryInsertSchema, categorySelectSchema, postSelectSchema, userSelectSchema, tagInsertSchema, tagSelectSchema } from "./server/db/schema";
-import { posts, categorys, users, tags } from "./server/db/schema";
+import { categoryInsertSchema, categorySelectSchema, postSelectSchema, userSelectSchema, tagInsertSchema, tagSelectSchema, projectSelectSchema, projectInsertSchema } from "./server/db/schema";
+import { posts, categorys, users, tags, projects } from "./server/db/schema";
 
 // 基础类型
 type CreatePostData = z.infer<typeof postInsertSchema>;
@@ -10,6 +10,10 @@ type CreateCategoryData = z.infer<typeof categoryInsertSchema>;
 
 type Tag = z.infer<typeof tagSelectSchema>;
 type CreateTagData = z.infer<typeof tagInsertSchema>;
+
+
+type Project = z.infer<typeof projectSelectSchema>;
+type CreateProjectData = z.infer<typeof projectInsertSchema>;
 
 // 带完整关联数据的类型
 type PostWithRelations = z.infer<typeof postSelectSchema> & {
@@ -23,6 +27,23 @@ type PostWithRelations = z.infer<typeof postSelectSchema> & {
     id: string;
     name: string;
   } | null;
+};
+
+type ProjectWithRelations = z.infer<typeof projectSelectSchema> & {
+  author: {
+    id: string;
+    name: string | null;
+    email: string;
+    image: string | null;
+  } | null;
+  tags: Array<{
+    tag: {
+      id: string;
+      name: string;
+      description: string | null;
+      color: string | null;
+    };
+  }>;
 };
 
 // 带关联 & 统计字段的完整 Post 类型

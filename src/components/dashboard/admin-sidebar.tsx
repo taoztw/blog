@@ -13,44 +13,11 @@ import {
   SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
-import ROUTES from "@/constants/routes";
-import {
-  Activity,
-  BarChart3,
-  Bell,
-  Database,
-  FileText,
-  LayoutDashboard,
-  Moon,
-  Settings,
-  Shield,
-  SquareStack,
-  Sun,
-  Tag,
-  Upload,
-  User,
-  Users,
-  Zap,
-} from "lucide-react";
+import { DASHBOARD_MENU_ITEMS } from "@/constants/menu-items";
+import { LayoutDashboard, Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { memo } from "react";
-
-const menuItems = [
-  { title: "Dashboard", icon: LayoutDashboard, href: `${ROUTES.DASHBOARD}` },
-  { title: "Analytics", icon: BarChart3, href: `${ROUTES.DASHBOARD}/analytics` },
-  { title: "Users", icon: Users, href: `${ROUTES.DASHBOARD}/users` },
-  { title: "Posts", icon: FileText, href: `${ROUTES.DASHBOARD}/posts` },
-  { title: "Upload", icon: Upload, href: `${ROUTES.DASHBOARD}/upload` },
-  { title: "Categories", icon: SquareStack, href: `${ROUTES.DASHBOARD}/categories` },
-  { title: "Tags", icon: Tag, href: `${ROUTES.DASHBOARD}/tags` },
-  // { title: "Activity", icon: Activity, href: "#activity" },
-  // { title: "Database", icon: Database, href: "#database" },
-  // { title: "Security", icon: Shield, href: "#security" },
-  // { title: "Performance", icon: Zap, href: "#performance" },
-  // { title: "Notifications", icon: Bell, href: "#notifications" },
-  // { title: "Settings", icon: Settings, href: "#settings" },
-];
 
 export const AdminSidebar = memo(() => {
   const { theme, setTheme } = useTheme();
@@ -80,7 +47,7 @@ export const AdminSidebar = memo(() => {
           <SidebarGroupLabel>Navigation</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {menuItems.map((item) => {
+              {DASHBOARD_MENU_ITEMS.map((item) => {
                 const Icon = item.icon;
                 return (
                   <SidebarMenuItem key={item.href}>

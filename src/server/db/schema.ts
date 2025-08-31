@@ -27,8 +27,24 @@ export const REACTION_ENUM = {
   DISLIKE: "dislike",
 };
 
+export const PROJECT_STATUS_ENUM = {
+  DRAFT: "draft",
+  PUBLISHED: "published",
+};
+
+export const PROJECT_TYPE_ENUM = {
+  FRONTEND: "frontend",
+  BACKEND: "backend", 
+  MOBILE: "mobile",
+  TOOL: "tool",
+  AI: "ai",
+  OTHER: "other",
+};
+
 const roleTuple = Object.values(ROLES_ENUM) as [string, ...string[]];
 const POST_STATUS_TUPLE = Object.values(POST_STATUS_ENUM) as [string, ...string[]];
+const PROJECT_STATUS_TUPLE = Object.values(PROJECT_STATUS_ENUM) as [string, ...string[]];
+const PROJECT_TYPE_TUPLE = Object.values(PROJECT_TYPE_ENUM) as [string, ...string[]];
 const reactionTuple = Object.values(REACTION_ENUM) as [string, ...string[]];
 
 const commonColumns = {
@@ -137,6 +153,7 @@ export const tagSelectSchema = createSelectSchema(tags).omit({
 });
 export const tagInsertSchema = createInsertSchema(tags);
 
+
 export const posts = sqliteTable(
   "post",
   {
@@ -201,6 +218,7 @@ export const postRelations = relations(posts, ({ one, many }) => ({
 
 export const tagRelations = relations(tags, ({ many }) => ({
   posts: many(postTags),
+  projects: many(projectTags),
 }));
 
 export const postTagRelations = relations(postTags, ({ one }) => ({
@@ -313,3 +331,92 @@ export const commentReactions = sqliteTable(
     }),
   ]
 );
+
+// Projects 表
+export const projects = sqliteTable(
+  "project",
+  {
+    id: text("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    title: text("title", { length: 512 }).notNull(),
+    description: text("description").notNull(),
+    imageUrl: text("image_url", { length: 512 }),
+    type: text("type", { enum: PROJECT_TYPE_TUPLE }).notNull(),
+    status: text("status", { enum: PROJECT_STATUS_TUPLE }).default(PROJECT_STATUS_ENUM.DRAFT),
+    githubUrl: text("github_url", { length: 512 }),
+    demoUrl: text("demo_url", { length: 512 }),
+    blogUrl: text("blog_url", { length: 512 }),
+    sortOrder: integer("sort_order").default(0),
+    createdById: text("created_by_id", { length: 255 })
+      .notNull()
+      .references(() => users.id),
+    ...commonColumns,
+  },
+  (t) => [
+    index("project_created_by_idx").on(t.createdById),
+    index("project_type_idx").on(t.type),
+    index("project_status_idx").on(t.status),
+  ]
+);
+
+export const projectTags = sqliteTable(
+  "project_tags",
+  {
+    projectId: text("project_id", { length: 255 })
+      .notNull()
+      .references(() => projects.id),
+    tagId: text("tag_id", { length: 255 })
+      .notNull()
+      .references(() => tags.id),
+    ...commonColumns,
+  },
+  (table) => [
+    primaryKey({
+      columns: [table.projectId, table.tagId],
+    }),
+  ]
+);
+
+export const projectRelations = relations(projects, ({ one, many }) => ({
+  author: one(users, {
+    fields: [projects.createdById],
+    references: [users.id],
+  }),
+  tags: many(projectTags),
+}));
+
+export const projectTagRelations = relations(projectTags, ({ one }) => ({
+  project: one(projects, {
+    fields: [projectTags.projectId],
+    references: [projects.id],
+  }),
+  tag: one(tags, {
+    fields: [projectTags.tagId],
+    references: [tags.id],
+  }),
+}));
+
+export const projectInsertSchema = createInsertSchema(projects).omit({
+  updateCounter: true,
+  createdById: true,
+});
+
+export const projectInsertWithTagsSchema = projectInsertSchema.extend({
+  tagIds: z.array(z.string()).optional(),
+});
+
+export const projectUpdateSchema = createUpdateSchema(projects).omit({
+  createdAt: true,
+  updatedAt: true,
+  updateCounter: true,
+});
+
+export const projectUpdateWithTagsSchema = projectUpdateSchema.extend({
+  tagIds: z.array(z.string()).optional(),
+});
+
+export const projectSelectSchema = createSelectSchema(projects).omit({
+  updateCounter: true,
+});

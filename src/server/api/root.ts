@@ -5,6 +5,7 @@ import { categoryRouter } from "./routers/categories";
 import { commentsRouter } from "./routers/comments";
 import { commentReactionRouter } from "./routers/comment-reaction";
 import { tagRouter } from "./routers/tags";
+import { projectRouter } from "./routers/project";
 
 /**
  * This is the primary router for your server.
@@ -18,6 +19,7 @@ export const appRouter = createTRPCRouter({
   tag: tagRouter,
   comment: commentsRouter,
   commentReactions: commentReactionRouter,
+  project: projectRouter,
 });
 
 // export type definition of API
