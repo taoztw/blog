@@ -131,7 +131,7 @@ export const projectRouter = createTRPCRouter({
       }
 
       if (type && type !== "all") {
-        conditions.push(eq(projects.type, type));
+        conditions.push(eq(projects.categoryId, type));
       }
 
       if (status) {
@@ -148,6 +148,7 @@ export const projectRouter = createTRPCRouter({
         offset,
         with: {
           author: true,
+          category: true,
           tags: {
             with: {
               tag: true,
@@ -174,6 +175,7 @@ export const projectRouter = createTRPCRouter({
       where: eq(projects.id, input.id),
       with: {
         author: true,
+        category: true,
         tags: {
           with: {
             tag: true,
@@ -194,11 +196,13 @@ export const projectRouter = createTRPCRouter({
     .input(
       z.object({
         search: z.string().optional(),
-        type: z.string().optional(),
+        categoryId: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { search, type } = input;
+      const { search, categoryId } = input;
+
+      console.log("Fetching projects with type:", categoryId);
 
       // Build where conditions
       const conditions = [eq(projects.status, "published")];
@@ -212,8 +216,8 @@ export const projectRouter = createTRPCRouter({
         );
       }
 
-      if (type && type !== "all") {
-        conditions.push(eq(projects.type, type));
+      if (categoryId && categoryId !== "all") {
+        conditions.push(eq(projects.categoryId, categoryId));
       }
 
       const whereCondition = conditions.length > 1 ? and(...conditions) : conditions[0];
@@ -223,6 +227,7 @@ export const projectRouter = createTRPCRouter({
         orderBy: [desc(projects.sortOrder), desc(projects.createdAt)],
         with: {
           author: true,
+          category: true,
           tags: {
             with: {
               tag: true,

@@ -36,6 +36,11 @@ type ProjectWithRelations = z.infer<typeof projectSelectSchema> & {
     email: string;
     image: string | null;
   } | null;
+  category: {
+    id: string;
+    name: string;
+    description: string | null;
+  } | null;
   tags: Array<{
     tag: {
       id: string;

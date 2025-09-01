@@ -25,15 +25,6 @@ interface CreateOrEditProjectSheetProps {
   isLoading?: boolean;
 }
 
-const projectTypes = [
-  { value: PROJECT_TYPE_ENUM.FRONTEND, label: "前端" },
-  { value: PROJECT_TYPE_ENUM.BACKEND, label: "后端" },
-  { value: PROJECT_TYPE_ENUM.MOBILE, label: "移动端" },
-  { value: PROJECT_TYPE_ENUM.TOOL, label: "工具" },
-  { value: PROJECT_TYPE_ENUM.AI, label: "AI" },
-  { value: PROJECT_TYPE_ENUM.OTHER, label: "其他" },
-];
-
 const projectStatuses = [
   { value: PROJECT_STATUS_ENUM.DRAFT, label: "草稿" },
   { value: PROJECT_STATUS_ENUM.PUBLISHED, label: "已发布" },
@@ -52,7 +43,7 @@ export function CreateOrEditProjectSheet({
     title: "",
     description: "",
     imageUrl: "",
-    type: PROJECT_TYPE_ENUM.FRONTEND,
+    categoryId: "",
     status: PROJECT_STATUS_ENUM.DRAFT,
     githubUrl: "",
     demoUrl: "",
@@ -66,6 +57,9 @@ export function CreateOrEditProjectSheet({
   // 获取所有标签
   const { data: tags = [] } = api.project.getAllTags.useQuery();
 
+  // 获取所有分类作为项目类型
+  const { data: categories = [] } = api.category.getAll.useQuery();
+
   const isEditing = !!project;
 
   useEffect(() => {
@@ -74,7 +68,7 @@ export function CreateOrEditProjectSheet({
         title: project.title,
         description: project.description,
         imageUrl: project.imageUrl || "",
-        type: project.type,
+        categoryId: project.categoryId,
         status: project.status || PROJECT_STATUS_ENUM.DRAFT,
         githubUrl: project.githubUrl || "",
         demoUrl: project.demoUrl || "",
@@ -100,7 +94,7 @@ export function CreateOrEditProjectSheet({
         title: "",
         description: "",
         imageUrl: "",
-        type: PROJECT_TYPE_ENUM.FRONTEND,
+        categoryId: "",
         status: PROJECT_STATUS_ENUM.DRAFT,
         githubUrl: "",
         demoUrl: "",
@@ -246,16 +240,16 @@ export function CreateOrEditProjectSheet({
               <div className="grid gap-3">
                 <Label htmlFor="type">项目类型</Label>
                 <Select
-                  value={formData.type}
-                  onValueChange={(value) => setFormData((prev) => ({ ...prev, type: value }))}
+                  value={formData.categoryId}
+                  onValueChange={(value) => setFormData((prev) => ({ ...prev, categoryId: value }))}
                 >
                   <SelectTrigger>
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {projectTypes.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
+                    {categories.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.name}
                       </SelectItem>
                     ))}
                   </SelectContent>

@@ -2,16 +2,17 @@
 
 import { api } from "@/trpc/react";
 import ProjectCard from "@/components/cards/project-card";
+import { type } from "os";
 
 interface ProjectsGridProps {
   search?: string;
-  type?: string;
+  categoryId?: string;
 }
 
-export function ProjectsGrid({ search, type }: ProjectsGridProps) {
+export function ProjectsGrid({ search, categoryId }: ProjectsGridProps) {
   const { data: projects, isLoading } = api.project.getAll.useQuery({
     search,
-    type,
+    categoryId,
   });
 
   if (isLoading) {

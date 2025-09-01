@@ -3,23 +3,25 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { Calendar, Tag, ExternalLink, FileText, Folder, Code2, Smartphone, Wrench, Brain, Boxes } from "lucide-react";
+import {
+  Calendar,
+  Tag,
+  ExternalLink,
+  FileText,
+  Folder,
+  Code2,
+  Smartphone,
+  Wrench,
+  Brain,
+  Boxes,
+  FolderOpen,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { PaginationComponent, getCurrentPageData } from "@/components/ui_custom/pagination";
 import LocalSearch from "@/components/search/LocalSearch";
 import { api } from "@/trpc/react";
-
-// Project type icons mapping
-const projectTypeIcons = {
-  frontend: Code2,
-  backend: Boxes,
-  mobile: Smartphone,
-  tool: Wrench,
-  ai: Brain,
-  other: Folder,
-} as const;
 
 // Content type definitions
 type ContentType = "post" | "project";
@@ -50,7 +52,7 @@ const contentTypes = ["全部", "文章", "项目"] as const;
 export function BlogArchive() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  
+
   // Initialize states from URL parameters
   const [selectedContentType, setSelectedContentType] = useState(() => {
     const typeParam = searchParams.get("type");
@@ -65,7 +67,7 @@ export function BlogArchive() {
   // Update URL when filters change
   useEffect(() => {
     const params = new URLSearchParams(searchParams.toString());
-    
+
     // Content type
     if (selectedContentType === "文章") {
       params.set("type", "post");
@@ -74,27 +76,27 @@ export function BlogArchive() {
     } else {
       params.delete("type");
     }
-    
+
     // Category
     if (selectedCategory !== "全部") {
       params.set("category", selectedCategory);
     } else {
       params.delete("category");
     }
-    
+
     // Tag
     if (selectedTag !== "全部") {
       params.set("tag", selectedTag);
     } else {
       params.delete("tag");
     }
-    
+
     // Reset page when filters change
     params.delete("page");
-    
+
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     router.push(newUrl, { scroll: false });
-  }, [selectedContentType, selectedCategory, selectedTag, router, searchParams]);
+  }, [selectedContentType, selectedCategory, selectedTag, router]);
 
   // Fetch data
   const { data: postsData, isLoading: isLoadingPosts } = api.post.getByPage.useQuery({
@@ -105,7 +107,6 @@ export function BlogArchive() {
   const { data: projects, isLoading: isLoadingProjects } = api.project.getAll.useQuery({
     search: searchQuery || undefined,
   });
-
 
   const posts = postsData?.items || [];
 
@@ -121,7 +122,7 @@ export function BlogArchive() {
       type: "post" as const,
       category: post.category,
       tags: post.tags || [],
-      url: `/blog/${post.slug}`,
+      url: `/blog/${post.id}/${post.slug}`,
     }));
 
     const projectItems: ArchiveItem[] = (projects || []).map((project: any) => ({
@@ -133,7 +134,7 @@ export function BlogArchive() {
       category: null, // Projects don't have categories in the current schema
       tags: project.tags?.map((pt: any) => pt.tag) || [],
       projectType: project.type as ProjectType,
-      url: `/projects/${project.id}`,
+      url: `${project.blogUrl}`,
     }));
 
     return [...postItems, ...projectItems];
@@ -233,7 +234,7 @@ export function BlogArchive() {
       return FileText;
     }
     if (item.type === "project" && item.projectType) {
-      return projectTypeIcons[item.projectType];
+      return FolderOpen;
     }
     return Folder;
   };
@@ -367,55 +368,55 @@ export function BlogArchive() {
                           <Link key={item.id} href={item.url} className="block">
                             <Card className="group hover:shadow-md transition-all duration-200 hover:border-primary/20 cursor-pointer">
                               <CardContent className="p-4">
-                              <div className="flex items-center gap-3">
-                                <div className="flex-shrink-0">
-                                  <IconComponent className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between gap-2">
-                                    <h4 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1 flex-1">
-                                      {item.title}
-                                    </h4>
-                                    <div className="flex items-center gap-2 flex-shrink-0">
-                                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                        <Calendar className="h-3 w-3" />
-                                        {new Date(item.date).toLocaleDateString("zh-CN")}
+                                <div className="flex items-center gap-3">
+                                  <div className="flex-shrink-0">
+                                    <IconComponent className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <h4 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1 flex-1">
+                                        {item.title}
+                                      </h4>
+                                      <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                          <Calendar className="h-3 w-3" />
+                                          {new Date(item.date).toLocaleDateString("zh-CN")}
+                                        </div>
+                                        <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                                       </div>
-                                      <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                                    </div>
+
+                                    <div className="flex items-center gap-2 mt-2 flex-wrap">
+                                      <Badge variant="outline" className="text-xs px-2 py-0.5">
+                                        {item.type === "post" ? "文章" : "项目"}
+                                      </Badge>
+
+                                      {item.category && (
+                                        <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                                          {item.category.name}
+                                        </Badge>
+                                      )}
+
+                                      {item.tags.length > 0 && (
+                                        <div className="flex items-center gap-1">
+                                          <Tag className="h-3 w-3 text-muted-foreground" />
+                                          <div className="flex gap-1 flex-wrap">
+                                            {item.tags.slice(0, 2).map((tag) => (
+                                              <Badge key={tag.id} variant="secondary" className="text-xs px-1.5 py-0.5">
+                                                {tag.name}
+                                              </Badge>
+                                            ))}
+                                            {item.tags.length > 2 && (
+                                              <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
+                                                +{item.tags.length - 2}
+                                              </Badge>
+                                            )}
+                                          </div>
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
-
-                                  <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                    <Badge variant="outline" className="text-xs px-2 py-0.5">
-                                      {item.type === "post" ? "文章" : "项目"}
-                                    </Badge>
-
-                                    {item.category && (
-                                      <Badge variant="secondary" className="text-xs px-2 py-0.5">
-                                        {item.category.name}
-                                      </Badge>
-                                    )}
-
-                                    {item.tags.length > 0 && (
-                                      <div className="flex items-center gap-1">
-                                        <Tag className="h-3 w-3 text-muted-foreground" />
-                                        <div className="flex gap-1 flex-wrap">
-                                          {item.tags.slice(0, 2).map((tag) => (
-                                            <Badge key={tag.id} variant="secondary" className="text-xs px-1.5 py-0.5">
-                                              {tag.name}
-                                            </Badge>
-                                          ))}
-                                          {item.tags.length > 2 && (
-                                            <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
-                                              +{item.tags.length - 2}
-                                            </Badge>
-                                          )}
-                                        </div>
-                                      </div>
-                                    )}
-                                  </div>
                                 </div>
-                              </div>
                               </CardContent>
                             </Card>
                           </Link>

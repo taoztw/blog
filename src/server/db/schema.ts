@@ -34,7 +34,7 @@ export const PROJECT_STATUS_ENUM = {
 
 export const PROJECT_TYPE_ENUM = {
   FRONTEND: "frontend",
-  BACKEND: "backend", 
+  BACKEND: "backend",
   MOBILE: "mobile",
   TOOL: "tool",
   AI: "ai",
@@ -137,6 +137,11 @@ export const categorySelectSchema = createSelectSchema(categorys).omit({
 });
 export const categoryInsertSchema = createInsertSchema(categorys);
 
+export const categoryRelations = relations(categorys, ({ many }) => ({
+  posts: many(posts),
+  projects: many(projects),
+}));
+
 export const tags = sqliteTable("tag", {
   id: text("id", { length: 255 })
     .notNull()
@@ -152,7 +157,6 @@ export const tagSelectSchema = createSelectSchema(tags).omit({
   updateCounter: true,
 });
 export const tagInsertSchema = createInsertSchema(tags);
-
 
 export const posts = sqliteTable(
   "post",
@@ -343,7 +347,9 @@ export const projects = sqliteTable(
     title: text("title", { length: 512 }).notNull(),
     description: text("description").notNull(),
     imageUrl: text("image_url", { length: 512 }),
-    type: text("type", { enum: PROJECT_TYPE_TUPLE }).notNull(),
+    categoryId: text("category_id", { length: 255 })
+      .notNull()
+      .references(() => categorys.id),
     status: text("status", { enum: PROJECT_STATUS_TUPLE }).default(PROJECT_STATUS_ENUM.DRAFT),
     githubUrl: text("github_url", { length: 512 }),
     demoUrl: text("demo_url", { length: 512 }),
@@ -356,7 +362,7 @@ export const projects = sqliteTable(
   },
   (t) => [
     index("project_created_by_idx").on(t.createdById),
-    index("project_type_idx").on(t.type),
+    index("project_category_idx").on(t.categoryId),
     index("project_status_idx").on(t.status),
   ]
 );
@@ -383,6 +389,10 @@ export const projectRelations = relations(projects, ({ one, many }) => ({
   author: one(users, {
     fields: [projects.createdById],
     references: [users.id],
+  }),
+  category: one(categorys, {
+    fields: [projects.categoryId],
+    references: [categorys.id],
   }),
   tags: many(projectTags),
 }));

@@ -1,3 +1,4 @@
+// 暂时保留这个硬编码的filters作为fallback
 export const ProjectFilters = [
   { label: "全部", value: "all" },
   { label: "前端", value: "frontend" },

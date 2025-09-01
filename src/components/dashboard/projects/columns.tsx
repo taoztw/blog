@@ -20,18 +20,6 @@ interface ColumnProps {
   onDelete: (id: string) => void;
 }
 
-const getTypeLabel = (type: string) => {
-  const typeMap: Record<string, string> = {
-    frontend: "前端",
-    backend: "后端",
-    mobile: "移动端",
-    tool: "工具",
-    ai: "AI",
-    other: "其他",
-  };
-  return typeMap[type] || type;
-};
-
 const getStatusVariant = (status: string) => {
   return status === "published" ? "default" : "secondary";
 };
@@ -49,12 +37,7 @@ export function createProjectColumns({ onEdit, onDelete }: ColumnProps): ColumnD
         const imageUrl = row.getValue("imageUrl") as string;
         return imageUrl ? (
           <div className="relative w-16 h-12 rounded overflow-hidden">
-            <Image
-              src={imageUrl}
-              alt="项目图片"
-              fill
-              className="object-cover"
-            />
+            <Image src={imageUrl} alt="项目图片" fill className="object-cover" />
           </div>
         ) : (
           <div className="w-16 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
@@ -76,23 +59,15 @@ export function createProjectColumns({ onEdit, onDelete }: ColumnProps): ColumnD
       header: "描述",
       cell: ({ row }) => {
         const description = row.getValue("description") as string;
-        return (
-          <div className="max-w-[200px] truncate text-sm text-gray-600">
-            {description}
-          </div>
-        );
+        return <div className="max-w-[200px] truncate text-sm text-gray-600">{description}</div>;
       },
     },
     {
-      accessorKey: "type",
-      header: "类型",
+      accessorKey: "category",
+      header: "分类",
       cell: ({ row }) => {
-        const type = row.getValue("type") as string;
-        return (
-          <Badge variant="outline">
-            {getTypeLabel(type)}
-          </Badge>
-        );
+        const project = row.original;
+        return <Badge variant="outline">{project.category?.name || "未分类"}</Badge>;
       },
     },
     {
@@ -100,37 +75,30 @@ export function createProjectColumns({ onEdit, onDelete }: ColumnProps): ColumnD
       header: "状态",
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
-        return (
-          <Badge variant={getStatusVariant(status)}>
-            {getStatusLabel(status)}
-          </Badge>
-        );
+        return <Badge variant={getStatusVariant(status)}>{getStatusLabel(status)}</Badge>;
       },
     },
     {
-      accessorKey: "technologies",
-      header: "技术栈",
+      accessorKey: "tags",
+      header: "标签",
       cell: ({ row }) => {
-        const technologies = row.getValue("technologies") as string;
-        if (!technologies) return <span className="text-gray-400">-</span>;
-        
-        try {
-          const techs = JSON.parse(technologies) as string[];
-          return (
-            <div className="flex flex-wrap gap-1 max-w-[150px]">
-              {techs.slice(0, 2).map((tech, index) => (
-                <Badge key={index} variant="secondary" className="text-xs">
-                  {tech}
-                </Badge>
-              ))}
-              {techs.length > 2 && (
-                <span className="text-xs text-gray-500">+{techs.length - 2}</span>
-              )}
-            </div>
-          );
-        } catch {
+        const project = row.original;
+        const tags = project.tags || [];
+
+        if (tags.length === 0) {
           return <span className="text-gray-400">-</span>;
         }
+
+        return (
+          <div className="flex flex-wrap gap-1 max-w-[150px]">
+            {tags.slice(0, 2).map((projectTag, index) => (
+              <Badge key={index} variant="secondary" className="text-xs">
+                {projectTag.tag.name}
+              </Badge>
+            ))}
+            {tags.length > 2 && <span className="text-xs text-gray-500">+{tags.length - 2}</span>}
+          </div>
+        );
       },
     },
     {
@@ -196,10 +164,7 @@ export function createProjectColumns({ onEdit, onDelete }: ColumnProps): ColumnD
                   <Edit className="mr-2 h-4 w-4" />
                   编辑
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => onDelete(project.id)}
-                  className="text-red-600"
-                >
+                <DropdownMenuItem onClick={() => onDelete(project.id)} className="text-red-600">
                   <Trash2 className="mr-2 h-4 w-4" />
                   删除
                 </DropdownMenuItem>

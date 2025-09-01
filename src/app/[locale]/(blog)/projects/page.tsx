@@ -1,11 +1,11 @@
 import { FilterCarousel } from "@/components/filter/filter-carousel";
 import LocalSearch from "@/components/search/LocalSearch";
-import { ProjectFilters } from "@/constants/filters";
 import ROUTES from "@/constants/routes";
 import { api, HydrateClient } from "@/trpc/server";
 import { Suspense } from "react";
 import { ProjectsGrid } from "@/components/projects/projects-grid";
 import type { Metadata } from "next";
+import type { type } from "os";
 
 export const metadata: Metadata = {
   title: "Projects | My Portfolio",
@@ -19,20 +19,32 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams: {
+  searchParams: Promise<{
     search?: string;
-    type?: string;
-  };
+    categoryId?: string;
+  }>;
 }
 
 const page = async ({ searchParams }: PageProps) => {
-  const { search, type } = searchParams;
+  const { search, categoryId } = await searchParams;
 
   // Prefetch data for SSR
   void api.project.getAll.prefetch({
     search,
-    type,
+    categoryId: categoryId || "all",
   });
+
+  // 获取categories作为筛选器数据
+  const categories = await api.category.getAll();
+
+  // 构建项目筛选器数据
+  const projectFilters = [
+    { label: "全部", value: "all" },
+    ...categories.map((category) => ({
+      label: category.name,
+      value: category.id,
+    })),
+  ];
 
   return (
     <HydrateClient>
@@ -50,13 +62,13 @@ const page = async ({ searchParams }: PageProps) => {
           </section>
 
           <div className="flex">
-            <FilterCarousel data={ProjectFilters} value={type || "all"} />
+            <FilterCarousel data={projectFilters} value={categoryId || "all"} />
           </div>
         </div>
 
         {/* Projects Grid */}
         <Suspense fallback={<ProjectsGridSkeleton />}>
-          <ProjectsGrid search={search} type={type} />
+          <ProjectsGrid search={search} categoryId={categoryId} />
         </Suspense>
       </div>
     </HydrateClient>
