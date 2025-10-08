@@ -221,4 +221,121 @@ export const tagRouter = createTRPCRouter({
 
     return tagsWithCounts;
   }),
+
+  // Initialize default tags
+  initializeDefaults: protectedProcedure.mutation(async ({ ctx }) => {
+    const defaultTags = [
+      {
+        name: "Next.js",
+        description: "Next.js 框架相关内容",
+        color: "#000000",
+      },
+      {
+        name: "React",
+        description: "React 库相关内容",
+        color: "#61DAFB",
+      },
+      {
+        name: "大语言模型",
+        description: "LLM - Large Language Model 相关内容",
+        color: "#FF6B6B",
+      },
+      {
+        name: "JavaScript",
+        description: "JavaScript 编程语言",
+        color: "#F7DF1E",
+      },
+      {
+        name: "Python",
+        description: "Python 编程语言",
+        color: "#3776AB",
+      },
+      {
+        name: "Linux",
+        description: "Linux 操作系统相关",
+        color: "#FCC624",
+      },
+      {
+        name: "Docker",
+        description: "Docker 容器技术",
+        color: "#2496ED",
+      },
+      {
+        name: "Git",
+        description: "Git 版本控制系统",
+        color: "#F05032",
+      },
+      {
+        name: "TypeScript",
+        description: "TypeScript 编程语言",
+        color: "#3178C6",
+      },
+      {
+        name: "Node.js",
+        description: "Node.js 运行时环境",
+        color: "#339933",
+      },
+      {
+        name: "数据库",
+        description: "数据库相关技术",
+        color: "#4479A1",
+      },
+      {
+        name: "云计算",
+        description: "云计算和云服务",
+        color: "#FF9900",
+      },
+    ];
+
+    const results: {
+      successful: any[];
+      failed: string[];
+      errors: string[];
+    } = {
+      successful: [],
+      failed: [],
+      errors: [],
+    };
+
+    for (const tagData of defaultTags) {
+      try {
+        // 检查标签是否已存在
+        const existingTag = await ctx.db
+          .select({ name: tags.name })
+          .from(tags)
+          .where(eq(tags.name, tagData.name))
+          .limit(1);
+
+        if (existingTag.length > 0) {
+          results.failed.push(tagData.name);
+          results.errors.push(`标签 "${tagData.name}" 已存在`);
+          continue;
+        }
+
+        // 创建标签
+        const [insertedTag] = await ctx.db.insert(tags).values(tagData).returning();
+
+        if (insertedTag) {
+          results.successful.push(insertedTag);
+        } else {
+          results.failed.push(tagData.name);
+          results.errors.push(`创建标签 "${tagData.name}" 失败`);
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        results.failed.push(tagData.name);
+        results.errors.push(`${tagData.name}: ${errorMessage}`);
+      }
+    }
+
+    return {
+      message: `初始化完成。成功创建 ${results.successful.length} 个标签，失败 ${results.failed.length} 个`,
+      totalRequested: defaultTags.length,
+      successCount: results.successful.length,
+      failCount: results.failed.length,
+      successfulTags: results.successful,
+      failedTags: results.failed,
+      errors: results.errors,
+    };
+  }),
 });

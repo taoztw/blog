@@ -118,4 +118,73 @@ export const categoryRouter = createTRPCRouter({
 
     return categoriesWithCounts;
   }),
+
+  // Initialize default categories
+  initializeDefaults: protectedProcedure.mutation(async ({ ctx }) => {
+    const defaultCategories = [
+      {
+        name: "生活",
+        description: "Life - 生活相关的文章和分享",
+      },
+      {
+        name: "技术",
+        description: "Tech - 技术相关的文章和教程",
+      },
+      {
+        name: "AI",
+        description: "AI - 人工智能相关的内容",
+      },
+    ];
+
+    const results: {
+      successful: any[];
+      failed: string[];
+      errors: string[];
+    } = {
+      successful: [],
+      failed: [],
+      errors: [],
+    };
+
+    for (const categoryData of defaultCategories) {
+      try {
+        // 检查类别是否已存在
+        const existingCategory = await ctx.db
+          .select({ name: categorys.name })
+          .from(categorys)
+          .where(eq(categorys.name, categoryData.name))
+          .limit(1);
+
+        if (existingCategory.length > 0) {
+          results.failed.push(categoryData.name);
+          results.errors.push(`类别 "${categoryData.name}" 已存在`);
+          continue;
+        }
+
+        // 创建类别
+        const [insertedCategory] = await ctx.db.insert(categorys).values(categoryData).returning();
+
+        if (insertedCategory) {
+          results.successful.push(insertedCategory);
+        } else {
+          results.failed.push(categoryData.name);
+          results.errors.push(`创建类别 "${categoryData.name}" 失败`);
+        }
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        results.failed.push(categoryData.name);
+        results.errors.push(`${categoryData.name}: ${errorMessage}`);
+      }
+    }
+
+    return {
+      message: `初始化完成。成功创建 ${results.successful.length} 个类别，失败 ${results.failed.length} 个`,
+      totalRequested: defaultCategories.length,
+      successCount: results.successful.length,
+      failCount: results.failed.length,
+      successfulCategories: results.successful,
+      failedCategories: results.failed,
+      errors: results.errors,
+    };
+  }),
 });

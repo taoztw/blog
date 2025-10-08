@@ -85,14 +85,46 @@ export function CategoryTable() {
     setEditCategory(null); // 关闭弹窗
   };
 
+  const initializeDefaults = api.category.initializeDefaults.useMutation({
+    onSuccess: (result) => {
+      utils.category.getMany.invalidate();
+
+      if (result.successCount > 0) {
+        toast.success(`成功创建 ${result.successCount} 个默认类别`);
+      }
+
+      if (result.failCount > 0) {
+        const failedText = result.failedCategories.slice(0, 3).join(", ");
+        const moreText = result.failedCategories.length > 3 ? ` 等${result.failedCategories.length}个` : "";
+        toast.warning(`${result.failCount} 个类别已存在: ${failedText}${moreText}`);
+      }
+    },
+    onError: (error) => {
+      toast.error(`初始化失败: ${error.message}`);
+    },
+  });
+
+  const handleInitializeDefaults = () => {
+    initializeDefaults.mutate();
+  };
+
   return (
     <div className="p-6 space-y-4">
       <div className="flex justify-between">
         <h1 className="text-2xl font-bold">类别列表</h1>
         {/* <CreatePostDialog /> */}
-        <Button variant="default" asChild className="bg-primary hover:bg-primary/90">
-          <CreateOrEditCategoryDialog onCreateCategory={handleCreateCategory} />
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={handleInitializeDefaults}
+            disabled={initializeDefaults.isPending}
+          >
+            {initializeDefaults.isPending ? "初始化中..." : "初始化默认类别"}
+          </Button>
+          <Button variant="default" asChild className="bg-primary hover:bg-primary/90">
+            <CreateOrEditCategoryDialog onCreateCategory={handleCreateCategory} />
+          </Button>
+        </div>
       </div>
       <DataTable
         columns={columns}

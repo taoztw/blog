@@ -100,11 +100,41 @@ export function TagTable() {
     await batchCreateTags.mutateAsync(tags);
   };
 
+  const initializeDefaults = api.tag.initializeDefaults.useMutation({
+    onSuccess: (result) => {
+      utils.tag.getMany.invalidate();
+
+      if (result.successCount > 0) {
+        toast.success(`成功创建 ${result.successCount} 个默认标签`);
+      }
+
+      if (result.failCount > 0) {
+        const failedText = result.failedTags.slice(0, 3).join(", ");
+        const moreText = result.failedTags.length > 3 ? ` 等${result.failedTags.length}个` : "";
+        toast.warning(`${result.failCount} 个标签已存在: ${failedText}${moreText}`);
+      }
+    },
+    onError: (error) => {
+      toast.error(`初始化失败: ${error.message}`);
+    },
+  });
+
+  const handleInitializeDefaults = () => {
+    initializeDefaults.mutate();
+  };
+
   return (
     <div className="p-6 space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">标签列表</h1>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={handleInitializeDefaults}
+            disabled={initializeDefaults.isPending}
+          >
+            {initializeDefaults.isPending ? "初始化中..." : "初始化默认标签"}
+          </Button>
           <BatchCreateTagDialog onBatchCreateTags={handleBatchCreateTags} />
           <CreateOrEditTagDialog onCreateTag={handleCreateTag} />
         </div>
