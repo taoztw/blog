@@ -1,6 +1,6 @@
 import { AdminSidebar } from "@/components/dashboard/admin-sidebar";
-import { DashboardCard } from "@/components/dashboard/home/dashboard-card";
-import { DashboardHeader } from "@/components/dashboard/home/dashboard-header";
+import { DashboardCard } from "@/components/dashboard/dashboard-card";
+import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { auth } from "@/server/auth";
 import type React from "react";

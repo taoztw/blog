@@ -1,4 +1,4 @@
-import { TagTable } from "@/components/dashboard/tags/tag-table";
+import { TagTable } from "./_components/tag-table";
 import { api, HydrateClient } from "@/trpc/server";
 import React from "react";
 

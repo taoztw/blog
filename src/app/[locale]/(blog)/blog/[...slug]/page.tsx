@@ -1,4 +1,4 @@
-import BlogView from "@/components/blog/blog-view";
+import BlogView from "../_components/blog-view";
 import { api, HydrateClient } from "@/trpc/server";
 
 interface PageProps {

@@ -1,4 +1,4 @@
-import SignUpForm from "@/components/forms/SignUpForm";
+import SignUpForm from "../_components/forms/SignUpForm";
 import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
 import React from "react";

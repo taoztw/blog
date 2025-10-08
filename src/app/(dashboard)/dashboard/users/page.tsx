@@ -1,4 +1,4 @@
-import { UserTable } from "@/components/dashboard/users/user-table";
+import { UserTable } from "./_components/user-table";
 import { api, HydrateClient } from "@/trpc/server";
 import React from "react";
 

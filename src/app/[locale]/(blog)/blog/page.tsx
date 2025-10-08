@@ -1,4 +1,4 @@
-import { BlogListPage } from "@/components/blog/blog-list";
+import { BlogListPage } from "./_components/blog-list";
 import React from "react";
 
 const BlogPage = async () => {

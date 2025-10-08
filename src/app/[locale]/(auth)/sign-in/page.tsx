@@ -1,4 +1,4 @@
-import SignInForm from "@/components/forms/SignInForm";
+import SignInForm from "../_components/forms/SignInForm";
 import { auth } from "@/server/auth";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";

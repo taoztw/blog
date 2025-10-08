@@ -9,7 +9,7 @@ import Link from "next/link";
 import { z } from "zod";
 import type { Post, PostWithRelations } from "@/global";
 import { getTimeStamp } from "@/lib/utils";
-import { ImageService } from "../dashboard/upload/image-service";
+import { ImageService } from "../dashboard/image-service";
 import { usePathname } from "next/navigation";
 import type { PostListItem } from "@/server/api/types";
 import type { tags } from "@/server/db/schema";

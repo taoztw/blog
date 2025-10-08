@@ -1,4 +1,4 @@
-import { LatestPost } from "@/components/post";
+import PostLatestCard from "@/components/cards/post-latest-card";
 import Link from "next/link";
 import { auth } from "@/server/auth";
 import { HydrateClient, api } from "@/trpc/server";
@@ -56,7 +56,7 @@ export default async function Home() {
             </div>
           </div>
 
-          {session?.user && <LatestPost />}
+          {session?.user && <PostLatestCard />}
         </div>
       </main>
     </HydrateClient>

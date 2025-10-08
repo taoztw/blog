@@ -1,4 +1,4 @@
-import { CategoryTable } from "@/components/dashboard/categories/category-table";
+import { CategoryTable } from "./_components/category-table";
 import { api, HydrateClient } from "@/trpc/server";
 import React from "react";
 

@@ -1,5 +1,5 @@
-import { ImageUpload } from "@/components/dashboard/upload/image-upload";
-import { ImageViewer } from "@/components/dashboard/upload/image-viewer";
+import { ImageUpload } from "./_components/image-upload";
+import { ImageViewer } from "./_components/image-viewer";
 
 export default function Home() {
   return (

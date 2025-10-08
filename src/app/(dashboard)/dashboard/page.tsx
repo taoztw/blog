@@ -1,4 +1,4 @@
-import AdminDashboard from "@/components/dashboard/dashboard";
+import AdminDashboard from "./_components/dashboard";
 import { auth } from "@/server/auth";
 import React from "react";
 

@@ -1,4 +1,4 @@
-import { PostTable } from "@/components/dashboard/posts/post-table";
+import { PostTable } from "./_components/post-table";
 import { api, HydrateClient } from "@/trpc/server";
 import React from "react";
 

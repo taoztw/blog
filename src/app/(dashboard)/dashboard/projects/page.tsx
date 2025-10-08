@@ -1,4 +1,4 @@
-import { ProjectTable } from "@/components/dashboard/projects/project-table";
+import { ProjectTable } from "./_components/project-table";
 import { api, HydrateClient } from "@/trpc/server";
 import React from "react";
 
