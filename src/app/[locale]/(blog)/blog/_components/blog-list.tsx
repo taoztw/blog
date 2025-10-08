@@ -5,18 +5,8 @@ import SearchInput from "@/components/ui/search-input";
 import { BlogCard } from "@/components/cards/post-card";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { api } from "@/trpc/react";
-import type { Post, PostWithRelations } from "@/global";
 import { BlogSidebar } from "./blog-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { useEffect, useState, type JSX } from "react";
 import { PaginationComponent } from "@/components/ui_custom/pagination";
 

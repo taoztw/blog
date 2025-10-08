@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence, easeInOut } from "framer-motion";
 import { Menu, X, ArrowRight, Zap, Search } from "lucide-react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Logo } from "../logo";
 import { ThemeSwitcher } from "../theme-switcher";
 import { useTheme } from "next-themes";
@@ -33,8 +34,23 @@ export default function Header2() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const session = useSession();
+  const pathname = usePathname();
 
   const t = useTranslations("HomePage.Header");
+
+  // Determine active navigation item based on current pathname
+  const getActiveItem = (href: string) => {
+    // Remove locale prefix from pathname for comparison
+    const currentPath = pathname.replace(/^\/[a-z]{2}(-[A-Z]{2})?/, "") || "/";
+    // Don't highlight any nav item when on the homepage
+    if (currentPath === "/") {
+      return false;
+    }
+    if (href === "/blog" && currentPath.startsWith("/blog")) {
+      return true;
+    }
+    return currentPath.startsWith(href);
+  };
 
   useEffect(() => {
     setMounted(true);
@@ -120,36 +136,55 @@ export default function Header2() {
               </Link>
             </motion.div>
             <nav className="hidden items-center space-x-1 lg:flex">
-              {navItems.map((item, index) => (
-                <motion.div
-                  key={item.name}
-                  variants={itemVariants}
-                  className="relative"
-                  onMouseEnter={() => setHoveredItem(item.name)}
-                  onMouseLeave={() => setHoveredItem(null)}
-                >
-                  <Link
-                    href={item.href}
-                    className="text-foreground/80 hover:text-foreground relative rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200"
+              {navItems.map((item) => {
+                const isActive = getActiveItem(item.href);
+                return (
+                  <motion.div
+                    key={item.name}
+                    variants={itemVariants}
+                    className="relative"
+                    onMouseEnter={() => setHoveredItem(item.name)}
+                    onMouseLeave={() => setHoveredItem(null)}
                   >
-                    {hoveredItem === item.name && (
-                      <motion.div
-                        className="bg-muted absolute inset-0 rounded-lg"
-                        layoutId="navbar-hover"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 400,
-                          damping: 30,
-                        }}
-                      />
-                    )}
-                    <span className="relative z-10">{t(`navItems.${item.name}`)}</span>
-                  </Link>
-                </motion.div>
-              ))}
+                    <Link
+                      href={item.href}
+                      className={`relative rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 ${
+                        isActive ? "text-foreground/80  bg-muted " : "text-foreground/80 hover:text-foreground"
+                      }`}
+                    >
+                      {!isActive && hoveredItem === item.name && (
+                        <motion.div
+                          className="bg-muted absolute inset-0 rounded-lg"
+                          layoutId="navbar-hover"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                      {isActive && (
+                        <motion.div
+                          className="absolute inset-0 rounded-lg
+                          "
+                          layoutId="navbar-active"
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 400,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                      <span className="relative z-10">{t(`navItems.${item.name}`)}</span>
+                    </Link>
+                  </motion.div>
+                );
+              })}
             </nav>
             <motion.div className="hidden items-center space-x-3 lg:flex" variants={itemVariants}>
               <motion.button
@@ -226,17 +261,24 @@ export default function Header2() {
             >
               <div className="space-y-6 p-6">
                 <div className="space-y-1">
-                  {navItems.map((item) => (
-                    <motion.div key={item.name} variants={mobileItemVariants}>
-                      <Link
-                        href={item.href}
-                        className="text-foreground hover:bg-muted block rounded-lg px-4 py-3 font-medium transition-colors duration-200"
-                        onClick={() => setIsMobileMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    </motion.div>
-                  ))}
+                  {navItems.map((item) => {
+                    const isActive = getActiveItem(item.href);
+                    return (
+                      <motion.div key={item.name} variants={mobileItemVariants}>
+                        <Link
+                          href={item.href}
+                          className={`block rounded-lg px-4 py-3 font-medium transition-colors duration-200 ${
+                            isActive
+                              ? "text-foreground bg-primary/10 border border-primary/20"
+                              : "text-foreground hover:bg-muted"
+                          }`}
+                          onClick={() => setIsMobileMenuOpen(false)}
+                        >
+                          {t(`navItems.${item.name}`)}
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
                 </div>
 
                 <motion.div className="border-border space-y-3 border-t pt-6" variants={mobileItemVariants}>
