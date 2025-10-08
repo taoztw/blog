@@ -7,4 +7,6 @@ export * from "./tags";
 export * from "./posts";
 export * from "./comments";
 export * from "./projects";
+export * from "./questions";
+export * from "./journals";
 export * from "./relations";

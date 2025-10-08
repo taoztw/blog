@@ -7,10 +7,73 @@
         "contact": "联系",
         "archives": "归档",
         "qas": "问答",
-        "projects": "项目"
+        "projects": "项目",
+        "journals": "日志"
       },
       "themeSwitcher": "Switch Theme",
       "signIn": "登录"
     }
+  },
+  "QAPage": {
+    "title": "所有问题",
+    "askQuestion": "提问",
+    "search": "在此搜索问题...",
+    "filters": {
+      "newest": "最新",
+      "recommended": "推荐问题",
+      "frequent": "热门",
+      "unanswered": "未回答"
+    },
+    "hotNetwork": "热门网络",
+    "popularTags": "热门标签",
+    "stats": {
+      "votes": "投票",
+      "answers": "回答",
+      "views": "浏览"
+    }
+  },
+  "QuestionDetail": {
+    "asked": "提问于",
+    "votes": "投票",
+    "answers": "回答",
+    "views": "浏览",
+    "tags": "标签",
+    "upvote": "点赞",
+    "downvote": "踩",
+    "writeAnswer": "在此撰写您的回答",
+    "postAnswer": "发布回答",
+    "generateAI": "生成AI回答",
+    "sortBy": {
+      "highest": "最高投票",
+      "newest": "最新",
+      "oldest": "最早"
+    }
+  },
+  "AskQuestion": {
+    "title": "提出问题",
+    "editTitle": "编辑问题",
+    "questionTitle": "问题标题",
+    "questionTitlePlaceholder": "JavaScript中是否有计算数字平方根的Math函数？",
+    "detailedExplanation": "问题的详细说明",
+    "tags": "标签",
+    "tagsPlaceholder": "添加最多5个标签来描述您的问题。开始输入以查看建议。",
+    "submit": "提交问题",
+    "update": "更新问题"
+  },
+  "JournalPage": {
+    "title": "日志",
+    "createJournal": "创建日志",
+    "noJournals": "暂无日志",
+    "loadMore": "加载更多"
+  },
+  "CreateJournal": {
+    "title": "创建日志",
+    "editTitle": "编辑日志",
+    "content": "内容",
+    "contentPlaceholder": "在此撰写您的日志...",
+    "image": "图片",
+    "imageUrl": "图片URL（可选）",
+    "submit": "创建日志",
+    "update": "更新日志"
   }
 }

@@ -1,7 +1,12 @@
+import { QuestionListPage } from "./_components/question-list";
 import React from "react";
 
-const page = () => {
-  return <div>QAs</div>;
+const QAsPage = async () => {
+  return (
+    <div>
+      <QuestionListPage />
+    </div>
+  );
 };
 
-export default page;
+export default QAsPage;

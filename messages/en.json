@@ -7,10 +7,73 @@
         "contact": "Contact",
         "archives": "Archives",
         "qas": "Q&As",
-        "projects": "Projects"
+        "projects": "Projects",
+        "journals": "Journals"
       },
       "themeSwitcher": "Switch Theme",
       "signIn": "Sign In"
     }
+  },
+  "QAPage": {
+    "title": "All Questions",
+    "askQuestion": "Ask a Question",
+    "search": "Search for Questions Here...",
+    "filters": {
+      "newest": "Newest",
+      "recommended": "Recommended Questions",
+      "frequent": "Frequent",
+      "unanswered": "Unanswered"
+    },
+    "hotNetwork": "Hot Network",
+    "popularTags": "Popular Tags",
+    "stats": {
+      "votes": "Votes",
+      "answers": "Answers",
+      "views": "Views"
+    }
+  },
+  "QuestionDetail": {
+    "asked": "asked",
+    "votes": "Votes",
+    "answers": "Answers",
+    "views": "Views",
+    "tags": "Tags",
+    "upvote": "Upvote",
+    "downvote": "Downvote",
+    "writeAnswer": "Write your answer here",
+    "postAnswer": "Post Answer",
+    "generateAI": "Generate AI Answer",
+    "sortBy": {
+      "highest": "Highest Upvotes",
+      "newest": "Newest",
+      "oldest": "Oldest"
+    }
+  },
+  "AskQuestion": {
+    "title": "Ask a Question",
+    "editTitle": "Edit a question",
+    "questionTitle": "Question Title",
+    "questionTitlePlaceholder": "Is there a Math function to calculate the root of a number in JavaScript?",
+    "detailedExplanation": "Detailed explanation of your problem",
+    "tags": "Tags",
+    "tagsPlaceholder": "Add up to 5 tags to describe what your question is about. Start typing to see suggestions.",
+    "submit": "Ask a Question",
+    "update": "Update Question"
+  },
+  "JournalPage": {
+    "title": "Journals",
+    "createJournal": "Create Journal",
+    "noJournals": "No journals yet",
+    "loadMore": "Load More"
+  },
+  "CreateJournal": {
+    "title": "Create Journal",
+    "editTitle": "Edit Journal",
+    "content": "Content",
+    "contentPlaceholder": "Write your journal entry here...",
+    "image": "Image",
+    "imageUrl": "Image URL (optional)",
+    "submit": "Create Journal",
+    "update": "Update Journal"
   }
 }
