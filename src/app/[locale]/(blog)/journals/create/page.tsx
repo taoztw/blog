@@ -12,10 +12,13 @@ import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "next-auth/react";
 
-const MarkdownEditor = dynamic(() => import("@/components/mardown-preview").then(mod => ({ default: mod.MarkdownEditor })), {
-  ssr: false,
-  loading: () => <Skeleton className="h-96 w-full" />,
-});
+const MarkdownEditor = dynamic(
+  () => import("@/components/markdown-editor").then((mod) => ({ default: mod.MarkdownEditor })),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="h-96 w-full" />,
+  }
+);
 
 export default function CreateJournalPage() {
   const t = useTranslations("CreateJournal");
@@ -77,11 +80,7 @@ export default function CreateJournalPage() {
             <Label htmlFor="content">
               {t("content")} <span className="text-red-500">*</span>
             </Label>
-            <MarkdownEditor
-              value={content}
-              onChange={setContent}
-              placeholder={t("contentPlaceholder")}
-            />
+            <MarkdownEditor value={content} onChange={setContent} placeholder={t("contentPlaceholder")} />
           </div>
 
           {/* Image URL */}
@@ -108,18 +107,10 @@ export default function CreateJournalPage() {
 
           {/* Submit Button */}
           <div className="flex gap-4">
-            <Button
-              type="submit"
-              disabled={createMutation.isPending}
-              className="bg-orange-500 hover:bg-orange-600"
-            >
+            <Button type="submit" disabled={createMutation.isPending} className="bg-orange-500 hover:bg-orange-600">
               {createMutation.isPending ? "Creating..." : t("submit")}
             </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => router.back()}
-            >
+            <Button type="button" variant="outline" onClick={() => router.back()}>
               Cancel
             </Button>
           </div>

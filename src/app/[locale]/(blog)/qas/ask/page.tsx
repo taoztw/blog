@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Dynamically import markdown editor to avoid SSR issues
-const MarkdownEditor = dynamic(() => import("@/components/mardown-preview").then(mod => ({ default: mod.MarkdownEditor })), {
+const MarkdownEditor = dynamic(() => import("@/components/markdown-editor").then(mod => ({ default: mod.MarkdownEditor })), {
   ssr: false,
   loading: () => <Skeleton className="h-96 w-full" />,
 });
