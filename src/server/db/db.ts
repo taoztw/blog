@@ -21,7 +21,7 @@ export const getDB = () => {
     throw new Error("D1 database not found");
   }
 
-  db = drizzle(cf_env.DB, { schema, logger: true });
+  db = drizzle(cf_env.DB, { schema });
 
   return db;
 };

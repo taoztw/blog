@@ -3,7 +3,7 @@ import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 import z from "zod";
 import { and, count, desc, eq, getTableColumns, inArray, isNotNull, isNull, lt, or } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
-import { db } from "@/server/db";
+import { db } from "@/server/db/db";
 
 export const commentsRouter = createTRPCRouter({
   create: protectedProcedure

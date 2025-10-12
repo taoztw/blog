@@ -1,5 +1,5 @@
 import { signInSchema } from "@/lib/validations";
-import { getDB } from "@/server/db";
+import { getDB } from "@/server/db/db";
 import { accounts, users } from "@/server/db/schema";
 import bcrypt from "bcryptjs";
 import { and, eq } from "drizzle-orm";
