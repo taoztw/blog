@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, ChangeEvent } from "react";
+import { useState, useRef, type ChangeEvent } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,7 +15,7 @@ import {
   ListOrdered,
   ListTodo,
   Image as ImageIcon,
-  Loader2
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -49,27 +49,16 @@ export function MarkdownEditor({
     const selectedText = value.substring(start, end);
     const textToInsert = selectedText || placeholder;
 
-    const newText =
-      value.substring(0, start) +
-      before +
-      textToInsert +
-      after +
-      value.substring(end);
+    const newText = value.substring(0, start) + before + textToInsert + after + value.substring(end);
 
     onChange(newText);
 
     // Set cursor position
     setTimeout(() => {
       if (selectedText) {
-        textarea.setSelectionRange(
-          start + before.length,
-          start + before.length + selectedText.length
-        );
+        textarea.setSelectionRange(start + before.length, start + before.length + selectedText.length);
       } else {
-        textarea.setSelectionRange(
-          start + before.length,
-          start + before.length + placeholder.length
-        );
+        textarea.setSelectionRange(start + before.length, start + before.length + placeholder.length);
       }
       textarea.focus();
     }, 0);
@@ -119,10 +108,7 @@ export function MarkdownEditor({
         const textarea = textareaRef.current;
         if (textarea) {
           const start = textarea.selectionStart;
-          const newText =
-            value.substring(0, start) +
-            "\n" + imgTag + "\n" +
-            value.substring(start);
+          const newText = value.substring(0, start) + "\n" + imgTag + "\n" + value.substring(start);
           onChange(newText);
 
           setTimeout(() => {
@@ -240,20 +226,10 @@ export function MarkdownEditor({
                 disabled={uploading}
                 title="Upload Image"
               >
-                {uploading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <ImageIcon className="h-4 w-4" />
-                )}
+                {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <ImageIcon className="h-4 w-4" />}
               </Button>
 
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-              />
+              <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleImageUpload} />
             </div>
           )}
         </div>
@@ -282,11 +258,7 @@ export function MarkdownEditor({
 
       <div className="border-t bg-muted/30 px-4 py-2 text-xs text-muted-foreground">
         Paste, drop, or click{" "}
-        <button
-          type="button"
-          className="text-primary hover:underline"
-          onClick={() => fileInputRef.current?.click()}
-        >
+        <button type="button" className="text-primary hover:underline" onClick={() => fileInputRef.current?.click()}>
           here
         </button>{" "}
         to add files
