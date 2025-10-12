@@ -1258,6 +1258,24 @@
   resolved "https://registry.npmmirror.com/@babel/runtime/-/runtime-7.28.2.tgz#2ae5a9d51cc583bd1f5673b3bb70d6d819682473"
   integrity sha512-KHp2IflsnGywDjBWDkR9iEqiWSpc8GIi0lgTT3mOElT0PP1tG26P4tmFI2YvAdzgq9RGyoHZQEIEdZy6Ec5xCA==
 
+"@better-auth/core@1.3.27":
+  version "1.3.27"
+  resolved "https://registry.npmmirror.com/@better-auth/core/-/core-1.3.27.tgz#4d8723529286b3bdd3a3a4715b79a09966774a7e"
+  integrity sha512-3Sfdax6MQyronY+znx7bOsfQHI6m1SThvJWb0RDscFEAhfqLy95k1sl+/PgGyg0cwc2cUXoEiAOSqYdFYrg3vA==
+  dependencies:
+    better-call "1.0.19"
+    zod "^4.1.5"
+
+"@better-auth/utils@0.3.0", "@better-auth/utils@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.npmmirror.com/@better-auth/utils/-/utils-0.3.0.tgz#066c5ce82bf393421547dd887b14a6899310003d"
+  integrity sha512-W+Adw6ZA6mgvnSnhOki270rwJ42t4XzSK6YWGF//BbVXL6SwCLWfyzBc1lN2m/4RM28KubdBKQ4X5VMoLRNPQw==
+
+"@better-fetch/fetch@1.1.18", "@better-fetch/fetch@^1.1.4":
+  version "1.1.18"
+  resolved "https://registry.npmmirror.com/@better-fetch/fetch/-/fetch-1.1.18.tgz#4ddc65a703c65e6036947ff335e635a5a38e6225"
+  integrity sha512-rEFOE1MYIsBmoMJtQbl32PGHHXuG2hDxvEd7rUHE0vCBoFQVSDqaVs9hkZEtHCxRoY+CljXKFCOuJ8uxqw1LcA==
+
 "@cloudflare/kv-asset-handler@0.4.0":
   version "0.4.0"
   resolved "https://registry.npmmirror.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.4.0.tgz#a8588c6a2e89bb3e87fb449295a901c9f6d3e1bf"
@@ -1925,6 +1943,11 @@
   dependencies:
     tslib "2"
 
+"@hexagon/base64@^1.1.27":
+  version "1.1.28"
+  resolved "https://registry.npmmirror.com/@hexagon/base64/-/base64-1.1.28.tgz#7d306a97f1423829be5b27c9d388fe50e3099d48"
+  integrity sha512-lhqDEAvWixy3bZ+UOYbPwUbBkwBq5C1LAJ/xPC8Oi+lL54oyakv/npbA0aU2hgCsx/1NUd4IBvV03+aUBWxerw==
+
 "@hookform/resolvers@^5.1.1":
   version "5.2.1"
   resolved "https://registry.npmmirror.com/@hookform/resolvers/-/resolvers-5.2.1.tgz#3332b4662fe301a969ac1b795d663cf728329166"
@@ -2248,6 +2271,11 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
+"@levischuck/tiny-cbor@^0.2.2":
+  version "0.2.11"
+  resolved "https://registry.npmmirror.com/@levischuck/tiny-cbor/-/tiny-cbor-0.2.11.tgz#833ddf7f3627dcb62d855d9c184061b4a1a875b3"
+  integrity sha512-llBRm4dT4Z89aRsm6u2oEZ8tfwL/2l6BwpZ7JcyieouniDECM5AqNgr/y08zalEIvW3RSK4upYyybDcmjXqAow==
+
 "@napi-rs/wasm-runtime@^0.2.11":
   version "0.2.12"
   resolved "https://registry.npmmirror.com/@napi-rs/wasm-runtime/-/wasm-runtime-0.2.12.tgz#3e78a8b96e6c33a6c517e1894efbd5385a7cb6f2"
@@ -2314,6 +2342,11 @@
   resolved "https://registry.npmmirror.com/@noble/ciphers/-/ciphers-1.3.0.tgz#f64b8ff886c240e644e5573c097f86e5b43676dc"
   integrity sha512-2I0gnIVPtfnMw9ee9h1dJG7tp81+8Ob3OJb3Mv37rx5L40/b0i7djjCVvGOVqc9AEIQyvyu1i6ypKdFw8R8gQw==
 
+"@noble/ciphers@^2.0.0":
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/@noble/ciphers/-/ciphers-2.0.1.tgz#fb07d6479d11fd10d7f601b6fb8fb9925b7accf7"
+  integrity sha512-xHK3XHPUW8DTAobU+G0XT+/w+JLM7/8k1UFdB5xg/zTFPnFCobhftzw8wl4Lw2aq/Rvir5pxfZV5fEazmeCJ2g==
+
 "@noble/curves@^1.9.1":
   version "1.9.6"
   resolved "https://registry.npmmirror.com/@noble/curves/-/curves-1.9.6.tgz#b45ebedca85bb75782f6be7e7f120f0c423c99e0"
@@ -2325,6 +2358,11 @@
   version "1.8.0"
   resolved "https://registry.npmmirror.com/@noble/hashes/-/hashes-1.8.0.tgz#cee43d801fcef9644b11b8194857695acd5f815a"
   integrity sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==
+
+"@noble/hashes@^2.0.0":
+  version "2.0.1"
+  resolved "https://registry.npmmirror.com/@noble/hashes/-/hashes-2.0.1.tgz#fc1a928061d1232b0a52bb754393c37a5216c89e"
+  integrity sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw==
 
 "@node-minify/core@^8.0.6":
   version "8.0.6"
@@ -2411,6 +2449,138 @@
   version "1.2.1"
   resolved "https://registry.npmmirror.com/@panva/hkdf/-/hkdf-1.2.1.tgz#cb0d111ef700136f4580349ff0226bf25c853f23"
   integrity sha512-6oclG6Y3PiDFcoyk8srjLfVKyMfVCKJ27JwNPViuXziFpmdz+MZnZN/aKY0JGXgYuO/VghU0jcOAZgWXZ1Dmrw==
+
+"@peculiar/asn1-android@^2.3.10":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-android/-/asn1-android-2.5.0.tgz#039c3b08dbd80cfb9b4c7f239c43a91247b58f98"
+  integrity sha512-t8A83hgghWQkcneRsgGs2ebAlRe54ns88p7ouv8PW2tzF1nAW4yHcL4uZKrFpIU+uszIRzTkcCuie37gpkId0A==
+  dependencies:
+    "@peculiar/asn1-schema" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-cms@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-cms/-/asn1-cms-2.5.0.tgz#3a7e857d86686898ce78efdbf481922bb805c68a"
+  integrity sha512-p0SjJ3TuuleIvjPM4aYfvYw8Fk1Hn/zAVyPJZTtZ2eE9/MIer6/18ROxX6N/e6edVSfvuZBqhxAj3YgsmSjQ/A==
+  dependencies:
+    "@peculiar/asn1-schema" "^2.5.0"
+    "@peculiar/asn1-x509" "^2.5.0"
+    "@peculiar/asn1-x509-attr" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-csr@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-csr/-/asn1-csr-2.5.0.tgz#4dd7534bd7d7db5bbbbde4d00d4836bf7e818d1c"
+  integrity sha512-ioigvA6WSYN9h/YssMmmoIwgl3RvZlAYx4A/9jD2qaqXZwGcNlAxaw54eSx2QG1Yu7YyBC5Rku3nNoHrQ16YsQ==
+  dependencies:
+    "@peculiar/asn1-schema" "^2.5.0"
+    "@peculiar/asn1-x509" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-ecc@^2.3.8", "@peculiar/asn1-ecc@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-ecc/-/asn1-ecc-2.5.0.tgz#3bbeaa3443567055be112b4c7e9d5562951242cf"
+  integrity sha512-t4eYGNhXtLRxaP50h3sfO6aJebUCDGQACoeexcelL4roMFRRVgB20yBIu2LxsPh/tdW9I282gNgMOyg3ywg/mg==
+  dependencies:
+    "@peculiar/asn1-schema" "^2.5.0"
+    "@peculiar/asn1-x509" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-pfx@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-pfx/-/asn1-pfx-2.5.0.tgz#22d12e676c063dfc6244278fe18eb75c2c121880"
+  integrity sha512-Vj0d0wxJZA+Ztqfb7W+/iu8Uasw6hhKtCdLKXLG/P3kEPIQpqGI4P4YXlROfl7gOCqFIbgsj1HzFIFwQ5s20ug==
+  dependencies:
+    "@peculiar/asn1-cms" "^2.5.0"
+    "@peculiar/asn1-pkcs8" "^2.5.0"
+    "@peculiar/asn1-rsa" "^2.5.0"
+    "@peculiar/asn1-schema" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-pkcs8@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-pkcs8/-/asn1-pkcs8-2.5.0.tgz#1939643773e928a4802813b595e324a05b453709"
+  integrity sha512-L7599HTI2SLlitlpEP8oAPaJgYssByI4eCwQq2C9eC90otFpm8MRn66PpbKviweAlhinWQ3ZjDD2KIVtx7PaVw==
+  dependencies:
+    "@peculiar/asn1-schema" "^2.5.0"
+    "@peculiar/asn1-x509" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-pkcs9@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-pkcs9/-/asn1-pkcs9-2.5.0.tgz#8c5b873a721bb92b4fe758da9de1ead63165106d"
+  integrity sha512-UgqSMBLNLR5TzEZ5ZzxR45Nk6VJrammxd60WMSkofyNzd3DQLSNycGWSK5Xg3UTYbXcDFyG8pA/7/y/ztVCa6A==
+  dependencies:
+    "@peculiar/asn1-cms" "^2.5.0"
+    "@peculiar/asn1-pfx" "^2.5.0"
+    "@peculiar/asn1-pkcs8" "^2.5.0"
+    "@peculiar/asn1-schema" "^2.5.0"
+    "@peculiar/asn1-x509" "^2.5.0"
+    "@peculiar/asn1-x509-attr" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-rsa@^2.3.8", "@peculiar/asn1-rsa@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-rsa/-/asn1-rsa-2.5.0.tgz#7283756ec596ccfbef23ff0e7eda0c37133ebed8"
+  integrity sha512-qMZ/vweiTHy9syrkkqWFvbT3eLoedvamcUdnnvwyyUNv5FgFXA3KP8td+ATibnlZ0EANW5PYRm8E6MJzEB/72Q==
+  dependencies:
+    "@peculiar/asn1-schema" "^2.5.0"
+    "@peculiar/asn1-x509" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-schema@^2.3.8", "@peculiar/asn1-schema@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-schema/-/asn1-schema-2.5.0.tgz#4e58d7c3087c4259cebf5363e092f85b9cbf0ca1"
+  integrity sha512-YM/nFfskFJSlHqv59ed6dZlLZqtZQwjRVJ4bBAiWV08Oc+1rSd5lDZcBEx0lGDHfSoH3UziI2pXt2UM33KerPQ==
+  dependencies:
+    asn1js "^3.0.6"
+    pvtsutils "^1.3.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-x509-attr@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-x509-attr/-/asn1-x509-attr-2.5.0.tgz#d413597dfe097620a00780e9e2ae851b06f32aed"
+  integrity sha512-9f0hPOxiJDoG/bfNLAFven+Bd4gwz/VzrCIIWc1025LEI4BXO0U5fOCTNDPbbp2ll+UzqKsZ3g61mpBp74gk9A==
+  dependencies:
+    "@peculiar/asn1-schema" "^2.5.0"
+    "@peculiar/asn1-x509" "^2.5.0"
+    asn1js "^3.0.6"
+    tslib "^2.8.1"
+
+"@peculiar/asn1-x509@^2.3.8", "@peculiar/asn1-x509@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.npmmirror.com/@peculiar/asn1-x509/-/asn1-x509-2.5.0.tgz#305f9cd534f4b6a723d27fc59363f382debf5500"
+  integrity sha512-CpwtMCTJvfvYTFMuiME5IH+8qmDe3yEWzKHe7OOADbGfq7ohxeLaXwQo0q4du3qs0AII3UbLCvb9NF/6q0oTKQ==
+  dependencies:
+    "@peculiar/asn1-schema" "^2.5.0"
+    asn1js "^3.0.6"
+    pvtsutils "^1.3.6"
+    tslib "^2.8.1"
+
+"@peculiar/x509@^1.13.0":
+  version "1.14.0"
+  resolved "https://registry.npmmirror.com/@peculiar/x509/-/x509-1.14.0.tgz#4b1abdf7ca5e46f2cb303fba608ef0507762e84a"
+  integrity sha512-Yc4PDxN3OrxUPiXgU63c+ZRXKGE8YKF2McTciYhUHFtHVB0KMnjeFSU0qpztGhsp4P0uKix4+J2xEpIEDu8oXg==
+  dependencies:
+    "@peculiar/asn1-cms" "^2.5.0"
+    "@peculiar/asn1-csr" "^2.5.0"
+    "@peculiar/asn1-ecc" "^2.5.0"
+    "@peculiar/asn1-pkcs9" "^2.5.0"
+    "@peculiar/asn1-rsa" "^2.5.0"
+    "@peculiar/asn1-schema" "^2.5.0"
+    "@peculiar/asn1-x509" "^2.5.0"
+    pvtsutils "^1.3.6"
+    reflect-metadata "^0.2.2"
+    tslib "^2.8.1"
+    tsyringe "^4.10.0"
 
 "@petamoriken/float16@^3.8.7":
   version "3.9.2"
@@ -3166,6 +3336,25 @@
   version "1.21.5"
   resolved "https://registry.npmmirror.com/@schummar/icu-type-parser/-/icu-type-parser-1.21.5.tgz#75989085bbbf80ee325874a0137437bde77e9baf"
   integrity sha512-bXHSaW5jRTmke9Vd0h5P7BtWZG9Znqb8gSDxZnxaGSJnGwPLDPfS+3g0BKzeWqzgZPsIVZkM7m2tbo18cm5HBw==
+
+"@simplewebauthn/browser@^13.1.2":
+  version "13.2.2"
+  resolved "https://registry.npmmirror.com/@simplewebauthn/browser/-/browser-13.2.2.tgz#4cde38c4c6969a039c23c2a3d931ecb69f937910"
+  integrity sha512-FNW1oLQpTJyqG5kkDg5ZsotvWgmBaC6jCHR7Ej0qUNep36Wl9tj2eZu7J5rP+uhXgHaLk+QQ3lqcw2vS5MX1IA==
+
+"@simplewebauthn/server@^13.1.2":
+  version "13.2.2"
+  resolved "https://registry.npmmirror.com/@simplewebauthn/server/-/server-13.2.2.tgz#42a9ebe64831b91fc1ac6d8aefc553822c7114aa"
+  integrity sha512-HcWLW28yTMGXpwE9VLx9J+N2KEUaELadLrkPEEI9tpI5la70xNEVEsu/C+m3u7uoq4FulLqZQhgBCzR9IZhFpA==
+  dependencies:
+    "@hexagon/base64" "^1.1.27"
+    "@levischuck/tiny-cbor" "^0.2.2"
+    "@peculiar/asn1-android" "^2.3.10"
+    "@peculiar/asn1-ecc" "^2.3.8"
+    "@peculiar/asn1-rsa" "^2.3.8"
+    "@peculiar/asn1-schema" "^2.3.8"
+    "@peculiar/asn1-x509" "^2.3.8"
+    "@peculiar/x509" "^1.13.0"
 
 "@sindresorhus/is@^7.0.2":
   version "7.0.2"
@@ -4490,6 +4679,15 @@ arraybuffer.prototype.slice@^1.0.4:
     get-intrinsic "^1.2.6"
     is-array-buffer "^3.0.4"
 
+asn1js@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.npmmirror.com/asn1js/-/asn1js-3.0.6.tgz#53e002ebe00c5f7fd77c1c047c3557d7c04dce25"
+  integrity sha512-UOCGPYbl0tv8+006qks/dTgV9ajs97X2p0FAbyS2iyCRrmLSRolDaHdp+v/CLgnzHc3fVB+CwYiUmei7ndFcgA==
+  dependencies:
+    pvtsutils "^1.3.6"
+    pvutils "^1.1.3"
+    tslib "^2.8.1"
+
 async-function@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmmirror.com/async-function/-/async-function-1.0.0.tgz#509c9fca60eaf85034c6829838188e4e4c8ffb2b"
@@ -4536,6 +4734,36 @@ bcryptjs@^3.0.2:
   version "3.0.2"
   resolved "https://registry.npmmirror.com/bcryptjs/-/bcryptjs-3.0.2.tgz#caadcca1afefe372ed6e20f86db8e8546361c1ca"
   integrity sha512-k38b3XOZKv60C4E2hVsXTolJWfkGRMbILBIe2IBITXciy5bOsTKot5kDrf3ZfufQtQOUN5mXceUEpU1rTl9Uog==
+
+better-auth@^1.3.27:
+  version "1.3.27"
+  resolved "https://registry.npmmirror.com/better-auth/-/better-auth-1.3.27.tgz#d5a6758de0258250279c8206d7e26d0b7b93d168"
+  integrity sha512-SwiGAJ7yU6dBhNg0NdV1h5M8T5sa7/AszZVc4vBfMDrLLmvUfbt9JoJ0uRUJUEdKRAAxTyl9yA+F3+GhtAD80w==
+  dependencies:
+    "@better-auth/core" "1.3.27"
+    "@better-auth/utils" "0.3.0"
+    "@better-fetch/fetch" "1.1.18"
+    "@noble/ciphers" "^2.0.0"
+    "@noble/hashes" "^2.0.0"
+    "@simplewebauthn/browser" "^13.1.2"
+    "@simplewebauthn/server" "^13.1.2"
+    better-call "1.0.19"
+    defu "^6.1.4"
+    jose "^6.1.0"
+    kysely "^0.28.5"
+    nanostores "^1.0.1"
+    zod "^4.1.5"
+
+better-call@1.0.19:
+  version "1.0.19"
+  resolved "https://registry.npmmirror.com/better-call/-/better-call-1.0.19.tgz#037b0d90d3ad01c434dd247b3f6778fb4f3161d4"
+  integrity sha512-sI3GcA1SCVa3H+CDHl8W8qzhlrckwXOTKhqq3OOPXjgn5aTOMIqGY34zLY/pHA6tRRMjTUC3lz5Mi7EbDA24Kw==
+  dependencies:
+    "@better-auth/utils" "^0.3.0"
+    "@better-fetch/fetch" "^1.1.4"
+    rou3 "^0.5.1"
+    set-cookie-parser "^2.7.1"
+    uncrypto "^0.1.3"
 
 better-sqlite3@^12.2.0:
   version "12.2.0"
@@ -6445,6 +6673,11 @@ jose@^6.0.6:
   resolved "https://registry.npmmirror.com/jose/-/jose-6.0.12.tgz#56253d94d46bd784addc4bde3691c323552fe7e4"
   integrity sha512-T8xypXs8CpmiIi78k0E+Lk7T2zlK4zDyg+o1CZ4AkOHgDg98ogdP2BeZ61lTFKFyoEwJ9RgAgN+SdM3iPgNonQ==
 
+jose@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.npmmirror.com/jose/-/jose-6.1.0.tgz#96285365689d16f2845a353964d2284bf19f464c"
+  integrity sha512-TTQJyoEoKcC1lscpVDCSsVgYzUDg/0Bt3WE//WiTPK6uOCQC2KZS4MpugbMWt/zyjkopgZoXhZuCi00gLudfUA==
+
 "js-tokens@^3.0.0 || ^4.0.0":
   version "4.0.0"
   resolved "https://registry.npmmirror.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
@@ -6461,6 +6694,11 @@ kleur@^4.1.5:
   version "4.1.5"
   resolved "https://registry.npmmirror.com/kleur/-/kleur-4.1.5.tgz#95106101795f7050c6c650f350c683febddb1780"
   integrity sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==
+
+kysely@^0.28.5:
+  version "0.28.8"
+  resolved "https://registry.npmmirror.com/kysely/-/kysely-0.28.8.tgz#064340cfa489833fdb11f026cbc5dacf7e37b5fa"
+  integrity sha512-QUOgl5ZrS9IRuhq5FvOKFSsD/3+IA6MLE81/bOOTRA/YQpKDza2sFdN5g6JCB9BOpqMJDGefLCQ9F12hRS13TA==
 
 lightningcss-darwin-arm64@1.30.1:
   version "1.30.1"
@@ -7290,6 +7528,11 @@ nanoid@^5.1.5:
   resolved "https://registry.npmmirror.com/nanoid/-/nanoid-5.1.5.tgz#f7597f9d9054eb4da9548cdd53ca70f1790e87de"
   integrity sha512-Ir/+ZpE9fDsNH0hQ3C68uyThDXzYcim2EqcZ8zn8Chtt1iylPT9xXJB0kPCnqzgcEGikO9RxSrh63MsmVCU7Fw==
 
+nanostores@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmmirror.com/nanostores/-/nanostores-1.0.1.tgz#bcc352ff7bf622e9274a3109c92e823a452d6028"
+  integrity sha512-kNZ9xnoJYKg/AfxjrVL4SS0fKX++4awQReGqWnwTRHxeHGZ1FJFVgTqr/eMrNQdp0Tz7M7tG/TDaX8QfHDwVCw==
+
 napi-build-utils@^2.0.0:
   version "2.0.0"
   resolved "https://registry.npmmirror.com/napi-build-utils/-/napi-build-utils-2.0.0.tgz#13c22c0187fcfccce1461844136372a47ddc027e"
@@ -7727,6 +7970,18 @@ pump@^3.0.0:
     end-of-stream "^1.1.0"
     once "^1.3.1"
 
+pvtsutils@^1.3.6:
+  version "1.3.6"
+  resolved "https://registry.npmmirror.com/pvtsutils/-/pvtsutils-1.3.6.tgz#ec46e34db7422b9e4fdc5490578c1883657d6001"
+  integrity sha512-PLgQXQ6H2FWCaeRak8vvk1GW462lMxB5s3Jm673N82zI4vqtVUPuZdffdZbPDFRoU8kAhItWFtPCWiPpp4/EDg==
+  dependencies:
+    tslib "^2.8.1"
+
+pvutils@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.npmmirror.com/pvutils/-/pvutils-1.1.3.tgz#f35fc1d27e7cd3dfbd39c0826d173e806a03f5a3"
+  integrity sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==
+
 qs@6.13.0:
   version "6.13.0"
   resolved "https://registry.npmmirror.com/qs/-/qs-6.13.0.tgz#6ca3bd58439f7e245655798997787b0d88a51906"
@@ -7934,6 +8189,11 @@ readable-stream@^3.1.1, readable-stream@^3.4.0:
     string_decoder "^1.1.1"
     util-deprecate "^1.0.1"
 
+reflect-metadata@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.npmmirror.com/reflect-metadata/-/reflect-metadata-0.2.2.tgz#400c845b6cba87a21f2c65c4aeb158f4fa4d9c5b"
+  integrity sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==
+
 reflect.getprototypeof@^1.0.6, reflect.getprototypeof@^1.0.9:
   version "1.0.10"
   resolved "https://registry.npmmirror.com/reflect.getprototypeof/-/reflect.getprototypeof-1.0.10.tgz#c629219e78a3316d8b604c765ef68996964e7bf9"
@@ -8059,6 +8319,11 @@ reusify@^1.0.4:
   resolved "https://registry.npmmirror.com/reusify/-/reusify-1.1.0.tgz#0fe13b9522e1473f51b558ee796e08f11f9b489f"
   integrity sha512-g6QUff04oZpHs0eG5p83rFLhHeV00ug/Yf9nZM6fLeUrPguBTkTQOdpAWWspMh55TZfVQDPaN3NQJfbVRAxdIw==
 
+rou3@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.npmmirror.com/rou3/-/rou3-0.5.1.tgz#414d1123631f45474df743c9fc904d757bb2e43c"
+  integrity sha512-OXMmJ3zRk2xeXFGfA3K+EOPHC5u7RDFG7lIOx0X1pdnhUkI8MdVrbV+sNsD80ElpUZ+MRHdyxPnFthq9VHs8uQ==
+
 router@^2.0.0:
   version "2.2.0"
   resolved "https://registry.npmmirror.com/router/-/router-2.2.0.tgz#019be620b711c87641167cc79b99090f00b146ef"
@@ -8166,6 +8431,11 @@ server-only@^0.0.1:
   version "0.0.1"
   resolved "https://registry.npmmirror.com/server-only/-/server-only-0.0.1.tgz#0f366bb6afb618c37c9255a314535dc412cd1c9e"
   integrity sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA==
+
+set-cookie-parser@^2.7.1:
+  version "2.7.1"
+  resolved "https://registry.npmmirror.com/set-cookie-parser/-/set-cookie-parser-2.7.1.tgz#3016f150072202dfbe90fadee053573cc89d2943"
+  integrity sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ==
 
 set-function-length@^1.2.2:
   version "1.2.2"
@@ -8702,12 +8972,12 @@ tsconfig-paths@^3.15.0:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
-tslib@2, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.2, tslib@^2.8.0:
+tslib@2, tslib@^2.0.0, tslib@^2.1.0, tslib@^2.3.1, tslib@^2.4.0, tslib@^2.5.0, tslib@^2.6.2, tslib@^2.8.0, tslib@^2.8.1:
   version "2.8.1"
   resolved "https://registry.npmmirror.com/tslib/-/tslib-2.8.1.tgz#612efe4ed235d567e8aba5f2a5fab70280ade83f"
   integrity sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==
 
-tslib@^1.11.1:
+tslib@^1.11.1, tslib@^1.9.3:
   version "1.14.1"
   resolved "https://registry.npmmirror.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
@@ -8721,6 +8991,13 @@ tsx@^4.7.0:
     get-tsconfig "^4.7.5"
   optionalDependencies:
     fsevents "~2.3.3"
+
+tsyringe@^4.10.0:
+  version "4.10.0"
+  resolved "https://registry.npmmirror.com/tsyringe/-/tsyringe-4.10.0.tgz#d0c95815d584464214060285eaaadd94aa03299c"
+  integrity sha512-axr3IdNuVIxnaK5XGEUFTu3YmAQ6lllgrvqfEoR16g/HGnYY/6We4oWENtAnzK6/LpJ2ur9PAb80RBt7/U4ugw==
+  dependencies:
+    tslib "^1.9.3"
 
 tunnel-agent@^0.6.0:
   version "0.6.0"
@@ -8807,6 +9084,11 @@ unbox-primitive@^1.1.0:
     has-bigints "^1.0.2"
     has-symbols "^1.1.0"
     which-boxed-primitive "^1.1.1"
+
+uncrypto@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.npmmirror.com/uncrypto/-/uncrypto-0.1.3.tgz#e1288d609226f2d02d8d69ee861fa20d8348ef2b"
+  integrity sha512-Ql87qFHB3s/De2ClA9e0gsnS6zXG27SkTiSJwjCc9MebbfapQfuPzumMIUMi38ezPZVNFcHI9sUIepeQfw8J8Q==
 
 undici-types@~5.26.4:
   version "5.26.5"
@@ -9192,6 +9474,11 @@ zod@4.0.0:
   version "4.0.0"
   resolved "https://registry.npmmirror.com/zod/-/zod-4.0.0.tgz#f331b035a9b39178cfb14e71b37c82701393db5d"
   integrity sha512-9diLdTPc/L7w/5jI4C3gHYNiGHDV9IZYxo1e5LSD8cabi65WVTWWb+g2BGPEpUUCOxR4D+6O5B0AzyMdUAXwrw==
+
+zod@^4.1.5:
+  version "4.1.12"
+  resolved "https://registry.npmmirror.com/zod/-/zod-4.1.12.tgz#64f1ea53d00eab91853195653b5af9eee68970f0"
+  integrity sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==
 
 zwitch@^2.0.0:
   version "2.0.4"
