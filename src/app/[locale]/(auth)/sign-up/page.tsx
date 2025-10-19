@@ -1,7 +1,4 @@
 import SignUpForm from "../_components/forms/SignUpForm";
-import { auth } from "@/server/auth";
-import { redirect } from "next/navigation";
-import React from "react";
 
 export const metadata = {
   title: "Sign Up",
@@ -9,10 +6,10 @@ export const metadata = {
 };
 
 const SignUp = async () => {
-  const session = await auth();
-  if (session?.user) {
-    redirect("/"); // Redirect to home if already signed in
-  }
+  // const session = await auth();
+  // if (session?.user) {
+  //   redirect("/"); // Redirect to home if already signed in
+  // }
   return <SignUpForm />;
 };
 

@@ -1,29 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Play,
-  Pause,
-  SkipForward,
-  Heart,
-  MapPin,
-  Coffee,
-  Code,
-  Music,
-  Volume2,
-  Users,
-  Users2,
-  TrendingUp,
-  FolderOpen,
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import Image from "next/image";
-import MusicPlayer from "./music-player";
 import { AnimatedNumber, AnimatedNumberK } from "@/components/ui_custom/animated-number";
-import Link from "next/link";
 import { formatK } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
+import { FolderOpen, Heart, MapPin, TrendingUp, Users2 } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import MusicPlayer from "./music-player";
 
 const photos = [
   {
@@ -42,20 +28,6 @@ const photos = [
     location: "香山",
   },
 ];
-
-const currentMusic = {
-  title: "Lofi Hip Hop Radio",
-  artist: "ChilledCow",
-  cover: "/placeholder.svg?height=60&width=60",
-  isPlaying: false,
-};
-
-const currentStatus = {
-  mood: "🚀 专注开发中",
-  learning: "Next.js 15 新特性",
-  reading: "《Clean Architecture》",
-  location: "北京",
-};
 
 export function HeroPersonalColorful() {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
@@ -113,7 +85,7 @@ export function HeroPersonalColorful() {
                       key={currentPhotoIndex}
                       initial={{ opacity: 0, scale: 1.1 }}
                       animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
+                      exit={{ x: -100, opacity: 0 }}
                       transition={{ duration: 0.5 }}
                       className="absolute inset-0"
                     >
@@ -233,7 +205,7 @@ export function HeroPersonalColorful() {
                 <Link href="/blog">
                   <Button variant="default" className="shadow-md hover:opacity-90">
                     <Heart className="w-4 h-4 mr-1" />
-                    进入博客
+                    查看博客
                   </Button>
                 </Link>
 
@@ -241,7 +213,7 @@ export function HeroPersonalColorful() {
                 <Link href="/projects">
                   <Button variant="secondary" className="dark:text-gray-400 shadow-md hover:bg-secondary/80">
                     <FolderOpen className="w-4 h-4 mr-2" />
-                    进入项目
+                    查看项目
                   </Button>
                 </Link>
               </div>

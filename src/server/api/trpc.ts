@@ -11,8 +11,9 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
 
-import { auth } from "@/server/auth";
+import { getAuth } from "@/lib/auth/auth";
 import { getDB } from "@/server/db/db";
+import { headers } from "next/headers";
 
 /**
  * 1. CONTEXT
@@ -27,16 +28,16 @@ import { getDB } from "@/server/db/db";
  * @see https://trpc.io/docs/server/context
  */
 export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const session = await auth();
-  const ip =
-    opts.headers.get("cf-connecting-ip") || // Cloudflare 添加
-    opts.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || // 备用
-    opts.headers.get("x-real-ip") || // 备用
-    "";
+  const session = await getAuth().api.getSession({ headers: await headers() });
+
+  // const ip =
+  //   opts.headers.get("cf-connecting-ip") || // Cloudflare 添加
+  //   opts.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || // 备用
+  //   opts.headers.get("x-real-ip") || // 备用
+  //   "";
   return {
     db: getDB(),
     session,
-    ip, // 用户 IP 地址
     ...opts,
   };
 };

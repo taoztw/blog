@@ -1,7 +1,7 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
-import { tagInsertSchema, tags, tagSelectSchema, postTags, posts } from "@/server/db/schema";
+import { posts, postTags, tagInsertSchema, tags } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, lt, or, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import z from "zod";
 
 export const tagRouter = createTRPCRouter({
@@ -204,13 +204,7 @@ export const tagRouter = createTRPCRouter({
         id: tags.id,
         name: tags.name,
         color: tags.color,
-        postCount: ctx.db.$count(
-          postTags,
-          and(
-            eq(postTags.tagId, tags.id),
-            eq(posts.status, "published")
-          )
-        ),
+        postCount: ctx.db.$count(postTags, and(eq(postTags.tagId, tags.id), eq(posts.status, "published"))),
       })
       .from(tags)
       .leftJoin(postTags, eq(postTags.tagId, tags.id))

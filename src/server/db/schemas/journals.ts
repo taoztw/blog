@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm";
-import { index, text, sqliteTable } from "drizzle-orm/sqlite-core";
+import { index, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
+import { user } from "./auth";
 import { commonColumns } from "./common";
-import { users } from "./users";
 
 // Journals table
 export const journals = sqliteTable(
@@ -14,7 +14,7 @@ export const journals = sqliteTable(
       .$defaultFn(() => crypto.randomUUID()),
     authorId: text("author_id", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     content: text("content").notNull(),
     imageUrl: text("image_url", { length: 512 }),
     ...commonColumns,
@@ -24,15 +24,14 @@ export const journals = sqliteTable(
 
 // Relations
 export const journalRelations = relations(journals, ({ one }) => ({
-  author: one(users, {
+  author: one(user, {
     fields: [journals.authorId],
-    references: [users.id],
+    references: [user.id],
   }),
 }));
 
 // Zod Schemas
 export const journalInsertSchema = createInsertSchema(journals).omit({
-  updateCounter: true,
   authorId: true,
   createdAt: true,
   updatedAt: true,
@@ -41,10 +40,7 @@ export const journalInsertSchema = createInsertSchema(journals).omit({
 export const journalUpdateSchema = createUpdateSchema(journals).omit({
   createdAt: true,
   updatedAt: true,
-  updateCounter: true,
   authorId: true,
 });
 
-export const journalSelectSchema = createSelectSchema(journals).omit({
-  updateCounter: true,
-});
+export const journalSelectSchema = createSelectSchema(journals);

@@ -1,11 +1,10 @@
-import "@/styles/globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import type { Metadata } from "next";
-import { TRPCReactProvider } from "@/trpc/react";
-import localFont from "next/font/local";
-import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/constants";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SessionProvider } from "next-auth/react";
+import { Toaster } from "@/components/ui/sonner";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/constants";
+import "@/styles/globals.css";
+import { TRPCReactProvider } from "@/trpc/react";
+import type { Metadata } from "next";
+import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
 
 const geistSans = localFont({
@@ -51,10 +50,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             easing="ease"
             speed={200}
           />
-          <SessionProvider>
-            <Toaster position="top-right" />
-            <TRPCReactProvider>{children}</TRPCReactProvider>
-          </SessionProvider>
+          <Toaster position="top-right" />
+          <TRPCReactProvider>{children}</TRPCReactProvider>
         </ThemeProvider>
       </body>
     </html>

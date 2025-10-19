@@ -7,14 +7,14 @@
 // export const createTable = sqliteTableCreator((name) => `blog_${name}`);
 
 // Re-export all schemas from the schemas directory
-export * from "./schemas/enums";
-export * from "./schemas/common";
-export * from "./schemas/users";
+export * from "./schemas/auth";
 export * from "./schemas/categories";
-export * from "./schemas/tags";
-export * from "./schemas//posts";
 export * from "./schemas/comments";
+export * from "./schemas/common";
+export * from "./schemas/enums";
+export * from "./schemas/journals";
+export * from "./schemas/posts";
 export * from "./schemas/projects";
 export * from "./schemas/questions";
-export * from "./schemas/journals";
 export * from "./schemas/relations";
+export * from "./schemas/tags";

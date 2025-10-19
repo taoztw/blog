@@ -1,6 +1,5 @@
-import { relations } from "drizzle-orm";
-import { text, sqliteTable } from "drizzle-orm/sqlite-core";
-import { createSelectSchema, createInsertSchema } from "drizzle-zod";
+import { sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { commonColumns } from "./common";
 
 export const categorys = sqliteTable("category", {
@@ -13,8 +12,6 @@ export const categorys = sqliteTable("category", {
   ...commonColumns,
 });
 
-export const categorySelectSchema = createSelectSchema(categorys).omit({
-  updateCounter: true,
-});
+export const categorySelectSchema = createSelectSchema(categorys);
 
 export const categoryInsertSchema = createInsertSchema(categorys);

@@ -1,11 +1,11 @@
 import { relations } from "drizzle-orm";
-import { index, integer, text, sqliteTable, primaryKey } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
-import { POST_STATUS_TUPLE, POST_STATUS_ENUM, reactionTuple } from "./enums";
-import { commonColumns } from "./common";
-import { users } from "./users";
+import { user } from "./auth";
 import { categorys } from "./categories";
+import { commonColumns } from "./common";
+import { POST_STATUS_ENUM, POST_STATUS_TUPLE, reactionTuple } from "./enums";
 import { tags } from "./tags";
 
 export const posts = sqliteTable(
@@ -23,7 +23,7 @@ export const posts = sqliteTable(
     status: text("status", { enum: POST_STATUS_TUPLE }).default(POST_STATUS_ENUM.DRAFT),
     createdById: text("created_by_id", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     categoryId: text("category_id", { length: 255 }).references(() => categorys.id),
     ...commonColumns,
   },
@@ -35,7 +35,7 @@ export const postViews = sqliteTable("post_views", {
   postId: text("post_id")
     .notNull()
     .references(() => posts.id),
-  userId: text("user_id").references(() => users.id),
+  userId: text("user_id").references(() => user.id),
   ip: text("ip", { length: 255 }).notNull(),
   ...commonColumns,
 });
@@ -61,7 +61,7 @@ export const postTags = sqliteTable(
 export const postReactions = sqliteTable("post_reactions", {
   id: integer("id").primaryKey({ autoIncrement: true }),
   ip: text("ip", { length: 255 }).notNull(),
-  userId: text("user_id").references(() => users.id),
+  userId: text("user_id").references(() => user.id),
   postId: text("post_id")
     .notNull()
     .references(() => posts.id),
@@ -75,9 +75,9 @@ export const postRelations = relations(posts, ({ one, many }) => ({
     fields: [posts.categoryId],
     references: [categorys.id],
   }),
-  author: one(users, {
+  author: one(user, {
     fields: [posts.createdById],
-    references: [users.id],
+    references: [user.id],
   }),
   tags: many(postTags),
 }));
@@ -94,7 +94,6 @@ export const postTagRelations = relations(postTags, ({ one }) => ({
 }));
 
 export const postInsertSchema = createInsertSchema(posts).omit({
-  updateCounter: true,
   createdById: true,
 });
 
@@ -105,13 +104,10 @@ export const postInsertWithTagsSchema = postInsertSchema.extend({
 export const postUpdateSchema = createUpdateSchema(posts).omit({
   createdAt: true,
   updatedAt: true,
-  updateCounter: true,
 });
 
 export const postUpdateWithTagsSchema = postUpdateSchema.extend({
   tagIds: z.array(z.string()).optional(),
 });
 
-export const postSelectSchema = createSelectSchema(posts).omit({
-  updateCounter: true,
-});
+export const postSelectSchema = createSelectSchema(posts);

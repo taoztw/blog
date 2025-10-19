@@ -1,11 +1,11 @@
 import { relations } from "drizzle-orm";
-import { index, integer, text, sqliteTable, primaryKey } from "drizzle-orm/sqlite-core";
+import { index, integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 import { z } from "zod";
-import { PROJECT_STATUS_TUPLE, PROJECT_STATUS_ENUM } from "./enums";
-import { commonColumns } from "./common";
-import { users } from "./users";
+import { user } from "./auth";
 import { categorys } from "./categories";
+import { commonColumns } from "./common";
+import { PROJECT_STATUS_ENUM, PROJECT_STATUS_TUPLE } from "./enums";
 import { tags } from "./tags";
 
 export const projects = sqliteTable(
@@ -28,7 +28,7 @@ export const projects = sqliteTable(
     sortOrder: integer("sort_order").default(0),
     createdById: text("created_by_id", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     ...commonColumns,
   },
   (t) => [
@@ -57,9 +57,9 @@ export const projectTags = sqliteTable(
 );
 
 export const projectRelations = relations(projects, ({ one, many }) => ({
-  author: one(users, {
+  author: one(user, {
     fields: [projects.createdById],
-    references: [users.id],
+    references: [user.id],
   }),
   category: one(categorys, {
     fields: [projects.categoryId],
@@ -80,7 +80,6 @@ export const projectTagRelations = relations(projectTags, ({ one }) => ({
 }));
 
 export const projectInsertSchema = createInsertSchema(projects).omit({
-  updateCounter: true,
   createdById: true,
 });
 
@@ -91,13 +90,10 @@ export const projectInsertWithTagsSchema = projectInsertSchema.extend({
 export const projectUpdateSchema = createUpdateSchema(projects).omit({
   createdAt: true,
   updatedAt: true,
-  updateCounter: true,
 });
 
 export const projectUpdateWithTagsSchema = projectUpdateSchema.extend({
   tagIds: z.array(z.string()).optional(),
 });
 
-export const projectSelectSchema = createSelectSchema(projects).omit({
-  updateCounter: true,
-});
+export const projectSelectSchema = createSelectSchema(projects);

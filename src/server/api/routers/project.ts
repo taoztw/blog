@@ -1,14 +1,13 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import {
-  projects,
   projectInsertWithTagsSchema,
-  projectUpdateWithTagsSchema,
+  projects,
   projectTags,
+  projectUpdateWithTagsSchema,
   tags,
-  users,
 } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, desc, eq, getTableColumns, like, or, sql } from "drizzle-orm";
+import { and, desc, eq, like, or, sql } from "drizzle-orm";
 import z from "zod";
 
 export const projectRouter = createTRPCRouter({

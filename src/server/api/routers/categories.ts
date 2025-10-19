@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
-import { categoryInsertSchema, categorys, categorySelectSchema, posts } from "@/server/db/schema";
+import { categoryInsertSchema, categorys, posts } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, lt, or, sql } from "drizzle-orm";
 import z from "zod";
@@ -162,7 +162,7 @@ export const categoryRouter = createTRPCRouter({
         }
 
         // 创建类别
-        const [insertedCategory] = await ctx.db.insert(categorys).values(categoryData).returning();
+        const insertedCategory = (await ctx.db.insert(categorys).values(categoryData).returning())[0];
 
         if (insertedCategory) {
           results.successful.push(insertedCategory);

@@ -1,18 +1,17 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import {
-  questions,
-  questionInsertSchema,
-  questionUpdateSchema,
-  questionInsertWithTagsSchema,
-  questionUpdateWithTagsSchema,
-  questionTags,
-  questionViews,
-  votes,
-  answers,
-  tags,
-  users,
   QUESTION_STATUS_ENUM,
+  questionInsertSchema,
+  questionInsertWithTagsSchema,
+  questions,
+  questionTags,
+  questionUpdateSchema,
+  questionUpdateWithTagsSchema,
+  questionViews,
+  tags,
+  user,
   VOTE_TYPE_ENUM,
+  votes,
 } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, getTableColumns, inArray, like, or, sql } from "drizzle-orm";
@@ -88,7 +87,11 @@ export const questionRouter = createTRPCRouter({
         throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid question data" });
       }
 
-      const [updatedQuestion] = await ctx.db.update(questions).set(validate.data).where(eq(questions.id, id)).returning();
+      const [updatedQuestion] = await ctx.db
+        .update(questions)
+        .set(validate.data)
+        .where(eq(questions.id, id))
+        .returning();
 
       if (!updatedQuestion) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Question not found" });
@@ -111,7 +114,11 @@ export const questionRouter = createTRPCRouter({
         throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid question data" });
       }
 
-      const [updatedQuestion] = await ctx.db.update(questions).set(validate.data).where(eq(questions.id, id)).returning();
+      const [updatedQuestion] = await ctx.db
+        .update(questions)
+        .set(validate.data)
+        .where(eq(questions.id, id))
+        .returning();
 
       if (!updatedQuestion) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Question not found" });
@@ -185,11 +192,11 @@ export const questionRouter = createTRPCRouter({
       let baseQuery = ctx.db
         .select({
           ...getTableColumns(questions),
-          author: users,
+          author: user,
           viewCount: ctx.db.$count(questionViews, eq(questionViews.questionId, questions.id)),
         })
         .from(questions)
-        .leftJoin(users, eq(questions.authorId, users.id))
+        .leftJoin(user, eq(questions.authorId, user.id))
         .leftJoin(questionViews, eq(questionViews.questionId, questions.id));
 
       if (tagId) {
@@ -217,7 +224,7 @@ export const questionRouter = createTRPCRouter({
 
       const items = await baseQuery
         .where(whereCondition)
-        .groupBy(questions.id, users.id)
+        .groupBy(questions.id, user.id)
         .orderBy(...orderBy)
         .limit(limit)
         .offset(offset);
@@ -253,15 +260,16 @@ export const questionRouter = createTRPCRouter({
       }));
 
       // Get total count
-      let countQuery = ctx.db
-        .select({ count: sql<number>`count(DISTINCT ${questions.id})` })
-        .from(questions);
-
-      if (tagId) {
-        countQuery = countQuery.leftJoin(questionTags, eq(questionTags.questionId, questions.id));
-      }
-
-      const totalResult = await countQuery.where(whereCondition);
+      const totalResult = tagId
+        ? await ctx.db
+            .select({ count: sql<number>`count(DISTINCT ${questions.id})` })
+            .from(questions)
+            .leftJoin(questionTags, eq(questionTags.questionId, questions.id))
+            .where(whereCondition)
+        : await ctx.db
+            .select({ count: sql<number>`count(DISTINCT ${questions.id})` })
+            .from(questions)
+            .where(whereCondition);
       const total = totalResult[0]?.count ?? 0;
       const totalPages = Math.ceil(total / limit);
 
@@ -287,12 +295,12 @@ export const questionRouter = createTRPCRouter({
       .with(userVotes)
       .select({
         ...getTableColumns(questions),
-        author: users,
+        author: user,
         viewCount: ctx.db.$count(questionViews, eq(questionViews.questionId, questions.id)),
         userVote: userVotes.voteType,
       })
       .from(questions)
-      .leftJoin(users, eq(questions.authorId, users.id))
+      .leftJoin(user, eq(questions.authorId, user.id))
       .leftJoin(userVotes, and(eq(userVotes.actionId, questions.id), eq(userVotes.actionType, "question")))
       .where(eq(questions.id, input.id));
 
@@ -320,7 +328,7 @@ export const questionRouter = createTRPCRouter({
   // Create view
   createView: publicProcedure.input(z.object({ questionId: z.string() })).mutation(async ({ ctx, input }) => {
     const { questionId } = input;
-    const ip = ctx.ip;
+    const ip = "";
     const userId = ctx.session?.user.id ?? null;
 
     // Check if this IP/user already viewed this question

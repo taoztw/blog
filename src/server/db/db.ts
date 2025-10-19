@@ -1,6 +1,7 @@
 import { getCloudflareContext } from "@opennextjs/cloudflare";
-import { drizzle } from "drizzle-orm/d1";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
+import { drizzle } from "drizzle-orm/d1";
+import { cache } from "react";
 import * as schema from "./schema";
 
 /**
@@ -10,7 +11,7 @@ import * as schema from "./schema";
 
 export let db: DrizzleD1Database<typeof schema> | null = null;
 
-export const getDB = () => {
+export const getDB = cache(() => {
   if (db) {
     return db;
   }
@@ -24,4 +25,4 @@ export const getDB = () => {
   db = drizzle(cf_env.DB, { schema });
 
   return db;
-};
+});

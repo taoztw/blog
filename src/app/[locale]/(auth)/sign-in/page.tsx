@@ -1,8 +1,5 @@
-import SignInForm from "../_components/forms/SignInForm";
-import { auth } from "@/server/auth";
 import type { Metadata } from "next";
-import { redirect } from "next/navigation";
-import React from "react";
+import SignInForm from "../_components/forms/SignInForm";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -10,10 +7,10 @@ export const metadata: Metadata = {
 };
 
 const SignIn = async () => {
-  const session = await auth();
-  if (session?.user) {
-    redirect("/"); // Redirect to home if already signed in
-  }
+  // const session = await auth();
+  // if (session?.user) {
+  //   redirect("/"); // Redirect to home if already signed in
+  // }
   return <SignInForm />;
 };
 

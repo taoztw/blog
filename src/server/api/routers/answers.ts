@@ -1,12 +1,12 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import {
-  answers,
   answerInsertSchema,
+  answers,
   answerUpdateSchema,
   questions,
-  votes,
-  users,
+  user,
   VOTE_TYPE_ENUM,
+  votes,
 } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, getTableColumns, sql } from "drizzle-orm";
@@ -129,11 +129,11 @@ export const answerRouter = createTRPCRouter({
         .with(userVotes)
         .select({
           ...getTableColumns(answers),
-          author: users,
+          author: user,
           userVote: userVotes.voteType,
         })
         .from(answers)
-        .leftJoin(users, eq(answers.authorId, users.id))
+        .leftJoin(user, eq(answers.authorId, user.id))
         .leftJoin(userVotes, and(eq(userVotes.actionId, answers.id), eq(userVotes.actionType, "answer")))
         .where(eq(answers.questionId, questionId))
         .orderBy(...orderBy)

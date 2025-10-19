@@ -1,8 +1,8 @@
 import { relations } from "drizzle-orm";
 import { categorys } from "./categories";
-import { tags } from "./tags";
 import { posts, postTags } from "./posts";
 import { projects, projectTags } from "./projects";
+import { tags } from "./tags";
 
 export const categoryRelations = relations(categorys, ({ many }) => ({
   posts: many(posts),

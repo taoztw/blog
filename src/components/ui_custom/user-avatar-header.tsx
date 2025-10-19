@@ -1,7 +1,3 @@
-import Image from "next/image";
-import React from "react";
-import { useRouter } from "next/navigation";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -11,12 +7,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { authClient } from "@/lib/auth/authClient";
 
 import { cn } from "@/lib/utils";
-import { signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Spinner } from "../ui/spinner";
 
 interface Props {
-  id: string;
+  id: string | null;
   name: string;
   imageUrl?: string | null;
   className?: string;
@@ -25,6 +23,8 @@ interface Props {
 
 const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackClassName }: Props) => {
   // 安全生成用户名字缩写
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
   const initials = name
     ? name
         .trim()
@@ -35,6 +35,19 @@ const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackCl
         .slice(0, 2)
     : "";
 
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/sign-in"); // redirect to login page
+        },
+      },
+    });
+  };
+
+  if (isPending) {
+    return <Spinner />;
+  }
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
@@ -57,7 +70,7 @@ const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackCl
       <DropdownMenuContent className="w-48" align="end">
         <DropdownMenuLabel>{name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()} className="cursor-pointer text-red-500">
+        <DropdownMenuItem onClick={() => handleLogout()} className="cursor-pointer text-red-500">
           退出登录
         </DropdownMenuItem>
       </DropdownMenuContent>

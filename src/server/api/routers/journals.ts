@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
-import { journals, journalInsertSchema, journalUpdateSchema, users } from "@/server/db/schema";
+import { journalInsertSchema, journals, journalUpdateSchema, user } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import z from "zod";
@@ -84,10 +84,10 @@ export const journalRouter = createTRPCRouter({
       const items = await ctx.db
         .select({
           ...getTableColumns(journals),
-          author: users,
+          author: user,
         })
         .from(journals)
-        .leftJoin(users, eq(journals.authorId, users.id))
+        .leftJoin(user, eq(journals.authorId, user.id))
         .where(whereCondition)
         .orderBy(desc(journals.createdAt))
         .limit(limit)
@@ -110,10 +110,10 @@ export const journalRouter = createTRPCRouter({
     const [journal] = await ctx.db
       .select({
         ...getTableColumns(journals),
-        author: users,
+        author: user,
       })
       .from(journals)
-      .leftJoin(users, eq(journals.authorId, users.id))
+      .leftJoin(user, eq(journals.authorId, user.id))
       .where(eq(journals.id, input.id));
 
     if (!journal) {

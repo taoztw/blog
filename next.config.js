@@ -2,8 +2,10 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-import "./src/env.js";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 import createNextIntlPlugin from "next-intl/plugin";
+import "./src/env.js";
+initOpenNextCloudflareForDev();
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -28,6 +30,3 @@ const config = {
 const withNextIntl = createNextIntlPlugin();
 
 export default withNextIntl(config);
-
-import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
-initOpenNextCloudflareForDev();

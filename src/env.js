@@ -8,7 +8,6 @@ export const env = createEnv({
    */
   server: {
     LOCAL_DB_PATH: z.string().optional(),
-    AUTH_SECRET: process.env.NODE_ENV === "production" ? z.string() : z.string().optional(),
     // AUTH_DISCORD_ID: z.string(),
     // AUTH_DISCORD_SECRET: z.string(),
     AUTH_GITHUB_ID: z.string(),
@@ -39,7 +38,6 @@ export const env = createEnv({
    */
   runtimeEnv: {
     LOCAL_DB_PATH: process.env.LOCAL_DB_PATH,
-    AUTH_SECRET: process.env.AUTH_SECRET,
     // AUTH_DISCORD_ID: process.env.AUTH_DISCORD_ID,
     // AUTH_DISCORD_SECRET: process.env.AUTH_DISCORD_SECRET,
     NODE_ENV: process.env.NODE_ENV,

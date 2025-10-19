@@ -1,9 +1,9 @@
-import React from "react";
-import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { routing } from "@/i18n/routing";
-import { notFound } from "next/navigation";
-import Header2 from "@/components/layouts/header";
 import { Footer } from "@/components/layouts/footer";
+import Header2 from "@/components/layouts/header";
+import { routing } from "@/i18n/routing";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import React from "react";
 
 interface LayoutProps {
   children: React.ReactNode;

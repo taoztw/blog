@@ -1,17 +1,17 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import {
-  posts,
-  postInsertSchema,
-  postUpdateSchema,
-  postInsertWithTagsSchema,
-  postUpdateWithTagsSchema,
-  postTags,
   categorys,
-  users,
-  postReactions,
-  postViews,
   comments,
+  postInsertSchema,
+  postInsertWithTagsSchema,
+  postReactions,
+  posts,
+  postTags,
+  postUpdateSchema,
+  postUpdateWithTagsSchema,
+  postViews,
   tags,
+  user,
 } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, desc, eq, getTableColumns, inArray, like, lt, or, sql } from "drizzle-orm";
@@ -224,7 +224,7 @@ export const postRouter = createTRPCRouter({
       const items = await ctx.db
         .select({
           ...getTableColumns(posts), // 所有 posts 列
-          author: users,
+          author: user,
           category: categorys,
           viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
           likeCount: sql<number>`
@@ -233,14 +233,14 @@ export const postRouter = createTRPCRouter({
           commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
         })
         .from(posts)
-        .leftJoin(users, eq(posts.createdById, users.id))
+        .leftJoin(user, eq(posts.createdById, user.id))
         .leftJoin(categorys, eq(posts.categoryId, categorys.id))
         // 额外 join，才能统计浏览、点赞、评论
         .leftJoin(postViews, eq(postViews.postId, posts.id))
         .leftJoin(postReactions, eq(postReactions.postId, posts.id))
         .leftJoin(comments, eq(comments.postId, posts.id))
         .where(where)
-        .groupBy(posts.id, users.id, categorys.id) // 分组聚合
+        .groupBy(posts.id, user.id, categorys.id) // 分组聚合
         .orderBy(desc(posts.createdAt))
         .limit(limit)
         .offset(offset);
@@ -306,7 +306,7 @@ export const postRouter = createTRPCRouter({
       .with(userPostReactions)
       .select({
         ...getTableColumns(posts),
-        user: users,
+        user: user,
         category: categorys,
         viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
         likeCount: ctx.db.$count(postReactions, and(eq(postReactions.postId, posts.id))),
@@ -314,7 +314,7 @@ export const postRouter = createTRPCRouter({
         userReaction: userPostReactions.type,
       })
       .from(posts)
-      .innerJoin(users, eq(posts.createdById, users.id))
+      .innerJoin(user, eq(posts.createdById, user.id))
       .innerJoin(categorys, eq(posts.categoryId, categorys.id))
       .leftJoin(userPostReactions, eq(userPostReactions.postId, posts.id))
       .where(eq(posts.id, input.id));
@@ -341,7 +341,7 @@ export const postRouter = createTRPCRouter({
   }),
   createView: publicProcedure.input(z.object({ postId: z.string() })).mutation(async ({ ctx, input }) => {
     const { postId } = input;
-    const ip = ctx.ip;
+    const ip = "";
 
     const userId = ctx.session?.user.id ?? null;
     await ctx.db.insert(postViews).values({ postId, ip, userId });
@@ -350,7 +350,7 @@ export const postRouter = createTRPCRouter({
   }),
   postLike: publicProcedure.input(z.object({ postId: z.string(), count: z.int() })).mutation(async ({ ctx, input }) => {
     const { postId, count } = input;
-    const ip = ctx.ip;
+    const ip = "";
     const userId = ctx.session?.user.id ?? null;
 
     await ctx.db.insert(postReactions).values({ postId, userId, ip, num: count });
@@ -453,14 +453,14 @@ export const postRouter = createTRPCRouter({
       let baseQuery = ctx.db
         .select({
           ...getTableColumns(posts),
-          author: users,
+          author: user,
           category: categorys,
           viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
           likeCount: sql<number>`COALESCE(SUM(${postReactions.num}), 0)`.mapWith(Number),
           commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
         })
         .from(posts)
-        .leftJoin(users, eq(posts.createdById, users.id))
+        .leftJoin(user, eq(posts.createdById, user.id))
         .leftJoin(categorys, eq(posts.categoryId, categorys.id))
         .leftJoin(postViews, eq(postViews.postId, posts.id))
         .leftJoin(postReactions, eq(postReactions.postId, posts.id))
@@ -477,7 +477,7 @@ export const postRouter = createTRPCRouter({
       // Get items
       const items = await baseQuery
         .where(whereCondition)
-        .groupBy(posts.id, users.id, categorys.id)
+        .groupBy(posts.id, user.id, categorys.id)
         .orderBy(desc(posts.createdAt))
         .limit(limit)
         .offset(offset);

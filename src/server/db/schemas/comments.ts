@@ -1,8 +1,8 @@
-import { text, sqliteTable, primaryKey, foreignKey } from "drizzle-orm/sqlite-core";
+import { foreignKey, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
-import { reactionTuple } from "./enums";
+import { user } from "./auth";
 import { commonColumns } from "./common";
-import { users } from "./users";
+import { reactionTuple } from "./enums";
 import { posts } from "./posts";
 
 export const comments = sqliteTable(
@@ -14,7 +14,7 @@ export const comments = sqliteTable(
       .$defaultFn(() => crypto.randomUUID()),
     userId: text("user_id", { length: 255 })
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     postId: text("post_id", { length: 255 })
       .notNull()
       .references(() => posts.id),
@@ -36,7 +36,7 @@ export const commentReactions = sqliteTable(
   {
     userId: text("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     commentId: text("comment_id")
       .notNull()
       .references(() => comments.id, { onDelete: "cascade" }),
@@ -52,20 +52,16 @@ export const commentReactions = sqliteTable(
 );
 
 export const commentInsertSchema = createInsertSchema(comments).omit({
-  updateCounter: true,
   createdAt: true,
   updatedAt: true,
   userId: true,
 });
 
-export const commentSelectSchema = createSelectSchema(comments).omit({
-  updateCounter: true,
-});
+export const commentSelectSchema = createSelectSchema(comments);
 
 export const commentUpdateSchema = createUpdateSchema(comments).omit({
   createdAt: true,
   updatedAt: true,
-  updateCounter: true,
   userId: true,
   postId: true,
   parentId: true,

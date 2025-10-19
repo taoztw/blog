@@ -1,27 +1,22 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import ROUTES from "@/constants/routes";
-import { signUpSchema } from "@/lib/validations";
-import { api } from "@/trpc/react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import React from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { z } from "zod";
 import { Logo } from "@/components/logo";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import { PasswordInput } from "@/components/ui/password-input";
+import ROUTES from "@/constants/routes";
+import { authClient } from "@/lib/auth/authClient";
+import { signUpSchema } from "@/lib/validations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
 import SocialAuthForm from "./SocialAuthForm";
 
 const SignUpForm = () => {
-  const router = useRouter();
-
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -31,35 +26,30 @@ const SignUpForm = () => {
       confirmPassword: "123123",
     },
   });
-  const signUpMutation = api.user.signUp.useMutation({
-    onSuccess: async (_data, variables) => {
-      toast.success("Sign up successful!");
-      try {
-        const res = await signIn("credentials", {
-          email: variables.email,
-          password: variables.password,
-          redirect: false,
-        });
-        router.replace(ROUTES.HOME);
-      } catch (error) {
-        toast.error("Sign in failed.");
-        router.push(ROUTES.SIGN_IN);
-      }
-    },
-    onError: (error) => {
-      if (error.data?.code === "CONFLICT") {
-        form.setError("email", {
-          type: "server",
-          message: "Email already exists",
-        });
-        form.setFocus("email");
-      }
-      toast.error(`Sign up failed: ${error.message}`);
-    },
-  });
 
-  const handleSubmit = (values: z.infer<typeof signUpSchema>) => {
-    signUpMutation.mutate(values);
+  // form.setError("email", {
+  //   type: "server",
+  //   message: "Email already exists",
+  // });
+
+  const handleSubmit = async (values: z.infer<typeof signUpSchema>) => {
+    await authClient.signUp.email(
+      {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        callbackURL: "/",
+      },
+      {
+        onError: (error) => {
+          toast.error(`注册失败: ${error.error.message}`);
+        },
+      }
+    );
+
+    // if (res.error == null && !res.data.user.emailVerified) {
+    //   router.push(`/register-success?email=${encodeURIComponent(data.email)}`);
+    // }
   };
 
   return (
@@ -144,8 +134,8 @@ const SignUpForm = () => {
               )}
             />
 
-            <Button className="w-full cursor-pointer" disabled={signUpMutation.isPending}>
-              {signUpMutation.isPending && <LoadingSpinner className="text-white" type="bars" />}
+            <Button className="w-full cursor-pointer" disabled={form.formState.isSubmitting}>
+              {form.formState.isSubmitting && <LoadingSpinner className="text-white" type="bars" />}
               Sign Up
             </Button>
           </div>

@@ -1,9 +1,8 @@
-import { commentInsertSchema, commentReactions, comments, users } from "@/server/db/schema";
-import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
-import z from "zod";
-import { and, count, desc, eq, getTableColumns, inArray, isNotNull, isNull, lt, or } from "drizzle-orm";
+import { commentReactions, comments, user } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
-import { db } from "@/server/db/db";
+import { and, count, desc, eq, getTableColumns, inArray, isNotNull, isNull, lt, or } from "drizzle-orm";
+import z from "zod";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "../trpc";
 
 export const commentsRouter = createTRPCRouter({
   create: protectedProcedure
@@ -100,7 +99,7 @@ export const commentsRouter = createTRPCRouter({
           .select({
             ...getTableColumns(comments),
             userReaction: userReactions.type,
-            user: users,
+            user: user,
             replyCount: replies.count,
             likeCount: ctx.db.$count(
               commentReactions,
@@ -127,7 +126,7 @@ export const commentsRouter = createTRPCRouter({
                 : undefined
             )
           )
-          .innerJoin(users, eq(comments.userId, users.id))
+          .innerJoin(user, eq(comments.userId, user.id))
           .orderBy(desc(comments.updatedAt), desc(comments.id))
           .leftJoin(userReactions, eq(userReactions.commentId, comments.id))
           .leftJoin(replies, eq(comments.id, replies.parentId))

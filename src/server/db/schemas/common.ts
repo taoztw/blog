@@ -2,17 +2,11 @@ import { sql } from "drizzle-orm";
 import { integer } from "drizzle-orm/sqlite-core";
 
 export const commonColumns = {
-  createdAt: integer({
-    mode: "timestamp",
-  })
-    .$defaultFn(() => new Date())
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
     .notNull(),
-  updatedAt: integer({
-    mode: "timestamp",
-  })
-    .$onUpdateFn(() => new Date())
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .$onUpdate(() => /* @__PURE__ */ new Date())
     .notNull(),
-  updateCounter: integer()
-    .default(0)
-    .$onUpdate(() => sql`updateCounter + 1`),
 };

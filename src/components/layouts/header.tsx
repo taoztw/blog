@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence, easeInOut } from "framer-motion";
-import { Menu, X, ArrowRight, Zap, Search } from "lucide-react";
+import ROUTES from "@/constants/routes";
+import { authClient } from "@/lib/auth/authClient";
+import { AnimatePresence, easeInOut, motion } from "framer-motion";
+import { Menu, Search, X } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import { LanguageSwitcher } from "../language-switcher";
 import { Logo } from "../logo";
 import { ThemeSwitcher } from "../theme-switcher";
-import { useTheme } from "next-themes";
-import ROUTES from "@/constants/routes";
-import { useTranslations } from "next-intl";
-import { LanguageSwitcher } from "../language-switcher";
-import { useSession } from "next-auth/react";
 import UserAvatarHeader from "../ui_custom/user-avatar-header";
 
 interface NavItem {
@@ -34,7 +34,7 @@ export default function Header2() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const session = useSession();
+  const { data: session } = authClient.useSession();
   const pathname = usePathname();
 
   const t = useTranslations("HomePage.Header");
@@ -205,12 +205,8 @@ export default function Header2() {
 
               <LanguageSwitcher />
 
-              {session.data?.user?.id ? (
-                <UserAvatarHeader
-                  id={session.data.user.id}
-                  name={session.data.user.name!}
-                  imageUrl={session.data.user?.image}
-                />
+              {session?.user?.id ? (
+                <UserAvatarHeader id={session.user.id} name={session.user.name!} imageUrl={session.user?.image} />
               ) : (
                 <Link
                   href={ROUTES.SIGN_IN}
