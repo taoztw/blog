@@ -10,6 +10,7 @@ import {
 import { authClient } from "@/lib/auth/authClient";
 
 import { cn } from "@/lib/utils";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Spinner } from "../ui/spinner";
 
@@ -45,6 +46,10 @@ const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackCl
     });
   };
 
+  const handleDashboard = () => {
+    router.push("/dashboard");
+  };
+
   if (isPending) {
     return <Spinner />;
   }
@@ -71,7 +76,16 @@ const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackCl
       <DropdownMenuContent className="w-48" align="end">
         <DropdownMenuLabel>{name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => handleDashboard()}
+          className="cursor-pointer"
+          disabled={!(session?.user.role === "admin")}
+        >
+          <LayoutDashboard className="mr-2 size-4" />
+          后台管理
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleLogout()} className="cursor-pointer text-red-500">
+          <LogOut className="mr-2 size-4" />
           退出登录
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -1,10 +1,8 @@
-import { ChevronDown, Filter, Loader2Icon } from "lucide-react";
-import React, { Suspense } from "react";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Button } from "../ui/button";
-import CommentsForm from "./comments-form";
 import { api } from "@/trpc/react";
+import { Loader2Icon } from "lucide-react";
+import React, { Suspense } from "react";
 import CommentItem from "./comment-item";
+import CommentsForm from "./comments-form";
 
 interface CommentsSectionProps {
   postId: string;
@@ -53,7 +51,7 @@ const CommentsSectionSuspense = ({ postId }: CommentsSectionProps) => {
     <div className="space-y-6 mt-5">
       <div className="flex items-center justify-between">
         <h1 className="text-base font-bold">{comments.pages[0]?.totalCount} comments</h1>
-        <DropdownMenu modal={false}>
+        {/* <DropdownMenu modal={false}>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm" className="gap-2">
               <Filter className="size-4" />
@@ -66,7 +64,7 @@ const CommentsSectionSuspense = ({ postId }: CommentsSectionProps) => {
             <DropdownMenuItem onClick={() => setSortBy("newest")}>最新评论</DropdownMenuItem>
             <DropdownMenuItem onClick={() => setSortBy("oldest")}>最早评论</DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu> */}
       </div>
       <CommentsForm postId={postId} />
 

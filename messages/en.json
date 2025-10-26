@@ -30,6 +30,20 @@
       "votes": "Votes",
       "answers": "Answers",
       "views": "Views"
+    },
+    "comingSoon": {
+      "title": "Q&A",
+      "subtitle": "Coming Soon",
+      "whatIs": "What is Q&A?",
+      "description": "Q&A is a dedicated space for asking and answering specific questions. Unlike blog posts which are longer-form articles, Q&A is designed for:",
+      "features": {
+        "quick": "Quick Questions & Answers - Get straight to the point with focused discussions",
+        "voting": "Community Voting - Upvote or downvote questions and answers to surface the best content",
+        "tags": "Tag-based Organization - Easily find and categorize questions by topics",
+        "tracking": "Answer Tracking - See how many answers each question has received",
+        "views": "View Counting - Track question popularity and engagement"
+      },
+      "perfect": "Perfect for technical troubleshooting, quick clarifications, and building a searchable knowledge base."
     }
   },
   "QuestionDetail": {
@@ -64,7 +78,21 @@
     "title": "Journals",
     "createJournal": "Create Journal",
     "noJournals": "No journals yet",
-    "loadMore": "Load More"
+    "loadMore": "Load More",
+    "comingSoon": {
+      "title": "Journals",
+      "subtitle": "Coming Soon",
+      "whatIs": "What are Journals?",
+      "description": "Journals are a personal logging space for quick thoughts and moments. Unlike blog posts which are structured articles, journals are designed for:",
+      "features": {
+        "quick": "Quick Updates - Share your thoughts, progress, or daily notes in real-time",
+        "media": "Rich Media Support - Include both text and images to capture moments visually",
+        "chronological": "Chronological Feed - View entries in timeline order, like a personal diary",
+        "lightweight": "Lightweight & Fast - No complex formatting needed, just write and publish",
+        "markdown": "Markdown Support - Simple text formatting for organized notes"
+      },
+      "perfect": "Perfect for daily logs, project updates, learning notes, or sharing quick thoughts with images."
+    }
   },
   "CreateJournal": {
     "title": "Create Journal",

@@ -173,7 +173,7 @@ export function HeroPersonalColorful() {
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
               {/* 标签云 */}
-              <Card className="p-4 hover:shadow-lg transition-all duration-300 ">
+              <Card className="p-4 hover:shadow-lg transition-all duration-300">
                 <div className="flex items-center space-x-2 mb-1">
                   <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center border border-blue-200 dark:border-blue-700">
                     <Tag className="w-4 h-4 text-blue-600 dark:text-blue-400" />
@@ -197,7 +197,7 @@ export function HeroPersonalColorful() {
 
               {/* 最近文章 */}
               <Card className="p-4 hover:shadow-lg transition-all duration-300">
-                <div className="flex items-center space-x-2 mb-3">
+                <div className="flex items-center space-x-2 mb-1">
                   <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center border border-green-200 dark:border-green-700">
                     <FileText className="w-4 h-4 text-green-600 dark:text-green-400" />
                   </div>
@@ -208,7 +208,7 @@ export function HeroPersonalColorful() {
                     <Link
                       key={post.id}
                       href={`/blog/${post.slug}`}
-                      className="block text-sm hover:underline dark:hover:underline transition-colors line-clamp-1"
+                      className="block text-sm hover:underline dark:hover:underline transition-colors line-clamp-1 hover:cursor-pointer"
                     >
                       {post.title}
                     </Link>

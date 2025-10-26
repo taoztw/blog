@@ -30,6 +30,20 @@
       "votes": "投票",
       "answers": "回答",
       "views": "浏览"
+    },
+    "comingSoon": {
+      "title": "问答",
+      "subtitle": "即将推出",
+      "whatIs": "什么是问答？",
+      "description": "问答是一个专门用于提问和回答特定问题的空间。与中长篇文章的博客不同，问答专为以下场景设计：",
+      "features": {
+        "quick": "快速问答 - 直击重点，聚焦讨论",
+        "voting": "社区投票 - 为问题和答案点赞或踩，让最佳内容脱颖而出",
+        "tags": "标签分类 - 通过主题轻松查找和分类问题",
+        "tracking": "回答追踪 - 查看每个问题收到了多少回答",
+        "views": "浏览统计 - 追踪问题的热度和参与度"
+      },
+      "perfect": "非常适合技术故障排查、快速答疑以及构建可搜索的知识库。"
     }
   },
   "QuestionDetail": {
@@ -64,7 +78,21 @@
     "title": "日志",
     "createJournal": "创建日志",
     "noJournals": "暂无日志",
-    "loadMore": "加载更多"
+    "loadMore": "加载更多",
+    "comingSoon": {
+      "title": "日志",
+      "subtitle": "即将推出",
+      "whatIs": "什么是日志？",
+      "description": "日志是记录快速想法和瞬间的个人空间。与结构化的博客文章不同，日志专为以下场景设计：",
+      "features": {
+        "quick": "快速更新 - 实时分享您的想法、进展或每日笔记",
+        "media": "富媒体支持 - 同时包含文本和图片，直观记录瞬间",
+        "chronological": "时间线视图 - 按时间顺序查看条目，就像个人日记",
+        "lightweight": "轻量快速 - 无需复杂格式，即写即发",
+        "markdown": "Markdown 支持 - 简单的文本格式化，让笔记井然有序"
+      },
+      "perfect": "非常适合每日日志、项目更新、学习笔记或分享带图片的快速想法。"
+    }
   },
   "CreateJournal": {
     "title": "创建日志",

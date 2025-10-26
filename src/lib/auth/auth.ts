@@ -27,6 +27,8 @@ export const getAuth = () =>
       google: {
         clientId: env.AUTH_GOOGLE_ID,
         clientSecret: env.AUTH_GOOGLE_SECRET,
+        accessType: "offline",
+        prompt: "select_account consent",
       },
     },
     session: {
@@ -36,4 +38,5 @@ export const getAuth = () =>
       },
     },
     plugins: [nextCookies(), admin()],
+    trustedOrigins: ["http://localhost:3000", "http://127.0.0.1:3000"],
   });

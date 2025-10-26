@@ -1,28 +1,10 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import {
-  Github,
-  Twitter,
-  Linkedin,
-  Mail,
-  Rss,
-  Heart,
-  Code,
-  Coffee,
-  MapPin,
-  Calendar,
-  ExternalLink,
-  Send,
-} from "lucide-react";
+import { ExternalLink, Github, Mail, Rss } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { ColaIcon } from "../icons/Cola";
 
 export function Footer() {
   const [email, setEmail] = useState("");
@@ -90,7 +72,7 @@ export function Footer() {
 
         {/* 友情链接 */}
         <div className="mb-8">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">友情链接</h3>
+          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4"></h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {friendLinks.map((link) => (
               <Link key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" className="group">
