@@ -1,36 +1,34 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { z } from "zod";
-import { POST_STATUS_ENUM, postInsertWithTagsSchema } from "@/server/db/schema";
-import type { PostWithRelations } from "@/global";
-import { api } from "@/trpc/react";
-import { toast } from "sonner";
-
+import { ImageService } from "@/components/dashboard/image-service";
+import { MarkdownPreview } from "@/components/mardown-preview";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { UploadCloud, X, Loader2Icon, SparklesIcon } from "lucide-react";
-import { MarkdownPreview } from "@/components/mardown-preview";
-import { markdownString } from "@/lib/fake-data";
-import { ImageService } from "@/components/dashboard/image-service";
-import { useSession } from "next-auth/react";
+import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
+import type { PostWithRelations } from "@/global";
+import { authClient } from "@/lib/auth/authClient";
+import { markdownString } from "@/lib/fake-data";
+import { POST_STATUS_ENUM, postInsertWithTagsSchema } from "@/server/db/schema";
+import { api } from "@/trpc/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UploadCloud, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
 
 type CreatePostData = z.infer<typeof postInsertWithTagsSchema>;
 
@@ -52,7 +50,7 @@ export function CreateOrEditPostDialog({
   onOpenChange,
 }: Props) {
   const [internalOpen, setInternalOpen] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, isPending } = authClient.useSession();
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = onOpenChange ?? setInternalOpen;
 

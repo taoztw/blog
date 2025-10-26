@@ -1,21 +1,21 @@
 "use client";
 
+import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { LoadingSpinner } from "@/components/ui/loading-spinner";
 import ROUTES from "@/constants/routes";
+import { authClient } from "@/lib/auth/authClient";
 import { signInSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
-import { Logo } from "@/components/logo";
-import { Input } from "@/components/ui/input";
 import SocialAuthForm from "./SocialAuthForm";
-import { LoadingSpinner } from "@/components/ui/loading-spinner";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -29,27 +29,34 @@ const SignInForm = () => {
   const handleSubmit = async (values: z.infer<typeof signInSchema>) => {
     setIsLoading(true);
     try {
-      const res = await signIn("credentials", {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-      });
-      if (res?.error) {
-        toast.error("Sign in failed. Please check your credentials.");
-        form.setError("email", {
-          type: "manual",
-          message: "Invalid email or password",
-        });
-        form.setError("password", {
-          type: "manual",
-          message: "Invalid email or password",
-        });
-        form.setFocus("email");
-        return;
-      }
-      toast.success("Sign in successful!");
-      // Redirect to home after successful sign in
-      router.replace(ROUTES.HOME);
+      await authClient.signIn.email(
+        {
+          email: values.email,
+          password: values.password,
+          callbackURL: ROUTES.HOME,
+        },
+        {
+          onRequest: () => {
+            setIsLoading(true);
+          },
+          onSuccess: () => {
+            toast.success("Sign in successful!");
+            router.replace(ROUTES.HOME);
+          },
+          onError: (ctx) => {
+            toast.error(ctx.error.message || "Sign in failed. Please check your credentials.");
+            form.setError("email", {
+              type: "manual",
+              message: "Invalid email or password",
+            });
+            form.setError("password", {
+              type: "manual",
+              message: "Invalid email or password",
+            });
+            form.setFocus("email");
+          },
+        }
+      );
     } catch (error) {
       toast.error("An unexpected error occurred");
     } finally {
@@ -98,9 +105,6 @@ const SignInForm = () => {
                 <FormItem>
                   <div className="flex items-center justify-between">
                     <FormLabel className="font-medium">Password</FormLabel>
-                    <Button asChild variant="link" size="sm" className="font-light text-muted-foreground text-sm">
-                      <Link href="#">Forgot your Password ?</Link>
-                    </Button>
                   </div>
 
                   <FormControl>

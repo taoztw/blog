@@ -11,26 +11,23 @@ import { authClient } from "@/lib/auth/authClient";
 import { signUpSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import type { z } from "zod";
 import SocialAuthForm from "./SocialAuthForm";
 
 const SignUpForm = () => {
+  const router = useRouter();
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      email: "1@qq.com",
-      name: "tz",
-      password: "123123",
-      confirmPassword: "123123",
+      email: "",
+      name: "",
+      password: "",
+      confirmPassword: "",
     },
   });
-
-  // form.setError("email", {
-  //   type: "server",
-  //   message: "Email already exists",
-  // });
 
   const handleSubmit = async (values: z.infer<typeof signUpSchema>) => {
     await authClient.signUp.email(
@@ -38,18 +35,21 @@ const SignUpForm = () => {
         name: values.name,
         email: values.email,
         password: values.password,
-        callbackURL: "/",
+        callbackURL: ROUTES.HOME,
       },
       {
-        onError: (error) => {
-          toast.error(`注册失败: ${error.error.message}`);
+        onRequest: () => {
+          // Loading state is handled by form.formState.isSubmitting
+        },
+        onSuccess: () => {
+          toast.success("Sign up successful!");
+          router.replace(ROUTES.HOME);
+        },
+        onError: (ctx) => {
+          toast.error(`Sign up failed: ${ctx.error.message}`);
         },
       }
     );
-
-    // if (res.error == null && !res.data.user.emailVerified) {
-    //   router.push(`/register-success?email=${encodeURIComponent(data.email)}`);
-    // }
   };
 
   return (

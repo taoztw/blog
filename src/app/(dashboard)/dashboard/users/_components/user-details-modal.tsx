@@ -1,14 +1,14 @@
 "use client";
 
-import * as React from "react";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
-import { CalendarDays, Mail, MapPin, Shield, User, ExternalLink } from "lucide-react";
-import { api } from "@/trpc/react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ROLES_ENUM } from "@/server/db/schema";
+import { authClient } from "@/lib/auth/authClient";
+import { Ban, CalendarDays, CheckCircle, Mail, Shield, User } from "lucide-react";
+import * as React from "react";
+import { toast } from "sonner";
 
 interface UserDetailsModalProps {
   userId: string | null;
@@ -16,8 +16,57 @@ interface UserDetailsModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+interface UserDetails {
+  id: string;
+  name: string;
+  email: string;
+  emailVerified: boolean;
+  image: string | null;
+  role: string;
+  banned?: boolean;
+  banReason?: string | null;
+  banExpires?: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export function UserDetailsModal({ userId, open, onOpenChange }: UserDetailsModalProps) {
-  const { data: userDetails, isLoading } = api.user.getById.useQuery({ id: userId! }, { enabled: !!userId && open });
+  const [userDetails, setUserDetails] = React.useState<UserDetails | null>(null);
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!userId || !open) return;
+
+    const fetchUserDetails = async () => {
+      setIsLoading(true);
+      try {
+        const { data, error } = await authClient.admin.listUsers({
+          query: {
+            filterField: "id",
+            filterValue: userId,
+            filterOperator: "eq",
+            limit: 1,
+          },
+        });
+
+        if (error) {
+          toast.error("获取用户详情失败");
+          return;
+        }
+
+        if (data && data.users.length > 0) {
+          setUserDetails(data.users[0] as UserDetails);
+        }
+      } catch (error) {
+        toast.error("获取用户详情失败");
+        console.error(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    void fetchUserDetails();
+  }, [userId, open]);
 
   if (!userId) return null;
 
@@ -55,8 +104,8 @@ export function UserDetailsModal({ userId, open, onOpenChange }: UserDetailsModa
               <div className="flex-1 space-y-2">
                 <div className="flex items-center space-x-2">
                   <h3 className="text-xl font-semibold">{userDetails.name || "未设置姓名"}</h3>
-                  <Badge variant={userDetails.role === ROLES_ENUM.ADMIN ? "default" : "secondary"}>
-                    {userDetails.role === ROLES_ENUM.ADMIN ? (
+                  <Badge variant={userDetails.role === "admin" ? "default" : "secondary"}>
+                    {userDetails.role === "admin" ? (
                       <>
                         <Shield className="h-3 w-3 mr-1" />
                         管理员
@@ -68,17 +117,18 @@ export function UserDetailsModal({ userId, open, onOpenChange }: UserDetailsModa
                       </>
                     )}
                   </Badge>
+                  {userDetails.banned && (
+                    <Badge variant="destructive">
+                      <Ban className="h-3 w-3 mr-1" />
+                      已封禁
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex items-center space-x-1 text-muted-foreground">
                   <Mail className="h-4 w-4" />
                   <span>{userDetails.email}</span>
+                  {userDetails.emailVerified && <CheckCircle className="h-4 w-4 text-green-500 ml-1" />}
                 </div>
-                {userDetails.location && (
-                  <div className="flex items-center space-x-1 text-muted-foreground">
-                    <MapPin className="h-4 w-4" />
-                    <span>{userDetails.location}</span>
-                  </div>
-                )}
               </div>
             </div>
 
@@ -94,7 +144,15 @@ export function UserDetailsModal({ userId, open, onOpenChange }: UserDetailsModa
                 </div>
                 <div className="space-y-1">
                   <span className="text-muted-foreground">角色</span>
-                  <p>{userDetails.role === ROLES_ENUM.ADMIN ? "管理员" : "普通用户"}</p>
+                  <p>{userDetails.role === "admin" ? "管理员" : "普通用户"}</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-muted-foreground">邮箱验证</span>
+                  <p>{userDetails.emailVerified ? "已验证" : "未验证"}</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-muted-foreground">账户状态</span>
+                  <p>{userDetails.banned ? "已封禁" : "正常"}</p>
                 </div>
                 <div className="space-y-1">
                   <span className="text-muted-foreground">注册时间</span>
@@ -113,30 +171,25 @@ export function UserDetailsModal({ userId, open, onOpenChange }: UserDetailsModa
               </div>
             </div>
 
-            {/* Linked Accounts */}
-            {userDetails.accounts && userDetails.accounts.length > 0 && (
+            {/* Ban Information */}
+            {userDetails.banned && (
               <>
                 <Separator />
                 <div className="space-y-4">
-                  <h4 className="text-lg font-semibold">关联账户</h4>
-                  <div className="space-y-2">
-                    {userDetails.accounts.map((account, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                        <div className="flex items-center space-x-3">
-                          <div className="h-8 w-8 bg-muted rounded-full flex items-center justify-center">
-                            <ExternalLink className="h-4 w-4" />
-                          </div>
-                          <div>
-                            <p className="font-medium capitalize">{account.provider}</p>
-                            <p className="text-sm text-muted-foreground">{account.type}</p>
-                          </div>
-                        </div>
-                        <div className="text-right text-sm text-muted-foreground">
-                          <p>关联于</p>
-                          <p>{new Date(account.createdAt).toLocaleDateString("zh-CN")}</p>
-                        </div>
+                  <h4 className="text-lg font-semibold text-red-600">封禁信息</h4>
+                  <div className="grid grid-cols-1 gap-4 text-sm">
+                    {userDetails.banReason && (
+                      <div className="space-y-1">
+                        <span className="text-muted-foreground">封禁原因</span>
+                        <p className="bg-red-50 p-2 rounded border border-red-200">{userDetails.banReason}</p>
                       </div>
-                    ))}
+                    )}
+                    {userDetails.banExpires && (
+                      <div className="space-y-1">
+                        <span className="text-muted-foreground">封禁到期时间</span>
+                        <p>{new Date(userDetails.banExpires).toLocaleString("zh-CN")}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               </>

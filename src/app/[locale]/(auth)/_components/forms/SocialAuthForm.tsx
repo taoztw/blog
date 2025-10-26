@@ -1,18 +1,17 @@
 "use client";
-import { signIn } from "next-auth/react";
 import Image from "next/image";
 
-import ROUTES from "@/constants/routes";
-import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
+import ROUTES from "@/constants/routes";
+import { authClient } from "@/lib/auth/authClient";
+import { toast } from "sonner";
 
 function SocialAuthForm() {
   const handleSignIn = async (provider: "github" | "google") => {
     try {
-      await signIn(provider, {
-        callbackUrl: ROUTES.HOME,
-        redirect: false,
+      await authClient.signIn.social({
+        provider,
+        callbackURL: ROUTES.HOME,
       });
     } catch (error) {
       console.log(error);
@@ -20,7 +19,6 @@ function SocialAuthForm() {
         description: error instanceof Error ? error.message : "An error occured during sign-in",
       });
     }
-    console.log(`Sign in with ${provider} clicked`);
   };
   return (
     <div className="mt-6 grid grid-cols-2 gap-3">

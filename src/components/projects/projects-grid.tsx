@@ -1,8 +1,9 @@
 "use client";
 
-import { api } from "@/trpc/react";
 import ProjectCard from "@/components/cards/project-card";
-import { type } from "os";
+import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
+import { api } from "@/trpc/react";
+import { IconFolderCode } from "@tabler/icons-react";
 
 interface ProjectsGridProps {
   search?: string;
@@ -31,12 +32,16 @@ export function ProjectsGrid({ search, categoryId }: ProjectsGridProps) {
 
   if (!projects || projects.length === 0) {
     return (
-      <div className="text-center py-12">
-        <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">No projects found</h3>
-        <p className="text-gray-600 dark:text-gray-400">
-          Try adjusting your search or filters" : "No projects have been published yet"
-        </p>
-      </div>
+      <Empty>
+        <EmptyHeader>
+          <EmptyMedia variant="icon">
+            <IconFolderCode />
+          </EmptyMedia>
+          <EmptyTitle>No Projects Yet</EmptyTitle>
+          <EmptyDescription>还没有创建项目</EmptyDescription>
+        </EmptyHeader>
+        <EmptyContent></EmptyContent>
+      </Empty>
     );
   }
 

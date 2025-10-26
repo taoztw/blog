@@ -1,19 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { useSearchParams } from "next/navigation";
 import { DataTable } from "@/components/dashboard/data-table";
-import { api } from "@/trpc/react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { PaginationComponent } from "@/components/ui_custom/pagination";
-import { createUserColumns } from "./columns";
-import { UserDetailsModal } from "./user-details-modal";
-import { toast } from "sonner";
-import { Search, Users, Shield, User as UserIcon, Trash2 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -24,28 +11,44 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { PaginationComponent } from "@/components/ui_custom/pagination";
+import { authClient } from "@/lib/auth/authClient";
+import { Search, Shield, Trash2, User as UserIcon, Users } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import * as React from "react";
+import { toast } from "sonner";
+import { createUserColumns } from "./columns";
+import { UserDetailsModal } from "./user-details-modal";
 
 interface UserData {
   id: string;
-  name: string | null;
+  name: string;
   email: string;
   role: string;
   image: string | null;
-  location: string | null;
+  emailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
+  banned?: boolean;
+  banReason?: string | null;
+  banExpires?: number | null;
 }
 
 export function UserTable() {
-  const { data: session } = useSession();
+  const { data: session } = authClient.useSession();
   const searchParams = useSearchParams();
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const pageSize = 10;
   const [search, setSearch] = React.useState("");
   const [debouncedSearch, setDebouncedSearch] = React.useState("");
   const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null);
   const [userToDelete, setUserToDelete] = React.useState<UserData | null>(null);
-
-  const utils = api.useUtils();
+  const [users, setUsers] = React.useState<UserData[]>([]);
+  const [totalUsers, setTotalUsers] = React.useState(0);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   // Debounce search
   React.useEffect(() => {
@@ -56,54 +59,138 @@ export function UserTable() {
     return () => clearTimeout(timer);
   }, [search]);
 
-  const { data: usersData, isFetching } = api.user.getAll.useQuery({
-    page: currentPage,
-    pageSize: 10,
-    search: debouncedSearch || undefined,
-  });
+  // Fetch users using Better Auth admin API
+  const fetchUsers = React.useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const { data, error } = await authClient.admin.listUsers({
+        query: {
+          limit: pageSize,
+          offset: (currentPage - 1) * pageSize,
+          searchValue: debouncedSearch || undefined,
+          searchField: "email",
+          searchOperator: "contains",
+        },
+      });
 
-  const { data: userStats } = api.user.getStats.useQuery();
+      if (error) {
+        toast.error(error.message || "获取用户列表失败");
+        return;
+      }
 
-  const updateRoleMutation = api.user.updateRole.useMutation({
-    onSuccess: (updatedUser) => {
-      utils.user.getAll.invalidate();
-      utils.user.getStats.invalidate();
-      toast.success(
-        `用户 ${updatedUser.name || updatedUser.email} 的角色已更新为 ${updatedUser.role === "admin" ? "管理员" : "用户"}`
-      );
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+      if (data) {
+        setUsers(data.users as UserData[]);
+        setTotalUsers(data.total);
+      }
+    } catch (error) {
+      toast.error("获取用户列表失败");
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, debouncedSearch, pageSize]);
 
-  const deleteUserMutation = api.user.deleteUser.useMutation({
-    onSuccess: () => {
-      utils.user.getAll.invalidate();
-      utils.user.getStats.invalidate();
-      toast.success("用户删除成功");
-      setUserToDelete(null);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  React.useEffect(() => {
+    void fetchUsers();
+  }, [fetchUsers]);
+
+  // Calculate user stats from the fetched users
+  const userStats = React.useMemo(() => {
+    const admins = users.filter((u) => u.role === "admin").length;
+    const regularUsers = users.filter((u) => u.role === "user").length;
+    return {
+      total: totalUsers,
+      admins,
+      users: regularUsers,
+    };
+  }, [users, totalUsers]);
 
   const handleViewDetails = (user: UserData) => {
     setSelectedUserId(user.id);
   };
 
-  const handleUpdateRole = (user: UserData, newRole: string) => {
-    updateRoleMutation.mutate({ id: user.id, role: newRole as "admin" | "user" });
+  const handleUpdateRole = async (user: UserData, newRole: string) => {
+    try {
+      const { error } = await authClient.admin.setRole({
+        userId: user.id,
+        role: newRole as "admin" | "user",
+      });
+
+      if (error) {
+        toast.error(error.message || "更新角色失败");
+        return;
+      }
+
+      toast.success(`用户 ${user.name || user.email} 的角色已更新为 ${newRole === "admin" ? "管理员" : "用户"}`);
+      await fetchUsers();
+    } catch (error) {
+      toast.error("更新角色失败");
+      console.error(error);
+    }
+  };
+
+  const handleBanUser = async (user: UserData) => {
+    try {
+      const { error } = await authClient.admin.banUser({
+        userId: user.id,
+        banReason: "违反使用条款",
+      });
+
+      if (error) {
+        toast.error(error.message || "封禁用户失败");
+        return;
+      }
+
+      toast.success(`用户 ${user.name || user.email} 已被封禁`);
+      await fetchUsers();
+    } catch (error) {
+      toast.error("封禁用户失败");
+      console.error(error);
+    }
+  };
+
+  const handleUnbanUser = async (user: UserData) => {
+    try {
+      const { error } = await authClient.admin.unbanUser({
+        userId: user.id,
+      });
+
+      if (error) {
+        toast.error(error.message || "解除封禁失败");
+        return;
+      }
+
+      toast.success(`用户 ${user.name || user.email} 已解除封禁`);
+      await fetchUsers();
+    } catch (error) {
+      toast.error("解除封禁失败");
+      console.error(error);
+    }
   };
 
   const handleDeleteUser = (user: UserData) => {
     setUserToDelete(user);
   };
 
-  const confirmDeleteUser = () => {
-    if (userToDelete) {
-      deleteUserMutation.mutate({ id: userToDelete.id });
+  const confirmDeleteUser = async () => {
+    if (!userToDelete) return;
+
+    try {
+      const { error } = await authClient.admin.removeUser({
+        userId: userToDelete.id,
+      });
+
+      if (error) {
+        toast.error(error.message || "删除用户失败");
+        return;
+      }
+
+      toast.success("用户删除成功");
+      setUserToDelete(null);
+      await fetchUsers();
+    } catch (error) {
+      toast.error("删除用户失败");
+      console.error(error);
     }
   };
 
@@ -111,6 +198,8 @@ export function UserTable() {
     onViewDetails: handleViewDetails,
     onUpdateRole: handleUpdateRole,
     onDelete: handleDeleteUser,
+    onBanUser: handleBanUser,
+    onUnbanUser: handleUnbanUser,
     currentUserId: session?.user?.id || "",
   });
 
@@ -181,10 +270,10 @@ export function UserTable() {
       </div>
 
       {/* Data Table */}
-      <DataTable columns={columns} data={usersData?.users ?? []} loading={isFetching} />
+      <DataTable columns={columns} data={users} loading={isLoading} />
 
       {/* Pagination */}
-      <PaginationComponent totalItems={usersData?.total ?? 0} itemsPerPage={10} isLoading={isFetching} />
+      <PaginationComponent totalItems={totalUsers} itemsPerPage={pageSize} isLoading={isLoading} />
 
       {/* User Details Modal */}
       <UserDetailsModal
@@ -209,22 +298,9 @@ export function UserTable() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDeleteUser}
-              className="bg-red-600 hover:bg-red-700"
-              disabled={deleteUserMutation.isPending}
-            >
-              {deleteUserMutation.isPending ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
-                  删除中...
-                </>
-              ) : (
-                <>
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  确认删除
-                </>
-              )}
+            <AlertDialogAction onClick={confirmDeleteUser} className="bg-red-600 hover:bg-red-700">
+              <Trash2 className="h-4 w-4 mr-2" />
+              确认删除
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

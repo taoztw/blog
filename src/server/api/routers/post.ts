@@ -10,6 +10,7 @@ import {
   postUpdateSchema,
   postUpdateWithTagsSchema,
   postViews,
+  statistics,
   tags,
   user,
 } from "@/server/db/schema";
@@ -530,4 +531,86 @@ export const postRouter = createTRPCRouter({
 
       return { items: itemsWithTags, page, totalPages, total };
     }),
+
+  // Get recent posts for homepage
+  getRecent: publicProcedure
+    .input(z.object({ limit: z.number().min(1).max(10).default(5) }))
+    .query(async ({ ctx, input }) => {
+      const { limit } = input;
+
+      const recentPosts = await ctx.db
+        .select({
+          id: posts.id,
+          title: posts.title,
+          slug: posts.slug,
+          createdAt: posts.createdAt,
+        })
+        .from(posts)
+        .where(eq(posts.status, "published"))
+        .orderBy(desc(posts.createdAt))
+        .limit(limit);
+
+      return recentPosts;
+    }),
+
+  // Get statistics (total posts count and total views) with 1-hour cache
+  getStatistics: publicProcedure.query(async ({ ctx }) => {
+    const CACHE_ID = "global_stats";
+    const CACHE_DURATION_MS = 60 * 60 * 1000; // 1 hour in milliseconds
+
+    // Try to get cached statistics
+    const [cachedStats] = await ctx.db.select().from(statistics).where(eq(statistics.id, CACHE_ID)).limit(1);
+
+    const now = new Date();
+
+    // Check if cache is valid (less than 1 hour old)
+    if (cachedStats && now.getTime() - cachedStats.lastUpdated.getTime() < CACHE_DURATION_MS) {
+      return {
+        totalPosts: cachedStats.totalPosts,
+        totalViews: cachedStats.totalViews,
+        lastUpdated: cachedStats.lastUpdated,
+        fromCache: true,
+      };
+    }
+
+    // Cache is stale or doesn't exist, calculate fresh statistics
+    const [postCountResult] = await ctx.db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(posts)
+      .where(eq(posts.status, "published"));
+
+    const totalPosts = Number(postCountResult?.count ?? 0);
+
+    const [viewCountResult] = await ctx.db
+      .select({ count: sql<number>`count(*)`.mapWith(Number) })
+      .from(postViews);
+
+    const totalViews = Number(viewCountResult?.count ?? 0);
+
+    // Update or insert cache
+    if (cachedStats) {
+      await ctx.db
+        .update(statistics)
+        .set({
+          totalPosts,
+          totalViews,
+          lastUpdated: now,
+        })
+        .where(eq(statistics.id, CACHE_ID));
+    } else {
+      await ctx.db.insert(statistics).values({
+        id: CACHE_ID,
+        totalPosts,
+        totalViews,
+        lastUpdated: now,
+      });
+    }
+
+    return {
+      totalPosts,
+      totalViews,
+      lastUpdated: now,
+      fromCache: false,
+    };
+  }),
 });

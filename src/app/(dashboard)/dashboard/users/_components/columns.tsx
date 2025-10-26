@@ -1,11 +1,8 @@
 "use client";
 
-import { type ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
-import { ArrowUpDown, MoreHorizontal, Edit, Trash2, Eye, Shield, User } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,23 +11,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ROLES_ENUM } from "@/server/db/schema";
+import { type ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, Ban, Eye, MoreHorizontal, Shield, ShieldCheck, Trash2, User } from "lucide-react";
 
 interface UserData {
   id: string;
-  name: string | null;
+  name: string;
   email: string;
   role: string;
   image: string | null;
-  location: string | null;
+  emailVerified: boolean;
   createdAt: Date;
   updatedAt: Date;
+  banned?: boolean;
+  banReason?: string | null;
+  banExpires?: number | null;
 }
 
 interface UserColumnsProps {
   onViewDetails: (user: UserData) => void;
   onUpdateRole: (user: UserData, newRole: string) => void;
   onDelete: (user: UserData) => void;
+  onBanUser: (user: UserData) => void;
+  onUnbanUser: (user: UserData) => void;
   currentUserId: string;
 }
 
@@ -38,6 +41,8 @@ export const createUserColumns = ({
   onViewDetails,
   onUpdateRole,
   onDelete,
+  onBanUser,
+  onUnbanUser,
   currentUserId,
 }: UserColumnsProps): ColumnDef<UserData>[] => [
   {
@@ -84,24 +89,37 @@ export const createUserColumns = ({
     accessorKey: "role",
     header: "角色",
     cell: ({ row }) => {
+      const user = row.original;
       const role = row.getValue("role") as string;
-      const variant = role === ROLES_ENUM.ADMIN ? "default" : "secondary";
-      const icon = role === ROLES_ENUM.ADMIN ? <Shield className="h-3 w-3 mr-1" /> : <User className="h-3 w-3 mr-1" />;
+      const variant = role === "admin" ? "default" : "secondary";
+      const icon = role === "admin" ? <Shield className="h-3 w-3 mr-1" /> : <User className="h-3 w-3 mr-1" />;
 
       return (
-        <Badge variant={variant} className="capitalize">
-          {icon}
-          {role === ROLES_ENUM.ADMIN ? "管理员" : "用户"}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <Badge variant={variant} className="capitalize">
+            {icon}
+            {role === "admin" ? "管理员" : "用户"}
+          </Badge>
+          {user.banned && (
+            <Badge variant="destructive" className="capitalize">
+              <Ban className="h-3 w-3 mr-1" />
+              已封禁
+            </Badge>
+          )}
+        </div>
       );
     },
   },
   {
-    accessorKey: "location",
-    header: "位置",
+    accessorKey: "emailVerified",
+    header: "邮箱验证",
     cell: ({ row }) => {
-      const location = row.getValue("location") as string | null;
-      return <span className="text-sm text-muted-foreground">{location || "未设置"}</span>;
+      const verified = row.getValue("emailVerified") as boolean;
+      return (
+        <Badge variant={verified ? "default" : "secondary"} className="capitalize">
+          {verified ? "已验证" : "未验证"}
+        </Badge>
+      );
     },
   },
   {
@@ -149,12 +167,8 @@ export const createUserColumns = ({
             </DropdownMenuItem>
             {!isCurrentUser && (
               <>
-                <DropdownMenuItem
-                  onClick={() =>
-                    onUpdateRole(user, user.role === ROLES_ENUM.ADMIN ? ROLES_ENUM.USER : ROLES_ENUM.ADMIN)
-                  }
-                >
-                  {user.role === ROLES_ENUM.ADMIN ? (
+                <DropdownMenuItem onClick={() => onUpdateRole(user, user.role === "admin" ? "user" : "admin")}>
+                  {user.role === "admin" ? (
                     <>
                       <User className="mr-2 h-4 w-4" />
                       设为用户
@@ -166,6 +180,17 @@ export const createUserColumns = ({
                     </>
                   )}
                 </DropdownMenuItem>
+                {user.banned ? (
+                  <DropdownMenuItem onClick={() => onUnbanUser(user)}>
+                    <ShieldCheck className="mr-2 h-4 w-4" />
+                    解除封禁
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem onClick={() => onBanUser(user)}>
+                    <Ban className="mr-2 h-4 w-4" />
+                    封禁用户
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem className="text-red-500" onClick={() => onDelete(user)}>
                   <Trash2 className="mr-2 h-4 w-4" />
                   删除用户

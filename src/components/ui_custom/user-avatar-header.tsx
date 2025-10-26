@@ -48,6 +48,7 @@ const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackCl
   if (isPending) {
     return <Spinner />;
   }
+
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>

@@ -17,4 +17,5 @@ export * from "./schemas/posts";
 export * from "./schemas/projects";
 export * from "./schemas/questions";
 export * from "./schemas/relations";
+export * from "./schemas/statistics";
 export * from "./schemas/tags";

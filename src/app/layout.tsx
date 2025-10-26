@@ -49,6 +49,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             showSpinner={true}
             easing="ease"
             speed={200}
+            color="#331"
           />
           <Toaster position="top-right" />
           <TRPCReactProvider>{children}</TRPCReactProvider>

@@ -1,3 +1,4 @@
+import { env } from "@/env";
 import { getDB } from "@/server/db/db";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
@@ -17,6 +18,16 @@ export const getAuth = () =>
       enabled: true,
       autoSignIn: true, //用户注册自动登录
       minPasswordLength: 6,
+    },
+    socialProviders: {
+      github: {
+        clientId: env.AUTH_GITHUB_ID,
+        clientSecret: env.AUTH_GITHUB_SECRET,
+      },
+      google: {
+        clientId: env.AUTH_GOOGLE_ID,
+        clientSecret: env.AUTH_GOOGLE_SECRET,
+      },
     },
     session: {
       cookieCache: {

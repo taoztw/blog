@@ -64,3 +64,46 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - **Type Checking**: Do not run type checking commands unless explicitly requested by the user
 - Code completion is considered finished once implementation is done, without requiring type verification
+
+### UI Components
+
+#### Spinner Component
+
+For loading states, use the `Spinner` component located at `src/components/ui/spinner.tsx`.
+
+**Usage:**
+
+```tsx
+import { Spinner } from "@/components/ui/spinner";
+
+// Basic usage
+<Spinner />
+
+// With custom size
+<Spinner className="size-5" />
+
+// Centered spinner
+<Spinner className="size-5 mx-auto" />
+```
+
+**Common Patterns:**
+
+```tsx
+// Loading state with tRPC
+const { data, isLoading } = api.post.getStatistics.useQuery();
+
+return (
+  <div>
+    {isLoading ? (
+      <Spinner className="size-5 mx-auto" />
+    ) : (
+      <div>{data?.value}</div>
+    )}
+  </div>
+);
+```
+
+**Props:**
+- Accepts all standard SVG props
+- `className`: Custom Tailwind classes (default: `size-4 animate-spin`)
+- Automatically includes `role="status"` and `aria-label="Loading"` for accessibility

@@ -2,7 +2,7 @@
 
 import { formatK } from "@/lib/utils";
 import { useInView, useSpring } from "framer-motion";
-import { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export function AnimatedNumber({ value }: { value: number }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -41,7 +41,7 @@ export function AnimatedNumberK({ value }: { value: number }) {
   useEffect(() => {
     const unsubscribe = spring.on("change", (latest) => {
       if (ref.current) {
-        ref.current.textContent = formatK(latest).toString();
+        ref.current.textContent = formatK(Math.round(latest)).toString();
       }
     });
     return unsubscribe;

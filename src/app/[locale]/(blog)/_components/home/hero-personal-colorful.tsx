@@ -2,10 +2,11 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { AnimatedNumber, AnimatedNumberK } from "@/components/ui_custom/animated-number";
-import { formatK } from "@/lib/utils";
+import { api } from "@/trpc/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { FolderOpen, Heart, MapPin, TrendingUp, Users2 } from "lucide-react";
+import { FileText, FolderOpen, Heart, MapPin, Tag, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -33,6 +34,11 @@ export function HeroPersonalColorful() {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
+  const { data: statData, isLoading: isStatsLoading } = api.post.getStatistics.useQuery();
+
+  // Fetch recent posts and tags
+  const { data: recentPosts } = api.post.getRecent.useQuery({ limit: 3 });
+  const { data: tagsWithCounts } = api.tag.getWithPostCounts.useQuery();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -166,29 +172,47 @@ export function HeroPersonalColorful() {
               transition={{ delay: 0.4 }}
               className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
-              {/* 实时访客 */}
-              <Card className="p-4 hover:shadow-lg transition-all duration-300  dark:from-blue-950/50 dark:to-cyan-950/50">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center">
-                    <Users2 className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+              {/* 标签云 */}
+              <Card className="p-4 hover:shadow-lg transition-all duration-300 ">
+                <div className="flex items-center space-x-2 mb-1">
+                  <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center border border-blue-200 dark:border-blue-700">
+                    <Tag className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">当前在线</p>
-                    <p className="font-medium text-sm">{1000} 位访客</p>
-                  </div>
+                  <p className="text-xs text-muted-foreground font-medium">热门标签</p>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {tagsWithCounts?.slice(0, 6).map((tag) => (
+                    <Link
+                      key={tag.id}
+                      href={`/blog?tag=${tag.id}`}
+                      className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      style={{ borderLeft: `3px solid ${tag.color || "#888"}` }}
+                    >
+                      {tag.name}
+                      <span className="ml-1 text-muted-foreground">({tag.postCount})</span>
+                    </Link>
+                  ))}
                 </div>
               </Card>
 
-              {/* 今日访问 */}
+              {/* 最近文章 */}
               <Card className="p-4 hover:shadow-lg transition-all duration-300">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center border border-purple-200 dark:border-purple-700">
-                    <TrendingUp className="w-5 h-5 text-purple-600 dark:text-purple-400" />
+                <div className="flex items-center space-x-2 mb-3">
+                  <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center border border-green-200 dark:border-green-700">
+                    <FileText className="w-4 h-4 text-green-600 dark:text-green-400" />
                   </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground">今日访问</p>
-                    <p className="font-medium text-sm">{formatK(123123)} 次浏览</p>
-                  </div>
+                  <p className="text-xs text-muted-foreground font-medium">最近文章</p>
+                </div>
+                <div className="space-y-2">
+                  {recentPosts?.map((post) => (
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      className="block text-sm hover:underline dark:hover:underline transition-colors line-clamp-1"
+                    >
+                      {post.title}
+                    </Link>
+                  ))}
                 </div>
               </Card>
             </motion.div>
@@ -241,16 +265,28 @@ export function HeroPersonalColorful() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="text-center space-y-1">
-                    <div className="text-xs text-muted-foreground">技术文章</div>
+                    <div className="text-xs text-muted-foreground">文章</div>
                     <p className="text-base font-medium text-gray-600 dark:text-gray-400">
-                      <AnimatedNumber value={127} />+
+                      {isStatsLoading ? (
+                        <Spinner className="size-5 mx-auto" />
+                      ) : (
+                        <>
+                          <AnimatedNumber value={statData?.totalPosts ?? 0} />+
+                        </>
+                      )}
                     </p>
                   </div>
                   <div className="text-center space-y-1">
                     <div className="text-xs text-muted-foreground">总阅读量</div>
 
                     <p className="text-base font-medium text-gray-600 dark:text-gray-400">
-                      <AnimatedNumberK value={3992938} />+
+                      {isStatsLoading ? (
+                        <Spinner className="size-5 mx-auto" />
+                      ) : (
+                        <>
+                          <AnimatedNumberK value={statData?.totalViews ?? 0} />+
+                        </>
+                      )}
                     </p>
                   </div>
                 </div>
