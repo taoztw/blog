@@ -1,6 +1,5 @@
-import { ProjectTable } from "./_components/project-table";
 import { api, HydrateClient } from "@/trpc/server";
-import React from "react";
+import { ProjectTable } from "./_components/project-table";
 
 const page = async () => {
   void api.project.getByPage.prefetch({

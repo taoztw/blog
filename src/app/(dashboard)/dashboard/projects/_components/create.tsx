@@ -1,22 +1,21 @@
 "use client";
 
+import { ImageService } from "@/components/dashboard/image-service";
+import { TagsSelect } from "@/components/tags-select";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import type { ProjectWithRelations } from "@/global";
-import { PROJECT_TYPE_ENUM, PROJECT_STATUS_ENUM } from "@/server/db/schema";
-import { useState, useEffect, useCallback } from "react";
-import { toast } from "sonner";
-import { ImageService } from "@/components/dashboard/image-service";
-import { Upload, ImageIcon, Plus } from "lucide-react";
+import { PROJECT_STATUS_ENUM } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import { ImageIcon, Upload, X } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-interface CreateOrEditProjectSheetProps {
+interface CreateOrEditProjectDialogProps {
   trigger: React.ReactNode;
   project?: ProjectWithRelations | null;
   open?: boolean;
@@ -30,14 +29,14 @@ const projectStatuses = [
   { value: PROJECT_STATUS_ENUM.PUBLISHED, label: "已发布" },
 ];
 
-export function CreateOrEditProjectSheet({
+export function CreateOrEditProjectDialog({
   trigger,
   project,
   open,
   onOpenChange,
   onSubmit,
   isLoading = false,
-}: CreateOrEditProjectSheetProps) {
+}: CreateOrEditProjectDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
@@ -105,12 +104,6 @@ export function CreateOrEditProjectSheet({
     }
   };
 
-  const toggleTag = (tagId: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      tagIds: prev.tagIds.includes(tagId) ? prev.tagIds.filter((id) => id !== tagId) : [...prev.tagIds, tagId],
-    }));
-  };
 
   const handleImageUpload = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -204,15 +197,15 @@ export function CreateOrEditProjectSheet({
     handleOpenChange(false);
   };
 
-  const sheetContent = (
-    <SheetContent className="w-[600px] sm:w-[540px] flex flex-col h-full">
-      <SheetHeader className="flex-shrink-0">
-        <SheetTitle>{isEditing ? "编辑项目" : "创建项目"}</SheetTitle>
-      </SheetHeader>
+  const dialogContent = (
+    <DialogContent className="max-w-3xl max-h-[90vh] flex flex-col">
+      <DialogHeader className="flex-shrink-0">
+        <DialogTitle>{isEditing ? "编辑项目" : "创建项目"}</DialogTitle>
+      </DialogHeader>
 
-      <form onSubmit={handleSubmit} className="flex flex-col h-full">
-        <div className="flex-1 overflow-y-auto px-4 py-2">
-          <div className="grid auto-rows-min gap-6">
+      <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+        <div className="flex-1 overflow-y-auto px-1 -mx-1">
+          <div className="grid auto-rows-min gap-6 pr-2">
             <div className="grid gap-3">
               <Label htmlFor="title">项目名称 *</Label>
               <Input
@@ -371,76 +364,40 @@ export function CreateOrEditProjectSheet({
 
             <div className="grid gap-3">
               <Label>标签</Label>
-              <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border rounded-md p-3">
-                {tags.map((tag) => {
-                  const isSelected = formData.tagIds.includes(tag.id);
-                  return (
-                    <div
-                      key={tag.id}
-                      className={`flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors ${
-                        isSelected
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-background hover:bg-muted border-muted"
-                      }`}
-                      onClick={() => toggleTag(tag.id)}
-                    >
-                      <div
-                        className={`w-3 h-3 rounded-full border-2 transition-colors ${
-                          isSelected ? "bg-primary-foreground border-primary-foreground" : "border-muted-foreground"
-                        }`}
-                      />
-                      <span className="text-sm font-medium">{tag.name}</span>
-                    </div>
-                  );
-                })}
-              </div>
-              {formData.tagIds.length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {formData.tagIds.map((tagId) => {
-                    const tag = tags.find((t) => t.id === tagId);
-                    return tag ? (
-                      <Badge key={tagId} variant="secondary" className="flex items-center gap-1">
-                        {tag.name}
-                        <button
-                          type="button"
-                          onClick={() => toggleTag(tagId)}
-                          className="ml-1 hover:bg-red-500 hover:text-white rounded-full p-0.5"
-                        >
-                          <X className="h-3 w-3" />
-                        </button>
-                      </Badge>
-                    ) : null;
-                  })}
-                </div>
-              )}
+              <TagsSelect
+                tags={tags}
+                selectedTagIds={formData.tagIds}
+                onSelectedChange={(tagIds) => setFormData((prev) => ({ ...prev, tagIds }))}
+                placeholder="选择标签..."
+              />
             </div>
           </div>
         </div>
 
-        <SheetFooter className="flex-shrink-0 flex justify-end mb-6 border-t">
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? "保存中..." : isEditing ? "更新" : "创建"}
-          </Button>
+        <DialogFooter className="flex-shrink-0 pt-4 border-t mt-4">
           <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
             取消
           </Button>
-        </SheetFooter>
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? "保存中..." : isEditing ? "更新" : "创建"}
+          </Button>
+        </DialogFooter>
       </form>
-    </SheetContent>
+    </DialogContent>
   );
 
   if (trigger) {
     return (
-      <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-        <SheetTrigger asChild>{trigger}</SheetTrigger>
-        {sheetContent}
-      </Sheet>
+      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+        <DialogTrigger asChild>{trigger}</DialogTrigger>
+        {dialogContent}
+      </Dialog>
     );
   }
 
   return (
-    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
-      {sheetContent}
-    </Sheet>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      {dialogContent}
+    </Dialog>
   );
 }

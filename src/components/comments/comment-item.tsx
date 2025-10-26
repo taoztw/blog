@@ -1,24 +1,24 @@
-import React from "react";
-import { UserAvatar } from "../ui_custom/user-avatar";
+import { authClient } from "@/lib/auth/authClient";
 import { cn } from "@/lib/utils";
-import {
-  ThumbsUpIcon,
-  ThumbsDownIcon,
-  MessageSquareIcon,
-  MoreVertical,
-  Trash2Icon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from "lucide-react";
-import { Button } from "../ui/button";
-import { formatDistanceToNow } from "date-fns";
 import type { CommentGetManyOutput } from "@/server/api/types";
 import { api } from "@/trpc/react";
+import { formatDistanceToNow } from "date-fns";
+import {
+  ChevronDownIcon,
+  ChevronUpIcon,
+  MessageSquareIcon,
+  MoreVertical,
+  ThumbsDownIcon,
+  ThumbsUpIcon,
+  Trash2Icon,
+} from "lucide-react";
+import React from "react";
 import { toast } from "sonner";
-import { useSession } from "next-auth/react";
+import { Button } from "../ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import CommentsForm from "./comments-form";
+import { UserAvatar } from "../ui_custom/user-avatar";
 import CommentReply from "./comment-reply";
+import CommentsForm from "./comments-form";
 
 interface CommentItemProps {
   comment: CommentGetManyOutput["items"][number];
@@ -76,7 +76,7 @@ const CommentItem = ({ comment, variant = "comment" }: CommentItemProps) => {
     },
   });
 
-  const userId = useSession().data?.user?.id;
+  const userId = authClient.useSession().data?.user?.id || null;
   return (
     <div>
       <div className="flex gap-4">

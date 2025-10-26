@@ -306,18 +306,13 @@ export function CreateOrEditPostDialog({
                       <FormItem>
                         <FormLabel>标签</FormLabel>
                         <FormControl>
-                          <MultiSelect
-                            options={
-                              tags?.map((tag) => ({
-                                label: tag.name,
-                                value: tag.id,
-                                color: tag.color || undefined,
-                              })) ?? []
-                            }
-                            selected={field.value ?? []}
-                            onChange={field.onChange}
-                            placeholder="选择标签..."
-                          />
+                          <MultiSelect values={field.value ?? []} onValuesChange={field.onChange}>
+                            {tags?.map((tag) => (
+                              <div key={tag.id} data-value={tag.id}>
+                                {tag.name}
+                              </div>
+                            )) ?? []}
+                          </MultiSelect>
                         </FormControl>
                       </FormItem>
                     )}

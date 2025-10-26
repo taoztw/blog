@@ -1,14 +1,14 @@
 "use client";
 
-import * as React from "react";
 import { DataTable } from "@/components/dashboard/data-table";
-import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { CreateOrEditProjectSheet } from "./create";
-import { createProjectColumns } from "./columns";
-import type { ProjectWithRelations } from "@/global";
-import { toast } from "sonner";
 import { PaginationComponent } from "@/components/ui_custom/pagination";
+import type { ProjectWithRelations } from "@/global";
+import { api } from "@/trpc/react";
+import * as React from "react";
+import { toast } from "sonner";
+import { createProjectColumns } from "./columns";
+import { CreateOrEditProjectDialog } from "./create";
 
 export function ProjectTable() {
   const [editProject, setEditProject] = React.useState<ProjectWithRelations | null>(null);
@@ -62,7 +62,7 @@ export function ProjectTable() {
     <div className="p-6 space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">项目管理</h1>
-        <CreateOrEditProjectSheet
+        <CreateOrEditProjectDialog
           trigger={<Button>创建项目</Button>}
           onSubmit={(data) => createProject.mutate(data)}
           isLoading={createProject.isPending}
@@ -99,7 +99,7 @@ export function ProjectTable() {
       {data && <PaginationComponent totalItems={data.total} itemsPerPage={10} isLoading={isFetching} />}
 
       {editProject && (
-        <CreateOrEditProjectSheet
+        <CreateOrEditProjectDialog
           trigger={null}
           project={editProject}
           open={!!editProject}
