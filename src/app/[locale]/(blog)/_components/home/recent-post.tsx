@@ -1,14 +1,11 @@
 "use client";
 
-import { useState, useRef, useEffect, type TouchEvent } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import PostLatestCard from "@/components/cards/post-latest-card";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon, ArrowRightIcon } from "lucide-react";
 import type { PostWithRelations } from "@/global";
-import PostLatestCard from "../cards/post-latest-card";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { useEffect, useRef, useState, type TouchEvent } from "react";
+// import PostLatestCard from "../cards/post-latest-card";
 
 export const blogPosts: PostWithRelations[] = [
   {
@@ -20,8 +17,7 @@ export const blogPosts: PostWithRelations[] = [
     content: "Full content about AI-powered marketing...",
     imageUrl: "/tmp/p1.jpg",
     status: "PUBLISHED",
-    viewCount: 1247,
-    likeCount: 89,
+
     createdById: "usr_123456789",
     categoryId: "1",
     author: {
@@ -31,7 +27,7 @@ export const blogPosts: PostWithRelations[] = [
       image: "/avatars/sarah-chen.jpg",
     },
     category: {
-      id: 1,
+      id: "1",
       name: "Artificial Intelligence",
     },
     createdAt: new Date(),
@@ -46,8 +42,6 @@ export const blogPosts: PostWithRelations[] = [
     content: "Full content about social media storytelling...",
     imageUrl: "/tmp/p2.jpg",
     status: "PUBLISHED",
-    viewCount: 892,
-    likeCount: 156,
     createdById: "usr_987654321",
     categoryId: "2",
     author: {
@@ -57,7 +51,7 @@ export const blogPosts: PostWithRelations[] = [
       image: "/avatars/marcus-rodriguez.jpg",
     },
     category: {
-      id: 2,
+      id: "2",
       name: "Social Media",
     },
     createdAt: new Date(),
@@ -72,8 +66,6 @@ export const blogPosts: PostWithRelations[] = [
     content: "Full content about voice commerce...",
     imageUrl: "/tmp/p3.jpg",
     status: "PUBLISHED",
-    viewCount: 634,
-    likeCount: 78,
     createdById: "usr_456789123",
     categoryId: "3",
     author: {
@@ -83,7 +75,7 @@ export const blogPosts: PostWithRelations[] = [
       image: "/avatars/emily-watson.jpg",
     },
     category: {
-      id: 3,
+      id: "3",
       name: "E-commerce",
     },
     createdAt: new Date(),
@@ -98,8 +90,6 @@ export const blogPosts: PostWithRelations[] = [
     content: "Full content about sustainable marketing...",
     imageUrl: "/tmp/p4.jpg",
     status: "PUBLISHED",
-    viewCount: 1089,
-    likeCount: 203,
     createdById: "usr_789123456",
     categoryId: "4",
     author: {
@@ -109,7 +99,7 @@ export const blogPosts: PostWithRelations[] = [
       image: "/avatars/david-kim.jpg",
     },
     category: {
-      id: 4,
+      id: "4",
       name: "Sustainability",
     },
     createdAt: new Date(),
@@ -124,8 +114,6 @@ export const blogPosts: PostWithRelations[] = [
     content: "Full content about micro-influencer marketing...",
     imageUrl: "/tmp/p2.jpg",
     status: "PUBLISHED",
-    viewCount: 756,
-    likeCount: 124,
     createdById: "usr_321654987",
     categoryId: "2",
     author: {
@@ -135,7 +123,7 @@ export const blogPosts: PostWithRelations[] = [
       image: "/avatars/jessica-liu.jpg",
     },
     category: {
-      id: 2,
+      id: "2",
       name: "Social Media",
     },
     createdAt: new Date(),
@@ -150,8 +138,6 @@ export const blogPosts: PostWithRelations[] = [
     content: "Full content about color psychology...",
     imageUrl: "/tmp/p4.jpg",
     status: "DRAFT",
-    viewCount: 0,
-    likeCount: 0,
     createdById: "usr_654987321",
     categoryId: "5",
     author: {
@@ -161,7 +147,7 @@ export const blogPosts: PostWithRelations[] = [
       image: "/avatars/alex-thompson.jpg",
     },
     category: {
-      id: 5,
+      id: "5",
       name: "Design",
     },
     createdAt: new Date(),

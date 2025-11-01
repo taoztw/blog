@@ -1,7 +1,7 @@
-import { type NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { type NextRequest, NextResponse } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { key: string } }) {
+export async function GET(request: NextRequest, { params }: { params: Promise<{ key: string }> }) {
   try {
     const { key } = await params;
     console.log(key);

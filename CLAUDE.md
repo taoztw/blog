@@ -92,18 +92,11 @@ import { Spinner } from "@/components/ui/spinner";
 // Loading state with tRPC
 const { data, isLoading } = api.post.getStatistics.useQuery();
 
-return (
-  <div>
-    {isLoading ? (
-      <Spinner className="size-5 mx-auto" />
-    ) : (
-      <div>{data?.value}</div>
-    )}
-  </div>
-);
+return <div>{isLoading ? <Spinner className="size-5 mx-auto" /> : <div>{data?.value}</div>}</div>;
 ```
 
 **Props:**
+
 - Accepts all standard SVG props
 - `className`: Custom Tailwind classes (default: `size-4 animate-spin`)
 - Automatically includes `role="status"` and `aria-label="Loading"` for accessibility

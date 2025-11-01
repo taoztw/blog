@@ -1,13 +1,13 @@
 "use client";
 
-import * as React from "react";
 import { DataTable } from "@/components/dashboard/data-table";
-import { api } from "@/trpc/react";
 import { Button } from "@/components/ui/button";
-import { CreateOrEditPostDialog } from "./create";
-import { createPostColumns } from "./columns";
 import type { CreatePostData, PostWithRelations } from "@/global";
+import { api } from "@/trpc/react";
+import * as React from "react";
 import { toast } from "sonner";
+import { createPostColumns } from "./columns";
+import { CreateOrEditPostDialog } from "./create";
 
 export function PostTable() {
   const [cursor, setCursor] = React.useState<{ id: string; updateAt: Date } | null>(null);
@@ -71,15 +71,7 @@ export function PostTable() {
           />
         </Button>
       </div>
-      <DataTable
-        columns={columns}
-        data={data?.items ?? []}
-        onPrevPage={goPrevPage}
-        onNextPage={goNextPage}
-        hasPrevPage={hasPrevPage}
-        hasNextPage={hasNextPage}
-        loading={isFetching}
-      />
+      <DataTable columns={columns} data={data?.items ?? []} loading={isFetching} />
 
       {editPost && (
         <CreateOrEditPostDialog

@@ -1,13 +1,13 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { api } from "@/trpc/react";
-import { Skeleton } from "@/components/ui/skeleton";
-import Link from "next/link";
 import { MarkdownPreview } from "@/components/mardown-preview";
-import { usePathname } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { api } from "@/trpc/react";
 import { motion } from "framer-motion";
+import { useTranslations } from "next-intl";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export default function JournalsPage() {
@@ -66,10 +66,7 @@ export default function JournalsPage() {
 
             {hasNextPage && (
               <div className="mt-8 text-center">
-                <Button
-                  onClick={() => fetchNextPage()}
-                  variant="outline"
-                >
+                <Button onClick={() => fetchNextPage()} variant="outline">
                   {t("loadMore")}
                 </Button>
               </div>
@@ -91,11 +88,7 @@ function JournalCard({ journal }: { journal: any }) {
       {/* Image */}
       {journal.imageUrl && (
         <div className="rounded-lg overflow-hidden">
-          <img
-            src={journal.imageUrl}
-            alt="Journal image"
-            className="w-full h-auto max-h-96 object-cover"
-          />
+          <img src={journal.imageUrl} alt="Journal image" className="w-full h-auto max-h-96 object-cover" />
         </div>
       )}
 
@@ -108,19 +101,13 @@ function JournalCard({ journal }: { journal: any }) {
       <div className="flex items-center justify-between pt-4 border-t">
         <div className="flex items-center gap-3">
           {journal.author?.image && (
-            <img
-              src={journal.author.image}
-              alt={journal.author.name || "User"}
-              className="h-8 w-8 rounded-full"
-            />
+            <img src={journal.author.image} alt={journal.author.name || "User"} className="h-8 w-8 rounded-full" />
           )}
           <div>
             <div className="font-semibold text-sm">{journal.author?.name}</div>
           </div>
         </div>
-        <div className="text-sm text-muted-foreground">
-          {new Date(journal.createdAt).toLocaleDateString()}
-        </div>
+        <div className="text-sm text-muted-foreground">{new Date(journal.createdAt).toLocaleDateString()}</div>
       </div>
     </motion.article>
   );
