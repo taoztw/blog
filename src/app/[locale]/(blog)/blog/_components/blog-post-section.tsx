@@ -1,18 +1,18 @@
 "use client";
 
-import { useState, useMemo, useEffect, Suspense } from "react";
 import { MarkdownPreview } from "@/components/mardown-preview";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, MessageCircle, Share2, Eye, Loader2Icon } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
-import { LikeButton } from "@/components/ui_custom/like-button";
-import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+import { LikeButton } from "@/components/ui_custom/like-button";
+import type { Post } from "@/global";
+import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import GithubSlugger from "github-slugger";
-import type { Post } from "@/global";
+import { Calendar, Eye, MessageCircle, Share2 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 interface TableOfContentsItem {
   id: string;

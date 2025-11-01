@@ -52,7 +52,7 @@ const PostLatestCard = ({ post }: PostLatestCardProps) => {
         </CardContent>
         <CardFooter className="pb-6">
           <Button variant="ghost" size="sm" className="w-full text-sm" asChild>
-            <Link href="#" className="flex items-center justify-center text-muted-foreground hover:text-primary/90">
+            <Link href={`/blog/${post.slug}`} className="flex items-center justify-center text-muted-foreground hover:text-primary/90">
               Read Article
               {/* <ArrowRightIcon className="ml-1 h-4 w-4" /> */}
             </Link>

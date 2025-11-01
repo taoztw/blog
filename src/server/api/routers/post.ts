@@ -26,6 +26,15 @@ export const postRouter = createTRPCRouter({
       throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid post data" });
     }
 
+    // Check if slug already exists
+    const existingPost = await ctx.db.query.posts.findFirst({
+      where: eq(posts.slug, validate.data.slug),
+    });
+
+    if (existingPost) {
+      throw new TRPCError({ code: "CONFLICT", message: "A post with this slug already exists" });
+    }
+
     const [insertedPost] = await ctx.db
       .insert(posts)
       .values({
@@ -67,6 +76,17 @@ export const postRouter = createTRPCRouter({
         throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid post data" });
       }
 
+      // Check if slug is being updated and if it already exists
+      if (validate.data.slug) {
+        const existingPost = await ctx.db.query.posts.findFirst({
+          where: and(eq(posts.slug, validate.data.slug), sql`${posts.id} != ${id}`),
+        });
+
+        if (existingPost) {
+          throw new TRPCError({ code: "CONFLICT", message: "A post with this slug already exists" });
+        }
+      }
+
       const [updatedPost] = await ctx.db.update(posts).set(validate.data).where(eq(posts.id, id)).returning();
 
       if (!updatedPost) {
@@ -85,6 +105,15 @@ export const postRouter = createTRPCRouter({
     const validate = postInsertSchema.safeParse(postData);
     if (!validate.success) {
       throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid post data" });
+    }
+
+    // Check if slug already exists
+    const existingPost = await ctx.db.query.posts.findFirst({
+      where: eq(posts.slug, validate.data.slug),
+    });
+
+    if (existingPost) {
+      throw new TRPCError({ code: "CONFLICT", message: "A post with this slug already exists" });
     }
 
     // Create post
@@ -124,6 +153,17 @@ export const postRouter = createTRPCRouter({
       const validate = postUpdateSchema.safeParse(postData);
       if (!validate.success) {
         throw new TRPCError({ code: "BAD_REQUEST", message: "Invalid post data" });
+      }
+
+      // Check if slug is being updated and if it already exists
+      if (validate.data.slug) {
+        const existingPost = await ctx.db.query.posts.findFirst({
+          where: and(eq(posts.slug, validate.data.slug), sql`${posts.id} != ${id}`),
+        });
+
+        if (existingPost) {
+          throw new TRPCError({ code: "CONFLICT", message: "A post with this slug already exists" });
+        }
       }
 
       // Update post
@@ -332,6 +372,56 @@ export const postRouter = createTRPCRouter({
       .from(postTags)
       .innerJoin(tags, eq(postTags.tagId, tags.id))
       .where(eq(postTags.postId, input.id));
+
+    const postTags_array = postTagsData.map(({ tag }) => tag);
+
+    return {
+      ...post,
+      tags: postTags_array,
+    };
+  }),
+  getBySlug: publicProcedure.input(z.object({ slug: z.string() })).query(async ({ ctx, input }) => {
+    const userId = ctx.session?.user.id;
+
+    const userPostReactions = ctx.db.$with("postReactions").as(
+      ctx.db
+        .select({
+          postId: postReactions.postId,
+          type: postReactions.type,
+        })
+        .from(postReactions)
+        .where(inArray(postReactions.userId, userId ? [userId] : []))
+    );
+
+    const [post] = await ctx.db
+      .with(userPostReactions)
+      .select({
+        ...getTableColumns(posts),
+        user: user,
+        category: categorys,
+        viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
+        likeCount: ctx.db.$count(postReactions, and(eq(postReactions.postId, posts.id))),
+        commentCount: ctx.db.$count(comments, eq(comments.postId, posts.id)),
+        userReaction: userPostReactions.type,
+      })
+      .from(posts)
+      .innerJoin(user, eq(posts.createdById, user.id))
+      .innerJoin(categorys, eq(posts.categoryId, categorys.id))
+      .leftJoin(userPostReactions, eq(userPostReactions.postId, posts.id))
+      .where(eq(posts.slug, input.slug));
+
+    if (!post) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+    }
+
+    // Get tags for this post
+    const postTagsData = await ctx.db
+      .select({
+        tag: tags,
+      })
+      .from(postTags)
+      .innerJoin(tags, eq(postTags.tagId, tags.id))
+      .where(eq(postTags.postId, post.id));
 
     const postTags_array = postTagsData.map(({ tag }) => tag);
 

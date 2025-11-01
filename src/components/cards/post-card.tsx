@@ -1,18 +1,15 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, ArrowRight, TrendingUp, ChevronRightIcon, Eye, MessageCircleIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { z } from "zod";
-import type { Post, PostWithRelations } from "@/global";
+import { Button } from "@/components/ui/button";
 import { getTimeStamp } from "@/lib/utils";
-import { ImageService } from "../dashboard/image-service";
-import { usePathname } from "next/navigation";
 import type { PostListItem } from "@/server/api/types";
 import type { tags } from "@/server/db/schema";
+import { Calendar, ChevronRightIcon, Eye, MessageCircleIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { ImageService } from "../dashboard/image-service";
 
 interface BlogCardProps {
   post: PostListItem & {
@@ -22,7 +19,7 @@ interface BlogCardProps {
 
 export function BlogCard({ post }: BlogCardProps) {
   const pathname = usePathname();
-  const blogUrl = `${pathname}/${post.id}/${post.slug}`;
+  const blogUrl = `${pathname}/${post.slug}`;
   return (
     // <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
     <article key={post.id} className="group flex flex-col gap-4 py-5 sm:flex-row">

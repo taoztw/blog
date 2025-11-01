@@ -2,14 +2,13 @@
 
 import type React from "react";
 
-import { useState, useCallback } from "react";
+import { ImageService } from "@/components/dashboard/image-service";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { ImageIcon, Upload, X } from "lucide-react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
-import { Upload, X, ImageIcon } from "lucide-react";
-import type { file } from "zod";
-import { ImageService } from "@/components/dashboard/image-service";
 
 interface UploadedImage {
   key: string;

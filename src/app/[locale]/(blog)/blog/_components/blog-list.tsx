@@ -1,14 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
-import SearchInput from "@/components/ui/search-input";
 import { BlogCard } from "@/components/cards/post-card";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { api } from "@/trpc/react";
-import { BlogSidebar } from "./blog-sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useEffect, useState, type JSX } from "react";
 import { PaginationComponent } from "@/components/ui_custom/pagination";
+import { api } from "@/trpc/react";
+import { motion } from "framer-motion";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { BlogSidebar } from "./blog-sidebar";
 
 export function BlogListPage() {
   const searchParams = useSearchParams();
@@ -21,24 +19,6 @@ export function BlogListPage() {
   const categoryId = searchParams.get("categoryId") ?? undefined;
   const tagName = searchParams.get("tag") ?? "";
   const categoryName = searchParams.get("category") ?? "";
-
-  // 内部状态（用于受控输入框）
-  const [searchValue, setSearchValue] = useState(search);
-
-  // 搜索值改动时，延迟更新 URL
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      // 只有内容真的改变时才更新
-      if (searchValue !== search) {
-        const params = new URLSearchParams(searchParams.toString());
-        params.set("q", searchValue);
-        params.set("page", "1");
-        router.push(`${pathname}?${params.toString()}`, { scroll: false });
-      }
-    }, 300); // 300ms 防抖
-
-    return () => clearTimeout(handler);
-  }, [searchValue]);
 
   // 获取数据（带分页、搜索和筛选）
   const { data, isLoading } = api.post.getByPageWithFilters.useQuery({
@@ -84,18 +64,6 @@ export function BlogListPage() {
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-8 lg:gap-10">
           {/* 主内容区域 */}
           <div className="w-full min-w-0">
-            <div className="mb-8 space-y-4">
-              <h1 className="text-3xl font-bold tracking-tight">Posts</h1>
-
-              {isLoading ? (
-                <Skeleton className="h-10 w-full rounded-md" />
-              ) : (
-                <SearchInput
-                  value={searchValue}
-                  onChange={(v) => setSearchValue(v)} // 只更新本地 state，不直接改 URL
-                />
-              )}
-            </div>
             {/* 筛选条件显示 */}
             {(tagName || categoryName) && (
               <div className="flex items-center gap-2 flex-wrap">

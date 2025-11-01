@@ -13,6 +13,7 @@ import { LanguageSwitcher } from "../language-switcher";
 import { Logo } from "../logo";
 import { ThemeSwitcher } from "../theme-switcher";
 import UserAvatarHeader from "../ui_custom/user-avatar-header";
+import { GlobalSearch } from "../global-search";
 
 interface NavItem {
   name: string;
@@ -32,6 +33,7 @@ export default function Header2() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const { data: session } = authClient.useSession();
@@ -55,6 +57,19 @@ export default function Header2() {
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // Add keyboard shortcut for search (Cmd+K or Ctrl+K)
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsSearchOpen((open) => !open);
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
   }, []);
 
   useEffect(() => {
@@ -192,6 +207,8 @@ export default function Header2() {
                 className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg p-2 transition-colors duration-200"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => setIsSearchOpen(true)}
+                aria-label="Search"
               >
                 <Search className="h-5 w-5" />
               </motion.button>
@@ -307,6 +324,9 @@ export default function Header2() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Global Search Dialog */}
+      <GlobalSearch open={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </>
   );
 }

@@ -1,5 +1,5 @@
-import BlogView from "../_components/blog-view";
 import { api, HydrateClient } from "@/trpc/server";
+import BlogView from "../_components/blog-view";
 
 interface PageProps {
   params: Promise<{ slug: string[] }>;
@@ -7,13 +7,13 @@ interface PageProps {
 
 export default async function page({ params }: PageProps) {
   const { slug } = await params;
-  const id = slug[0]; // 假设第一个部分是文章 ID
+  const postSlug = slug[0]; // 使用 slug 而不是 id
 
-  if (!id) {
+  if (!postSlug) {
     return <div>文章未找到</div>;
   }
 
-  const post = await api.post.getOne({ id });
+  const post = await api.post.getBySlug({ slug: postSlug });
   return (
     <HydrateClient>
       <BlogView post={post} />

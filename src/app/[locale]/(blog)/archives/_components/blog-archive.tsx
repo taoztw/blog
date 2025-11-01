@@ -122,7 +122,7 @@ export function BlogArchive() {
       type: "post" as const,
       category: post.category,
       tags: post.tags || [],
-      url: `/blog/${post.id}/${post.slug}`,
+      url: `/blog/${post.slug}`,
     }));
 
     const projectItems: ArchiveItem[] = (projects || []).map((project: any) => ({

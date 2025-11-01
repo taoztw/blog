@@ -16,7 +16,7 @@ export const posts = sqliteTable(
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
     title: text("title", { length: 512 }).notNull(),
-    slug: text("slug", { length: 512 }).notNull(),
+    slug: text("slug", { length: 512 }).notNull().unique(),
     excerpt: text("excerpt").notNull(),
     content: text("content").notNull(),
     imageUrl: text("image_url", { length: 512 }),

@@ -1,6 +1,14 @@
 import { z } from "zod";
-import { categoryInsertSchema, categorySelectSchema, postSelectSchema, userSelectSchema, tagInsertSchema, tagSelectSchema, projectSelectSchema, projectInsertSchema } from "./server/db/schema";
-import { posts, categorys, users, tags, projects } from "./server/db/schema";
+import {
+  categoryInsertSchema,
+  categorySelectSchema,
+  postSelectSchema,
+  projectInsertSchema,
+  projectSelectSchema,
+  tagInsertSchema,
+  tagSelectSchema,
+  userSelectSchema,
+} from "./server/db/schema";
 
 // 基础类型
 type CreatePostData = z.infer<typeof postInsertSchema>;
@@ -10,7 +18,6 @@ type CreateCategoryData = z.infer<typeof categoryInsertSchema>;
 
 type Tag = z.infer<typeof tagSelectSchema>;
 type CreateTagData = z.infer<typeof tagInsertSchema>;
-
 
 type Project = z.infer<typeof projectSelectSchema>;
 type CreateProjectData = z.infer<typeof projectInsertSchema>;
@@ -60,3 +67,18 @@ export type Post = z.infer<typeof postSelectSchema> & {
   commentCount: number;
   userReaction?: string | null;
 };
+
+type ActionResponse<T = null> = {
+  success: boolean;
+  data?: T;
+  error?: {
+    message: string;
+    details?: Record<string, string[]>;
+  };
+  status?: number;
+};
+type SuccessResponse<T = null> = ActionResponse<T> & { success: true };
+type ErrorResponse = ActionResponse<undefined> & { success: false };
+
+type APIErrorResponse = NextResponse<ErrorResponse>;
+type APIResponse<T = null> = NextResponse<SuccessResponse<T> | ErrorResponse>;
