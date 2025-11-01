@@ -1,12 +1,11 @@
-import { CalendarIcon, ArrowRightIcon, Calendar, ClockPlus, Eye, Clock } from "lucide-react";
-import Link from "next/link";
-import { Badge } from "../ui/badge";
-import React from "react";
-import { Card, CardContent, CardFooter } from "../ui/card";
-import Image from "next/image";
-import { Button } from "../ui/button";
 import type { PostWithRelations } from "@/global";
 import { getTimeStamp } from "@/lib/utils";
+import { Calendar, Clock, Eye } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardFooter } from "../ui/card";
 
 interface PostLatestCardProps {
   post: PostWithRelations;
@@ -52,7 +51,10 @@ const PostLatestCard = ({ post }: PostLatestCardProps) => {
         </CardContent>
         <CardFooter className="pb-6">
           <Button variant="ghost" size="sm" className="w-full text-sm" asChild>
-            <Link href={`/blog/${post.slug}`} className="flex items-center justify-center text-muted-foreground hover:text-primary/90">
+            <Link
+              href={`/blog/${post.slug}`}
+              className="flex items-center justify-center text-muted-foreground hover:text-primary/90"
+            >
               Read Article
               {/* <ArrowRightIcon className="ml-1 h-4 w-4" /> */}
             </Link>
