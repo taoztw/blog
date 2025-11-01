@@ -1,5 +1,6 @@
 "use client";
 
+import { TagBadge } from "@/components/tag-badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/trpc/react";
 import { format } from "date-fns";
@@ -30,14 +31,6 @@ export function BlogSidebar() {
     params.delete("tag");
     params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`);
-  };
-
-  const getTagSize = (count: number, maxCount: number) => {
-    const ratio = count / maxCount;
-    if (ratio > 0.8) return "text-sm";
-    if (ratio > 0.6) return "text-xs";
-    if (ratio > 0.4) return "text-xs";
-    return "text-xs";
   };
 
   const maxTagCount = Math.max(...(tags?.map((t) => t.postCount) || [1]));
@@ -110,22 +103,21 @@ export function BlogSidebar() {
           </div>
         ) : (
           <div className="flex flex-wrap gap-1.5">
-            {tags?.map((tag) => (
-              <button
-                key={tag.id}
-                onClick={() => handleTagClick(tag.name)}
-                className={`px-2 py-0.5 ${getTagSize(tag.postCount, maxTagCount)} rounded border border-border/40
-                  text-muted-foreground hover:border-border hover:text-foreground
-                  transition-colors relative`}
-                style={{
-                  backgroundColor: tag.color ? `${tag.color}15` : undefined,
-                  // borderColor: tag.color ? `${tag.color}40` : undefined,
-                }}
-              >
-                {tag.name}
-                <span className="ml-1 text-[10px] opacity-60">({tag.postCount})</span>
-              </button>
-            )) || <p className="text-muted-foreground">暂无标签</p>}
+            {tags?.map((tag) => {
+              const ratio = tag.postCount / maxTagCount;
+              const size = ratio > 0.8 ? "md" : ratio > 0.6 ? "sm" : "sm";
+
+              return (
+                <TagBadge
+                  key={tag.id}
+                  name={tag.name}
+                  color={tag.color}
+                  count={tag.postCount}
+                  onClick={() => handleTagClick(tag.name)}
+                  size={size}
+                />
+              );
+            }) || <p className="text-muted-foreground">暂无标签</p>}
           </div>
         )}
       </section>

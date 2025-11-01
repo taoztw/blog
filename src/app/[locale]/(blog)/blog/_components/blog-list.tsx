@@ -1,6 +1,8 @@
 "use client";
 
 import { BlogCard } from "@/components/cards/post-card";
+import { CategoryBadge } from "@/components/category-badge";
+import { TagBadge } from "@/components/tag-badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginationComponent } from "@/components/ui_custom/pagination";
 import { api } from "@/trpc/react";
@@ -27,8 +29,20 @@ export function BlogListPage() {
     categoryName,
   });
 
+  // 获取所有标签和分类信息（用于显示颜色）
+  const { data: tags } = api.tag.getAll.useQuery(undefined, {
+    enabled: !!tagName,
+  });
+  const { data: categories } = api.category.getAll.useQuery(undefined, {
+    enabled: !!categoryName,
+  });
+
   const posts = data?.items ?? [];
   const totalItems = data?.total ?? 0;
+
+  // 找到当前筛选的标签和分类的完整信息
+  const currentTag = tags?.find((tag) => tag.name === tagName);
+  const currentCategory = categories?.find((cat) => cat.name === categoryName);
 
   console.log("posts", posts);
 
@@ -60,26 +74,13 @@ export function BlogListPage() {
           <div className="w-full min-w-0">
             {/* 筛选条件显示 */}
             {(tagName || categoryName) && (
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex items-center gap-2 flex-wrap mb-6">
                 <span className="text-sm text-muted-foreground">当前筛选：</span>
-                {tagName && (
-                  <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-md ">
-                    <span className="text-sm">标签: {tagName}</span>
-                    <button onClick={() => clearFilter("tag")} className="ml-1 hover:bg-blue-100 rounded-full p-0.5">
-                      ×
-                    </button>
-                  </div>
+                {tagName && currentTag && (
+                  <TagBadge name={currentTag.name} color={currentTag.color} onRemove={() => clearFilter("tag")} />
                 )}
-                {categoryName && (
-                  <div className="flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 text-sm rounded-md border">
-                    <span className="text-sm">分类: {categoryName}</span>
-                    <button
-                      onClick={() => clearFilter("category")}
-                      className="ml-1 hover:bg-green-100 rounded-full p-0.5"
-                    >
-                      ×
-                    </button>
-                  </div>
+                {categoryName && currentCategory && (
+                  <CategoryBadge name={currentCategory.name} onRemove={() => clearFilter("category")} />
                 )}
                 {(tagName || categoryName) && (
                   <button

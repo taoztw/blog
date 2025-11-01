@@ -1,5 +1,6 @@
 "use client";
 
+import { TagBadge } from "@/components/tag-badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
@@ -9,6 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { FileText, FolderOpen, Heart, MapPin, Tag, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import MusicPlayer from "./music-player";
 
@@ -31,6 +33,7 @@ const photos = [
 ];
 
 export function HeroPersonalColorful() {
+  const router = useRouter();
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState("");
@@ -174,7 +177,7 @@ export function HeroPersonalColorful() {
             >
               {/* 标签云 */}
               <Card className="p-4 hover:shadow-lg transition-all duration-300">
-                <div className="flex items-center space-x-2 mb-1">
+                <div className="flex items-center space-x-2 mb-3">
                   <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center border border-blue-200 dark:border-blue-700">
                     <Tag className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   </div>
@@ -182,15 +185,14 @@ export function HeroPersonalColorful() {
                 </div>
                 <div className="flex flex-wrap gap-2">
                   {tagsWithCounts?.slice(0, 6).map((tag) => (
-                    <Link
+                    <TagBadge
                       key={tag.id}
-                      href={`/blog?tag=${tag.id}`}
-                      className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                      style={{ borderLeft: `3px solid ${tag.color || "#888"}` }}
-                    >
-                      {tag.name}
-                      <span className="ml-1 text-muted-foreground">({tag.postCount})</span>
-                    </Link>
+                      name={tag.name}
+                      color={tag.color}
+                      count={tag.postCount}
+                      size="sm"
+                      onClick={() => router.push(`/blog?tag=${encodeURIComponent(tag.name)}`)}
+                    />
                   ))}
                 </div>
               </Card>
