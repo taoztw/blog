@@ -1,16 +1,15 @@
+"use client";
+import { authClient } from "@/lib/auth/authClient";
 import { commentInsertSchema } from "@/server/db/schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import z from "zod";
-import { Form, FormField, FormItem } from "../ui/form";
-import { UserAvatar } from "../ui_custom/user-avatar";
-import { Textarea } from "../ui/textarea";
-import { motion } from "framer-motion";
-import EmojiPicker from "emoji-picker-react";
-import { Button } from "../ui/button";
 import { api } from "@/trpc/react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import z from "zod";
+import { Button } from "../ui/button";
+import { Form, FormField, FormItem } from "../ui/form";
+import { Textarea } from "../ui/textarea";
+import { UserAvatar } from "../ui_custom/user-avatar";
 
 interface CommentsFormProps {
   postId: string;
@@ -22,6 +21,7 @@ interface CommentsFormProps {
 
 const CommentsForm = ({ postId, parentId, onSuccess, onCancel, variant = "comment" }: CommentsFormProps) => {
   const utils = api.useUtils();
+  const { data: session } = authClient.useSession();
   const create = api.comment.create.useMutation({
     onSuccess: () => {
       utils.comment.getMany.invalidate({ postId });
@@ -57,7 +57,7 @@ const CommentsForm = ({ postId, parentId, onSuccess, onCancel, variant = "commen
   return (
     <Form {...form}>
       <form className="flex gap-4 group" onSubmit={form.handleSubmit(onSubmit)}>
-        <UserAvatar imgUrl="" name="" size="base" />
+        <UserAvatar imgUrl={session?.user.image || ""} name={session?.user.name} size="base" />
 
         <div className="flex-1">
           <FormField

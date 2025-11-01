@@ -1,8 +1,7 @@
 "use client";
-import React from "react";
 import CommentsSection from "@/components/comments/comments-section";
-import { PostSection } from "./blog-post-section";
 import type { Post } from "@/global";
+import { PostSection } from "./blog-post-section";
 
 interface BlogViewProps {
   post: Post;
