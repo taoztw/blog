@@ -67,15 +67,15 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
     setSearch("");
   };
 
-  const handleSelectTag = (tagId: string, tagName: string) => {
+  const handleSelectTag = (tagName: string) => {
     onOpenChange(false);
-    router.push(`/blog?tagId=${tagId}&tag=${encodeURIComponent(tagName)}`);
+    router.push(`/blog?tag=${encodeURIComponent(tagName)}`);
     setSearch("");
   };
 
-  const handleSelectCategory = (categoryId: string, categoryName: string) => {
+  const handleSelectCategory = (categoryName: string) => {
     onOpenChange(false);
-    router.push(`/blog?categoryId=${categoryId}&category=${encodeURIComponent(categoryName)}`);
+    router.push(`/blog?category=${encodeURIComponent(categoryName)}`);
     setSearch("");
   };
 
@@ -117,7 +117,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
         {!isLoading && filteredTags.length > 0 && (
           <CommandGroup heading="Tags">
             {filteredTags.slice(0, 5).map((tag) => (
-              <CommandItem key={tag.id} value={tag.name} onSelect={() => handleSelectTag(tag.id, tag.name)}>
+              <CommandItem key={tag.id} value={tag.name} onSelect={() => handleSelectTag(tag.name)}>
                 <Hash className="mr-2 h-4 w-4" />
                 <span>{tag.name}</span>
                 {tag.description && <span className="ml-2 text-xs text-muted-foreground">- {tag.description}</span>}
@@ -132,7 +132,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
               <CommandItem
                 key={category.id}
                 value={`category-${category.id}`}
-                onSelect={() => handleSelectCategory(category.id, category.name)}
+                onSelect={() => handleSelectCategory(category.name)}
               >
                 <Folder className="mr-2 h-4 w-4" />
                 <span>{category.name}</span>

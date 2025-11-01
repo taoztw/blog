@@ -515,12 +515,12 @@ export const postRouter = createTRPCRouter({
         page: z.number().min(1).default(1),
         limit: z.number().min(1).max(100).default(10),
         search: z.string().optional(),
-        tagId: z.string().optional(),
-        categoryId: z.string().optional(),
+        tagName: z.string().optional(),
+        categoryName: z.string().optional(),
       })
     )
     .query(async ({ ctx, input }) => {
-      const { page, limit, search, tagId, categoryId } = input;
+      const { page, limit, search, tagName, categoryName } = input;
       const offset = (page - 1) * limit;
 
       // Build where conditions
@@ -536,8 +536,8 @@ export const postRouter = createTRPCRouter({
         );
       }
 
-      if (categoryId) {
-        conditions.push(eq(posts.categoryId, categoryId));
+      if (categoryName) {
+        conditions.push(eq(categorys.name, categoryName));
       }
 
       // First get posts without tags to avoid duplicates
@@ -558,9 +558,11 @@ export const postRouter = createTRPCRouter({
         .leftJoin(comments, eq(comments.postId, posts.id));
 
       // Add tag filter condition if provided
-      if (tagId) {
-        baseQuery = baseQuery.leftJoin(postTags, eq(postTags.postId, posts.id));
-        conditions.push(eq(postTags.tagId, tagId));
+      if (tagName) {
+        baseQuery = baseQuery
+          .leftJoin(postTags, eq(postTags.postId, posts.id))
+          .leftJoin(tags, eq(postTags.tagId, tags.id));
+        conditions.push(eq(tags.name, tagName));
       }
 
       const whereCondition = conditions.length > 1 ? and(...conditions) : conditions[0];
@@ -611,8 +613,10 @@ export const postRouter = createTRPCRouter({
         .from(posts)
         .leftJoin(categorys, eq(posts.categoryId, categorys.id));
 
-      if (tagId) {
-        countQuery = countQuery.leftJoin(postTags, eq(postTags.postId, posts.id));
+      if (tagName) {
+        countQuery = countQuery
+          .leftJoin(postTags, eq(postTags.postId, posts.id))
+          .leftJoin(tags, eq(postTags.tagId, tags.id));
       }
 
       const totalResult = await countQuery.where(whereCondition);
@@ -671,9 +675,7 @@ export const postRouter = createTRPCRouter({
 
     const totalPosts = Number(postCountResult?.count ?? 0);
 
-    const [viewCountResult] = await ctx.db
-      .select({ count: sql<number>`count(*)`.mapWith(Number) })
-      .from(postViews);
+    const [viewCountResult] = await ctx.db.select({ count: sql<number>`count(*)`.mapWith(Number) }).from(postViews);
 
     const totalViews = Number(viewCountResult?.count ?? 0);
 

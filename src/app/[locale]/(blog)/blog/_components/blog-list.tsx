@@ -15,18 +15,16 @@ export function BlogListPage() {
   const pathname = usePathname();
   const search = searchParams.get("q") ?? "";
   const page = parseInt(searchParams.get("page") ?? "1", 10);
-  const tagId = searchParams.get("tagId") ?? undefined;
-  const categoryId = searchParams.get("categoryId") ?? undefined;
-  const tagName = searchParams.get("tag") ?? "";
-  const categoryName = searchParams.get("category") ?? "";
+  const tagName = searchParams.get("tag") ?? undefined;
+  const categoryName = searchParams.get("category") ?? undefined;
 
   // 获取数据（带分页、搜索和筛选）
   const { data, isLoading } = api.post.getByPageWithFilters.useQuery({
     page,
     limit: 5,
     search,
-    tagId,
-    categoryId,
+    tagName,
+    categoryName,
   });
 
   const posts = data?.items ?? [];
@@ -38,10 +36,8 @@ export function BlogListPage() {
   const clearFilter = (type: "tag" | "category") => {
     const params = new URLSearchParams(searchParams.toString());
     if (type === "tag") {
-      params.delete("tagId");
       params.delete("tag");
     } else {
-      params.delete("categoryId");
       params.delete("category");
     }
     params.set("page", "1");
@@ -50,9 +46,7 @@ export function BlogListPage() {
 
   const clearAllFilters = () => {
     const params = new URLSearchParams(searchParams.toString());
-    params.delete("tagId");
     params.delete("tag");
-    params.delete("categoryId");
     params.delete("category");
     params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`);
@@ -69,7 +63,7 @@ export function BlogListPage() {
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="text-sm text-muted-foreground">当前筛选：</span>
                 {tagName && (
-                  <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-sm rounded-md border">
+                  <div className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 text-xs rounded-md ">
                     <span className="text-sm">标签: {tagName}</span>
                     <button onClick={() => clearFilter("tag")} className="ml-1 hover:bg-blue-100 rounded-full p-0.5">
                       ×

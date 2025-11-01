@@ -1,11 +1,11 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { api } from "@/trpc/react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { api } from "@/trpc/react";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 export function BlogSidebar() {
   const router = useRouter();
@@ -16,21 +16,17 @@ export function BlogSidebar() {
   const { data: tags, isLoading: isLoadingTags } = api.tag.getWithPostCounts.useQuery();
   const { data: categories, isLoading: isLoadingCategories } = api.category.getWithPostCounts.useQuery();
 
-  const handleTagClick = (tagId: string, tagName: string) => {
+  const handleTagClick = (tagName: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("tagId", tagId);
     params.set("tag", tagName);
-    params.delete("categoryId");
     params.delete("category");
     params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const handleCategoryClick = (categoryId: string, categoryName: string) => {
+  const handleCategoryClick = (categoryName: string) => {
     const params = new URLSearchParams(searchParams.toString());
-    params.set("categoryId", categoryId);
     params.set("category", categoryName);
-    params.delete("tagId");
     params.delete("tag");
     params.set("page", "1");
     router.push(`${pathname}?${params.toString()}`);
@@ -91,7 +87,7 @@ export function BlogSidebar() {
             {categories?.map((category) => (
               <li key={category.id}>
                 <button
-                  onClick={() => handleCategoryClick(category.id, category.name)}
+                  onClick={() => handleCategoryClick(category.name)}
                   className="flex justify-between w-full text-left text-sm text-muted-foreground hover:text-foreground transition-colors py-0.5"
                 >
                   <span>{category.name}</span>
@@ -117,9 +113,9 @@ export function BlogSidebar() {
             {tags?.map((tag) => (
               <button
                 key={tag.id}
-                onClick={() => handleTagClick(tag.id, tag.name)}
+                onClick={() => handleTagClick(tag.name)}
                 className={`px-2 py-0.5 ${getTagSize(tag.postCount, maxTagCount)} rounded border border-border/40
-                  text-muted-foreground hover:border-border hover:text-foreground 
+                  text-muted-foreground hover:border-border hover:text-foreground
                   transition-colors relative`}
                 style={{
                   backgroundColor: tag.color ? `${tag.color}15` : undefined,
