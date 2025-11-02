@@ -4,14 +4,18 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin } from "better-auth/plugins";
+import * as schema from "../../server/db/schema";
 
-export const getAuth = () =>
-  betterAuth({
+export const getAuth = async () => {
+  const database = await getDB();
+
+  return betterAuth({
     // database: drizzleAdapter(new Database("./test.db"), {
     //   provider: "sqlite",
     // }),
-    database: drizzleAdapter(getDB(), {
+    database: drizzleAdapter(database, {
       provider: "sqlite",
+      schema: schema,
     }),
     // database: new Database("./test.db"),
     emailAndPassword: {
@@ -40,3 +44,4 @@ export const getAuth = () =>
     plugins: [nextCookies(), admin()],
     trustedOrigins: ["http://localhost:3000", "http://127.0.0.1:3000"],
   });
+};

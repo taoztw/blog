@@ -6,7 +6,8 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 export async function POST(req: NextRequest, { context }: any) {
-  const session = await getAuth().api.getSession({ headers: req.headers });
+  const auth = await getAuth();
+  const session = await auth.api.getSession({ headers: req.headers });
 
   if (session?.user.role !== "admin") {
     return Response.json({ success: false, message: "你没有权限上传图片。" }, { status: 403 });

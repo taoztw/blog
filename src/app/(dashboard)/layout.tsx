@@ -12,7 +12,7 @@ interface LayoutProps {
 }
 
 const Layout = async ({ children }: LayoutProps) => {
-  const auth = getAuth();
+  const auth = await getAuth();
   const session = await auth.api.getSession({
     headers: await headers(),
   });
