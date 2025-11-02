@@ -20,6 +20,8 @@ wrangler.toml
 /prisma/db.sqlite-journal
 db.sqlite
 migrations
+migrations_productions
+.env.dev
 
 # next.js
 /.next/

@@ -20,7 +20,7 @@ export const env = createEnv({
     CLOUDFLARE_D1_DATABASE_ID: z.string().optional(),
     CLOUDFLARE_TOKEN: z.string().optional(),
     // HTTP Proxy
-    HTTP_PROXY: z.string(),
+    HTTP_PROXY: z.string().optional(),
   },
 
   /**
