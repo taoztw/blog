@@ -25,6 +25,7 @@ migrations
 /.next/
 /out/
 next-env.d.ts
+/.env.production
 
 # production
 /build
