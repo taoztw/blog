@@ -2,11 +2,15 @@
 
 import { TagBadge } from "@/components/tag-badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+
+type TagWithCount = RouterOutputs["tag"]["getWithPostCounts"][number];
+type CategoryWithCount = RouterOutputs["category"]["getWithPostCounts"][number];
+type PopularPost = RouterOutputs["post"]["getPopular"][number];
 
 export function BlogSidebar() {
   const router = useRouter();
@@ -33,7 +37,7 @@ export function BlogSidebar() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
-  const maxTagCount = Math.max(...(tags?.map((t) => t.postCount) || [1]));
+  const maxTagCount = Math.max(...(tags?.map((t: TagWithCount) => t.postCount) || [1]));
 
   return (
     <div className="space-y-8 text-sm">
@@ -51,7 +55,7 @@ export function BlogSidebar() {
           </div>
         ) : (
           <ol className="space-y-2.5 list-decimal list-inside marker:text-muted-foreground/50">
-            {popularPosts?.map((post, index) => (
+            {popularPosts?.map((post: PopularPost) => (
               <li key={post.id} className="text-muted-foreground">
                 <Link href={`/blog/${post.slug}`} className="hover:text-foreground transition-colors text-sm">
                   {post.title}
@@ -77,7 +81,7 @@ export function BlogSidebar() {
           </div>
         ) : (
           <ul className="space-y-1.5">
-            {categories?.map((category) => (
+            {categories?.map((category: CategoryWithCount) => (
               <li key={category.id}>
                 <button
                   onClick={() => handleCategoryClick(category.name)}
@@ -103,7 +107,7 @@ export function BlogSidebar() {
           </div>
         ) : (
           <div className="flex flex-wrap gap-1.5">
-            {tags?.map((tag) => {
+            {tags?.map((tag: TagWithCount) => {
               const ratio = tag.postCount / maxTagCount;
               const size = ratio > 0.8 ? "md" : ratio > 0.6 ? "sm" : "sm";
 

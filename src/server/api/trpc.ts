@@ -36,7 +36,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
   //   opts.headers.get("x-real-ip") || // 备用
   //   "";
   return {
-    db: getDB(),
+    db: await getDB(),
     session,
     ...opts,
   };

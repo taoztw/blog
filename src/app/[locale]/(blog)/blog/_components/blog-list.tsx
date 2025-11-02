@@ -5,10 +5,14 @@ import { CategoryBadge } from "@/components/category-badge";
 import { TagBadge } from "@/components/tag-badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginationComponent } from "@/components/ui_custom/pagination";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { motion } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { BlogSidebar } from "./blog-sidebar";
+
+type Tag = RouterOutputs["tag"]["getAll"][number];
+type Category = RouterOutputs["category"]["getAll"][number];
+type PostWithFilters = RouterOutputs["post"]["getByPageWithFilters"]["items"][number];
 
 export function BlogListPage() {
   const searchParams = useSearchParams();
@@ -41,10 +45,8 @@ export function BlogListPage() {
   const totalItems = data?.total ?? 0;
 
   // 找到当前筛选的标签和分类的完整信息
-  const currentTag = tags?.find((tag) => tag.name === tagName);
-  const currentCategory = categories?.find((cat) => cat.name === categoryName);
-
-  console.log("posts", posts);
+  const currentTag = tags?.find((tag: Tag) => tag.name === tagName);
+  const currentCategory = categories?.find((cat: Category) => cat.name === categoryName);
 
   // 清除筛选
   const clearFilter = (type: "tag" | "category") => {
@@ -106,7 +108,7 @@ export function BlogListPage() {
               {!isLoading && posts.length === 0 && <p>没有找到文章</p>}
 
               {!isLoading &&
-                posts.map((post, index) => (
+                posts.map((post: PostWithFilters, index: number) => (
                   <motion.div
                     key={post.id}
                     initial={{ opacity: 0, y: 20 }}

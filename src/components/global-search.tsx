@@ -9,10 +9,14 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Spinner } from "@/components/ui/spinner";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { FileText, Folder, Hash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+type Tag = RouterOutputs["tag"]["getAll"][number];
+type Category = RouterOutputs["category"]["getAll"][number];
+type Post = RouterOutputs["post"]["getByPage"]["items"][number];
 
 interface GlobalSearchProps {
   open: boolean;
@@ -56,10 +60,10 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
   });
 
   // Filter tags and categories based on search
-  const filteredTags = tags?.filter((tag) => tag.name.toLowerCase().includes(debouncedSearch.toLowerCase())) || [];
+  const filteredTags = tags?.filter((tag: Tag) => tag.name.toLowerCase().includes(debouncedSearch.toLowerCase())) || [];
 
   const filteredCategories =
-    categories?.filter((category) => category.name.toLowerCase().includes(debouncedSearch.toLowerCase())) || [];
+    categories?.filter((category: Category) => category.name.toLowerCase().includes(debouncedSearch.toLowerCase())) || [];
 
   const handleSelectPost = (postId: string, slug: string) => {
     onOpenChange(false);
@@ -102,7 +106,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
 
         {!isLoading && posts && posts.items.length > 0 && (
           <CommandGroup heading="Posts">
-            {posts.items.map((post) => (
+            {posts.items.map((post: Post) => (
               <CommandItem key={post.id} value={post.content} onSelect={() => handleSelectPost(post.id, post.slug)}>
                 <FileText className="mr-2 h-4 w-4" />
                 <div className="flex flex-col">
@@ -116,7 +120,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
 
         {!isLoading && filteredTags.length > 0 && (
           <CommandGroup heading="Tags">
-            {filteredTags.slice(0, 5).map((tag) => (
+            {filteredTags.slice(0, 5).map((tag: Tag) => (
               <CommandItem key={tag.id} value={tag.name} onSelect={() => handleSelectTag(tag.name)}>
                 <Hash className="mr-2 h-4 w-4" />
                 <span>{tag.name}</span>
@@ -128,7 +132,7 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
 
         {!isLoading && filteredCategories.length > 0 && (
           <CommandGroup heading="Categories">
-            {filteredCategories.slice(0, 5).map((category) => (
+            {filteredCategories.slice(0, 5).map((category: Category) => (
               <CommandItem
                 key={category.id}
                 value={`category-${category.id}`}

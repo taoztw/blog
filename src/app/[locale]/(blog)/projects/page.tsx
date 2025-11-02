@@ -1,11 +1,12 @@
 import { FilterCarousel } from "@/components/filter/filter-carousel";
 import LocalSearch from "@/components/search/LocalSearch";
 import ROUTES from "@/constants/routes";
-import { api, HydrateClient } from "@/trpc/server";
+import { api, HydrateClient, type RouterOutputs } from "@/trpc/server";
 import { Suspense } from "react";
 import { ProjectsGrid } from "@/components/projects/projects-grid";
 import type { Metadata } from "next";
-import type { type } from "os";
+
+type Category = RouterOutputs["category"]["getAll"][number];
 
 export const metadata: Metadata = {
   title: "Projects | My Portfolio",
@@ -40,7 +41,7 @@ const page = async ({ searchParams }: PageProps) => {
   // 构建项目筛选器数据
   const projectFilters = [
     { label: "全部", value: "all" },
-    ...categories.map((category) => ({
+    ...categories.map((category: Category) => ({
       label: category.name,
       value: category.id,
     })),

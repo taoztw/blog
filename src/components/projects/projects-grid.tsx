@@ -2,8 +2,10 @@
 
 import ProjectCard from "@/components/cards/project-card";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { IconFolderCode } from "@tabler/icons-react";
+
+type Project = RouterOutputs["project"]["getAll"][number];
 
 interface ProjectsGridProps {
   search?: string;
@@ -47,7 +49,7 @@ export function ProjectsGrid({ search, categoryId }: ProjectsGridProps) {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-      {projects.map((project) => (
+      {projects.map((project: Project) => (
         <ProjectCard key={project.id} project={project} />
       ))}
     </div>

@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { AnimatedNumber, AnimatedNumberK } from "@/components/ui_custom/animated-number";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileText, FolderOpen, Heart, MapPin, Tag, TrendingUp } from "lucide-react";
 import Image from "next/image";
@@ -13,6 +13,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import MusicPlayer from "./music-player";
+
+type RecentPost = RouterOutputs["post"]["getRecent"][number];
 
 const photos = [
   {
@@ -208,18 +210,15 @@ export function HeroPersonalColorful() {
                   <p className="text-xs text-muted-foreground font-medium">最近文章</p>
                 </div>
                 <div className="space-y-2">
-                  {recentPosts?.map((post) => {
-                    if (!post.slug) return null;
-                    return (
-                      <Link
-                        key={post.id}
-                        href={`/blog/${post.slug}`}
-                        className="block text-sm hover:underline dark:hover:underline transition-colors line-clamp-1 hover:cursor-pointer"
-                      >
-                        {post.title}
-                      </Link>
-                    );
-                  })}
+                  {recentPosts?.map((post: RecentPost) => (
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      className="block text-sm hover:underline dark:hover:underline transition-colors line-clamp-1 hover:cursor-pointer"
+                    >
+                      {post.title}
+                    </Link>
+                  ))}
                 </div>
               </Card>
             </motion.div>

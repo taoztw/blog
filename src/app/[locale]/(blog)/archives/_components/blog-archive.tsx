@@ -6,15 +6,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { PaginationComponent, getCurrentPageData } from "@/components/ui_custom/pagination";
-import { api } from "@/trpc/react";
+import { api, type RouterOutputs } from "@/trpc/react";
 import { Calendar, ExternalLink, FileText, Folder, FolderOpen, Tag } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
+type Post = RouterOutputs["post"]["getByPage"]["items"][number];
+type Project = RouterOutputs["project"]["getAll"][number];
+type ProjectTag = Project["tags"][number];
+
 // Content type definitions
 type ContentType = "post" | "project";
-type ProjectType = "frontend" | "backend" | "mobile" | "tool" | "ai" | "other";
 
 interface ArchiveItem {
   id: string;
@@ -31,7 +34,6 @@ interface ArchiveItem {
     name: string;
     color?: string | null;
   }>;
-  projectType?: ProjectType;
   url: string;
 }
 
@@ -103,7 +105,7 @@ export function BlogArchive() {
 
   // Transform data into unified format
   const allItems: ArchiveItem[] = useMemo(() => {
-    const postItems: ArchiveItem[] = (posts || []).map((post: any) => ({
+    const postItems: ArchiveItem[] = (posts || []).map((post: Post) => ({
       id: post.id,
       title: post.title,
       description: post.excerpt,
@@ -114,15 +116,14 @@ export function BlogArchive() {
       url: `/blog/${post.slug}`,
     }));
 
-    const projectItems: ArchiveItem[] = (projects || []).map((project: any) => ({
+    const projectItems: ArchiveItem[] = (projects || []).map((project: Project) => ({
       id: project.id,
       title: project.title,
       description: project.description,
       date: project.createdAt,
       type: "project" as const,
       category: null, // Projects don't have categories in the current schema
-      tags: project.tags?.map((pt: any) => pt.tag) || [],
-      projectType: project.type as ProjectType,
+      tags: project.tags?.map((pt: ProjectTag) => pt.tag) || [],
       url: `${project.blogUrl}`,
     }));
 
@@ -222,7 +223,7 @@ export function BlogArchive() {
     if (item.type === "post") {
       return FileText;
     }
-    if (item.type === "project" && item.projectType) {
+    if (item.type === "project") {
       return FolderOpen;
     }
     return Folder;

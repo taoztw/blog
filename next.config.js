@@ -24,6 +24,7 @@ const config = {
         hostname: "lh3.googleusercontent.com",
       },
     ],
+    unoptimized: true,
   },
   allowedDevOrigins: ["https://localhost:3000", "http://localhost:3000"],
 };
