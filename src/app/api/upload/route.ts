@@ -9,7 +9,7 @@ export async function POST(req: NextRequest, { context }: any) {
   const session = await getAuth().api.getSession({ headers: req.headers });
 
   if (session?.user.role !== "admin") {
-    return Response.json({ success: false, message: "你没有权限上传图片。" });
+    return Response.json({ success: false, message: "你没有权限上传图片。" }, { status: 403 });
   }
   const env = getCloudflareContext().env;
 
