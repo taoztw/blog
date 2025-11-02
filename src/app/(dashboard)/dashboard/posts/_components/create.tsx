@@ -21,7 +21,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { PostWithRelations } from "@/global";
 import { authClient } from "@/lib/auth/authClient";
 import { markdownString } from "@/lib/fake-data";
-import { POST_STATUS_ENUM, postInsertWithTagsSchema } from "@/server/db/schema";
+import { categorySelectSchema, POST_STATUS_ENUM, postInsertWithTagsSchema, tagSelectSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UploadCloud, X } from "lucide-react";
@@ -289,7 +289,7 @@ export function CreateOrEditPostDialog({
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {categories?.map((cat) => (
+                            {categories?.map((cat: z.infer<typeof categorySelectSchema>) => (
                               <SelectItem key={cat.id} value={cat.id}>
                                 {cat.name}
                               </SelectItem>
@@ -307,7 +307,7 @@ export function CreateOrEditPostDialog({
                         <FormLabel>标签</FormLabel>
                         <FormControl>
                           <MultiSelect values={field.value ?? []} onValuesChange={field.onChange}>
-                            {tags?.map((tag) => (
+                            {tags?.map((tag: z.infer<typeof tagSelectSchema>) => (
                               <div key={tag.id} data-value={tag.id}>
                                 {tag.name}
                               </div>

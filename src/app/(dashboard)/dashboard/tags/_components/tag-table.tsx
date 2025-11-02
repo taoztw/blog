@@ -1,14 +1,5 @@
 "use client";
 
-import * as React from "react";
-import { useSearchParams } from "next/navigation";
-import { api } from "@/trpc/react";
-import { CreateOrEditTagDialog } from "./create-dialog";
-import { BatchCreateTagDialog } from "./batch-create-dialog";
-import { PaginationComponent } from "@/components/ui_custom/pagination";
-import type { Tag, CreateTagData } from "@/global";
-import { toast } from "sonner";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -19,7 +10,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowUpDown, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { PaginationComponent } from "@/components/ui_custom/pagination";
+import type { CreateTagData, Tag } from "@/global";
+import { tagSelectSchema } from "@/server/db/schema";
+import { api } from "@/trpc/react";
+import type { z } from "zod";
+import { ArrowUpDown, Edit, MoreHorizontal, Trash2 } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import * as React from "react";
+import { toast } from "sonner";
+import { BatchCreateTagDialog } from "./batch-create-dialog";
+import { CreateOrEditTagDialog } from "./create-dialog";
 
 export function TagTable() {
   const [editTag, setEditTag] = React.useState<Tag | null>(null);
@@ -128,11 +130,7 @@ export function TagTable() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">标签列表</h1>
         <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={handleInitializeDefaults}
-            disabled={initializeDefaults.isPending}
-          >
+          <Button variant="outline" onClick={handleInitializeDefaults} disabled={initializeDefaults.isPending}>
             {initializeDefaults.isPending ? "初始化中..." : "初始化默认标签"}
           </Button>
           <BatchCreateTagDialog onBatchCreateTags={handleBatchCreateTags} />
@@ -169,7 +167,7 @@ export function TagTable() {
                 </TableCell>
               </TableRow>
             ) : data?.items?.length ? (
-              data.items.map((tag) => (
+              data.items.map((tag: z.infer<typeof tagSelectSchema>) => (
                 <TableRow key={tag.id}>
                   <TableCell>
                     <Badge

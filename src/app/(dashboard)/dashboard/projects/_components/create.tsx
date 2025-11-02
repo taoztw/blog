@@ -9,11 +9,12 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { ProjectWithRelations } from "@/global";
-import { PROJECT_STATUS_ENUM } from "@/server/db/schema";
+import { categorySelectSchema, PROJECT_STATUS_ENUM } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { ImageIcon, Upload, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import type { z } from "zod";
 
 interface CreateOrEditProjectDialogProps {
   trigger: React.ReactNode;
@@ -103,7 +104,6 @@ export function CreateOrEditProjectDialog({
       });
     }
   };
-
 
   const handleImageUpload = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -240,7 +240,7 @@ export function CreateOrEditProjectDialog({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {categories.map((category) => (
+                    {categories.map((category: z.infer<typeof categorySelectSchema>) => (
                       <SelectItem key={category.id} value={category.id}>
                         {category.name}
                       </SelectItem>

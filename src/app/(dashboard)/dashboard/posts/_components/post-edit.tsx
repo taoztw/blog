@@ -1,29 +1,25 @@
 "use client";
 
-import React, { Suspense } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import React, { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Loader2Icon, SparklesIcon, UploadCloud, X } from "lucide-react";
 import { MarkdownPreview } from "@/components/mardown-preview";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import { markdownString } from "@/lib/fake-data";
-import { POST_STATUS_ENUM, postInsertSchema } from "@/server/db/schema";
-import router from "next/router";
+import { categorySelectSchema, POST_STATUS_ENUM, postInsertSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
+import { Loader2Icon, SparklesIcon, UploadCloud, X } from "lucide-react";
 
 type PostInsertValues = z.infer<typeof postInsertSchema>;
 
@@ -344,7 +340,7 @@ const CreatePostForm = () => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {categories?.map((cat) => (
+                          {categories?.map((cat: z.infer<typeof categorySelectSchema>) => (
                             <SelectItem key={cat.id} value={cat.id}>
                               {cat.name}
                             </SelectItem>

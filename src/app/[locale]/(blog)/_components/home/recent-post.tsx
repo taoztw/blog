@@ -1,6 +1,6 @@
 "use client";
 
-import PostLatestCard from "@/components/cards/post-latest-card";
+// import PostLatestCard from "@/components/cards/post-latest-card";
 import { Button } from "@/components/ui/button";
 import type { PostWithRelations } from "@/global";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
@@ -321,9 +321,9 @@ export default function RecentBlogSection() {
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            {blogPosts.map((post) => (
+            {/* {blogPosts.map((post) => (
               <PostLatestCard post={post} key={post.id} />
-            ))}
+            ))} */}
           </div>
 
           {/* Progress indicators for mobile */}

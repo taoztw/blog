@@ -1,14 +1,10 @@
 "use client";
 
-import { useState, useRef, useEffect, type TouchEvent } from "react";
-import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { CalendarIcon, ChevronLeftIcon, ChevronRightIcon, ArrowRightIcon } from "lucide-react";
 import type { PostWithRelations } from "@/global";
-import PostLatestCard from "../cards/post-latest-card";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { useEffect, useRef, useState, type TouchEvent } from "react";
+// import PostLatestCard from "../cards/post-latest-card";
 
 export const blogPosts: PostWithRelations[] = [
   {

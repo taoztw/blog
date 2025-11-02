@@ -2,7 +2,12 @@ html {
   scroll-behavior: smooth;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   scroll-margin-top: 80px; /* 这个值等于你的顶部固定导航高度 */
 }
 
@@ -186,7 +191,6 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
 }
 
-
 .markdown-body abbr[title] {
   border-bottom: none;
   -webkit-text-decoration: underline dotted;
@@ -238,7 +242,7 @@ h1, h2, h3, h4, h5, h6 {
 .markdown-body img {
   border-style: none;
   max-width: 100%;
-  height: auto
+  height: auto;
   box-sizing: content-box;
 }
 

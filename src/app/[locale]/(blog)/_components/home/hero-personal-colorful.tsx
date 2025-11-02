@@ -184,16 +184,18 @@ export function HeroPersonalColorful() {
                   <p className="text-xs text-muted-foreground font-medium">热门标签</p>
                 </div>
                 <div className="flex flex-wrap gap-2">
-                  {tagsWithCounts?.slice(0, 6).map((tag) => (
-                    <TagBadge
-                      key={tag.id}
-                      name={tag.name}
-                      color={tag.color}
-                      count={tag.postCount}
-                      size="sm"
-                      onClick={() => router.push(`/blog?tag=${encodeURIComponent(tag.name)}`)}
-                    />
-                  ))}
+                  {tagsWithCounts
+                    ?.slice(0, 6)
+                    .map((tag: { id: string; name: string; color: string | null; postCount: number }) => (
+                      <TagBadge
+                        key={tag.id}
+                        name={tag.name}
+                        color={tag.color}
+                        count={tag.postCount}
+                        size="sm"
+                        onClick={() => router.push(`/blog?tag=${encodeURIComponent(tag.name)}`)}
+                      />
+                    ))}
                 </div>
               </Card>
 
@@ -206,15 +208,18 @@ export function HeroPersonalColorful() {
                   <p className="text-xs text-muted-foreground font-medium">最近文章</p>
                 </div>
                 <div className="space-y-2">
-                  {recentPosts?.map((post) => (
-                    <Link
-                      key={post.id}
-                      href={`/blog/${post.slug}`}
-                      className="block text-sm hover:underline dark:hover:underline transition-colors line-clamp-1 hover:cursor-pointer"
-                    >
-                      {post.title}
-                    </Link>
-                  ))}
+                  {recentPosts?.map((post) => {
+                    if (!post.slug) return null;
+                    return (
+                      <Link
+                        key={post.id}
+                        href={`/blog/${post.slug}`}
+                        className="block text-sm hover:underline dark:hover:underline transition-colors line-clamp-1 hover:cursor-pointer"
+                      >
+                        {post.title}
+                      </Link>
+                    );
+                  })}
                 </div>
               </Card>
             </motion.div>

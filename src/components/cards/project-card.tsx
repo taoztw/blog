@@ -1,11 +1,11 @@
-import React from "react";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
+import type { ProjectWithRelations } from "@/global";
+import { ExternalLink, Github } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import Link from "next/link";
-import { ExternalLink, Github } from "lucide-react";
-import type { ProjectWithRelations } from "@/global";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../ui/card";
 
 interface ProjectCardProps {
   project: ProjectWithRelations;
@@ -25,7 +25,7 @@ const getTypeLabel = (type: string) => {
 
 const ProjectCard = ({ project }: ProjectCardProps) => {
   // 获取标签列表
-  const tagNames = project.tags?.map(pt => pt.tag.name) || [];
+  const tagNames = project.tags?.map((pt) => pt.tag.name) || [];
 
   // 准备链接按钮
   const links = [
@@ -66,7 +66,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
           </div>
         )}
         <div className="absolute top-3 left-3">
-          <Badge>{getTypeLabel(project.type)}</Badge>
+          <Badge>{getTypeLabel(project.category?.name || "other")}</Badge>
         </div>
       </div>
 
