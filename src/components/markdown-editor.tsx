@@ -1,22 +1,22 @@
 "use client";
 
-import { useState, useRef, type ChangeEvent } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { MarkdownPreview } from "@/components/mardown-preview";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Bold,
-  Italic,
-  Heading,
   Code,
+  Heading,
+  Image as ImageIcon,
+  Italic,
   Link,
   List,
   ListOrdered,
   ListTodo,
-  Image as ImageIcon,
   Loader2,
 } from "lucide-react";
+import { useRef, useState, type ChangeEvent } from "react";
 import { toast } from "sonner";
 
 interface MarkdownEditorProps {

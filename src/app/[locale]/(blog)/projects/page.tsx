@@ -1,10 +1,10 @@
+import { ProjectsGrid } from "@/app/[locale]/(blog)/projects/_components/projects-grid";
 import { FilterCarousel } from "@/components/filter/filter-carousel";
 import LocalSearch from "@/components/search/LocalSearch";
 import ROUTES from "@/constants/routes";
 import { api, HydrateClient, type RouterOutputs } from "@/trpc/server";
-import { Suspense } from "react";
-import { ProjectsGrid } from "@/components/projects/projects-grid";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 type Category = RouterOutputs["category"]["getAll"][number];
 

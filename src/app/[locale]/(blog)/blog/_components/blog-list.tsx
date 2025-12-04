@@ -1,7 +1,7 @@
 "use client";
 
-import { BlogCard } from "@/components/cards/post-card";
-import { CategoryBadge } from "@/components/category-badge";
+import { BlogCard } from "@/app/[locale]/(blog)/blog/_components/post-card";
+import { CategoryBadge } from "@/app/[locale]/(blog)/blog/_components/category-badge";
 import { TagBadge } from "@/components/tag-badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PaginationComponent } from "@/components/ui_custom/pagination";

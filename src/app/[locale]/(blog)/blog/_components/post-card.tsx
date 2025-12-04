@@ -9,7 +9,7 @@ import { Calendar, ChevronRightIcon, Eye, MessageCircleIcon } from "lucide-react
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ImageService } from "../dashboard/image-service";
+import { ImageService } from "../../../../../components/dashboard/image-service";
 
 interface BlogCardProps {
   post: PostListItem & {

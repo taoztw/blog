@@ -1,12 +1,7 @@
 "use client";
 
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Activity, DollarSign, Eye, Users } from "lucide-react";
-import { useState } from "react";
-import { AdminSidebar } from "@/components/dashboard/admin-sidebar";
 import { DashboardCard } from "./dashboard-card";
-import { DashboardHeader } from "./dashboard-header";
-import { QuickActions } from "./quick-actions";
 import { RecentActivity } from "./recent-activity";
 import { RevenueChart } from "./revenue-chart";
 import { SystemStatus } from "./system-status";

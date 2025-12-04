@@ -1,9 +1,6 @@
 // components/language-switcher-compact.tsx
 "use client";
 
-import * as React from "react";
-import { useRouter, usePathname } from "next/navigation";
-import { useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLocale } from "next-intl";
+import { usePathname, useRouter } from "next/navigation";
 
 const languages = [
   { code: "en", name: "English", short: "EN" },

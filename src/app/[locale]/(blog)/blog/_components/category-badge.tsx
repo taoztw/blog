@@ -44,18 +44,14 @@ export function CategoryBadge({
       {...props}
     >
       <span className="font-medium">{name}</span>
-      {count !== undefined && (
-        <span className="text-[10px] opacity-60">({count})</span>
-      )}
+      {count !== undefined && <span className="text-[10px] opacity-60">({count})</span>}
       {hasRemove && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             onRemove();
           }}
-          className={cn(
-            "ml-0.5 rounded-full hover:bg-green-200 dark:hover:bg-green-800 p-0.5 transition-colors"
-          )}
+          className={cn("ml-0.5 rounded-full hover:bg-green-200 dark:hover:bg-green-800 p-0.5 transition-colors")}
           aria-label="Remove category"
         >
           <X className="size-3" />

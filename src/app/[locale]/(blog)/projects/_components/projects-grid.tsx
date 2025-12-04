@@ -1,6 +1,6 @@
 "use client";
 
-import ProjectCard from "@/components/cards/project-card";
+import ProjectCard from "@/app/[locale]/(blog)/projects/_components/project-card";
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from "@/components/ui/empty";
 import { api, type RouterOutputs } from "@/trpc/react";
 import { IconFolderCode } from "@tabler/icons-react";

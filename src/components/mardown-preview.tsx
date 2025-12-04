@@ -1,13 +1,13 @@
 "use client";
 
+import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import remarkBreaks from "remark-breaks";
-import rehypeSlug from "rehype-slug"; // ✅ 自动生成标题 id
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { oneDark, oneLight } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
+import rehypeSlug from "rehype-slug"; // ✅ 自动生成标题 id
+import remarkBreaks from "remark-breaks";
+import remarkGfm from "remark-gfm";
 
 interface MarkdownPreviewProps {
   content: string;

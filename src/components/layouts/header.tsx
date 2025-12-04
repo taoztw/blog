@@ -9,11 +9,11 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { GlobalSearch } from "../search/global-search";
 import { LanguageSwitcher } from "../language-switcher";
 import { Logo } from "../logo";
 import { ThemeSwitcher } from "../theme-switcher";
 import UserAvatarHeader from "../ui_custom/user-avatar-header";
-import { GlobalSearch } from "../global-search";
 
 interface NavItem {
   name: string;
