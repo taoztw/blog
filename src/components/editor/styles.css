@@ -1,0 +1,27 @@
+/* src/components/Editor/styles.css */
+.tiptap {
+  outline: none;
+}
+
+.tiptap p {
+  margin: 0.5em 0;
+}
+
+.tiptap .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}
+
+/* 文件节点选中状态 */
+.tiptap .node-file.ProseMirror-selectednode > div {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* 变量节点样式 */
+.tiptap .variable-wrapper {
+  display: inline;
+}
