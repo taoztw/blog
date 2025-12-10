@@ -111,7 +111,7 @@ export default function Editor({ initialContent, onChange }: EditorProps) {
       </div>
 
       {/* 编辑区域 */}
-      <EditorContent editor={editor} className="prose max-w-none min-h-[200px] focus:outline-none" />
+      <EditorContent editor={editor} className="tiptap prose max-w-none min-h-[200px] focus:outline-none" />
     </div>
   );
 }

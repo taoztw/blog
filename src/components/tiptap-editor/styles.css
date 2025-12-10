@@ -1,0 +1,321 @@
+/* Tiptap Editor Styles */
+@reference "../../styles/globals.css";
+
+.tiptap-editor-wrapper {
+  @apply bg-background;
+}
+
+/* 编辑器内容区域 */
+.tiptap {
+  @apply min-h-[200px] outline-none;
+}
+
+/* Placeholder 样式 */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  @apply text-muted-foreground pointer-events-none float-left h-0;
+}
+
+/* 标题样式（缩小版） */
+.tiptap h1 {
+  @apply text-xl font-bold mb-2;
+}
+
+.tiptap h2 {
+  @apply text-lg font-bold mb-2;
+}
+
+.tiptap h3 {
+  @apply text-base font-bold mb-1;
+}
+
+.tiptap h4,
+.tiptap h5,
+.tiptap h6 {
+  @apply text-sm font-semibold mb-1;
+}
+
+/* 标题上边距（非第一个元素时才添加） */
+.tiptap h1:not(:first-child) {
+  @apply mt-4;
+}
+
+.tiptap h2:not(:first-child) {
+  @apply mt-3;
+}
+
+.tiptap h3:not(:first-child) {
+  @apply mt-2;
+}
+
+.tiptap h4:not(:first-child),
+.tiptap h5:not(:first-child),
+.tiptap h6:not(:first-child) {
+  @apply mt-2;
+}
+
+/* 段落 */
+.tiptap p {
+  @apply my-2;
+}
+
+/* 段落作为第一个元素时去掉上边距 */
+.tiptap p:first-child {
+  @apply mt-0;
+}
+
+/* 列表 */
+.tiptap ul,
+.tiptap ol {
+  @apply pl-6 my-2;
+}
+
+.tiptap ul {
+  @apply list-disc;
+}
+
+.tiptap ol {
+  @apply list-decimal;
+}
+
+.tiptap li {
+  @apply my-1;
+}
+
+/* 任务列表 */
+.tiptap ul[data-type="taskList"] {
+  @apply list-none pl-0;
+}
+
+.tiptap ul[data-type="taskList"] li {
+  @apply flex items-start gap-2;
+}
+
+.tiptap ul[data-type="taskList"] li > label {
+  @apply flex-shrink-0 mt-1;
+}
+
+.tiptap ul[data-type="taskList"] li > div {
+  @apply flex-1;
+}
+
+/* 引用块 */
+.tiptap blockquote {
+  @apply border-l-4 border-muted-foreground/30 pl-4 py-1 my-4 text-muted-foreground italic;
+}
+
+/* 代码 */
+.tiptap code {
+  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.tiptap pre {
+  @apply my-4 rounded-lg overflow-hidden;
+}
+
+.tiptap pre code {
+  @apply block p-0 bg-transparent;
+}
+
+/* 水平分割线 */
+.tiptap hr {
+  @apply my-4 border-t-2 border-muted;
+}
+
+/* 链接 */
+.tiptap a {
+  @apply text-primary underline hover:text-primary/80 cursor-pointer;
+}
+
+/* 表格 */
+.tiptap table {
+  @apply border-collapse table-auto w-full my-4;
+}
+
+.tiptap th,
+.tiptap td {
+  @apply border border-border px-3 py-2 text-left relative;
+}
+
+.tiptap th {
+  @apply bg-muted font-semibold;
+}
+
+/* 表格单元格选中状态 */
+.tiptap .selectedCell:after {
+  content: "";
+  @apply absolute inset-0 bg-primary/20 pointer-events-none z-10;
+}
+
+/* Gapcursor 样式 */
+.tiptap .ProseMirror-gapcursor {
+  @apply pointer-events-none absolute;
+}
+
+.tiptap .ProseMirror-gapcursor:after {
+  content: "";
+  @apply block border-l-2 border-primary h-full w-0 animate-pulse;
+}
+
+/* 选中样式 */
+.tiptap ::selection {
+  @apply bg-primary/20;
+}
+
+/* 焦点样式 */
+.tiptap:focus {
+  @apply outline-none;
+}
+
+/* Mention 样式 */
+.tiptap .mention {
+  @apply bg-primary/10 text-primary px-1 rounded font-medium;
+}
+
+/* 代码高亮主题（GitHub Dark） */
+.tiptap pre code.hljs {
+  @apply bg-[#0d1117] text-[#c9d1d9];
+}
+
+.hljs-doctag,
+.hljs-keyword,
+.hljs-meta .hljs-keyword,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-type,
+.hljs-variable.language_ {
+  @apply text-[#ff7b72];
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.class_.inherited__,
+.hljs-title.function_ {
+  @apply text-[#d2a8ff];
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-literal,
+.hljs-meta,
+.hljs-number,
+.hljs-operator,
+.hljs-variable,
+.hljs-selector-attr,
+.hljs-selector-class,
+.hljs-selector-id {
+  @apply text-[#79c0ff];
+}
+
+.hljs-regexp,
+.hljs-string,
+.hljs-meta .hljs-string {
+  @apply text-[#a5d6ff];
+}
+
+.hljs-built_in,
+.hljs-symbol {
+  @apply text-[#ffa657];
+}
+
+.hljs-comment,
+.hljs-code,
+.hljs-formula {
+  @apply text-[#8b949e];
+}
+
+.hljs-name,
+.hljs-quote,
+.hljs-selector-tag,
+.hljs-selector-pseudo {
+  @apply text-[#7ee787];
+}
+
+.hljs-subst {
+  @apply text-[#c9d1d9];
+}
+
+.hljs-section {
+  @apply text-[#1f6feb] font-bold;
+}
+
+.hljs-bullet {
+  @apply text-[#f2cc60];
+}
+
+.hljs-emphasis {
+  @apply text-[#c9d1d9] italic;
+}
+
+.hljs-strong {
+  @apply text-[#c9d1d9] font-bold;
+}
+
+.hljs-addition {
+  @apply text-[#aff5b4] bg-[#033a16];
+}
+
+.hljs-deletion {
+  @apply text-[#ffdcd7] bg-[#67060c];
+}
+
+/* Light theme support */
+@media (prefers-color-scheme: light) {
+  .tiptap pre code.hljs {
+    @apply bg-[#f6f8fa] text-[#24292f];
+  }
+
+  .hljs-doctag,
+  .hljs-keyword,
+  .hljs-meta .hljs-keyword,
+  .hljs-template-tag,
+  .hljs-template-variable,
+  .hljs-type,
+  .hljs-variable.language_ {
+    @apply text-[#d73a49];
+  }
+
+  .hljs-title,
+  .hljs-title.class_,
+  .hljs-title.class_.inherited__,
+  .hljs-title.function_ {
+    @apply text-[#6f42c1];
+  }
+
+  .hljs-attr,
+  .hljs-attribute,
+  .hljs-literal,
+  .hljs-meta,
+  .hljs-number,
+  .hljs-operator,
+  .hljs-variable,
+  .hljs-selector-attr,
+  .hljs-selector-class,
+  .hljs-selector-id {
+    @apply text-[#005cc5];
+  }
+
+  .hljs-regexp,
+  .hljs-string,
+  .hljs-meta .hljs-string {
+    @apply text-[#032f62];
+  }
+
+  .hljs-built_in,
+  .hljs-symbol {
+    @apply text-[#e36209];
+  }
+
+  .hljs-comment,
+  .hljs-code,
+  .hljs-formula {
+    @apply text-[#6a737d];
+  }
+
+  .hljs-name,
+  .hljs-quote,
+  .hljs-selector-tag,
+  .hljs-selector-pseudo {
+    @apply text-[#22863a];
+  }
+}
