@@ -37,40 +37,41 @@ const CodeBlockComponent = ({ node, updateAttributes, extension }: any) => {
 
   return (
     <NodeViewWrapper className="code-block-wrapper my-4">
-      <div className="relative group rounded-lg border bg-muted/50">
+      <div className="relative group rounded-lg overflow-hidden">
         {/* 工具栏 */}
-        <div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
-          <Select value={language} onValueChange={handleLanguageChange}>
-            <SelectTrigger className="w-[180px] h-8">
-              <SelectValue placeholder="选择语言" />
-            </SelectTrigger>
-            <SelectContent>
-              {CODE_BLOCK_LANGUAGES.map((lang) => (
-                <SelectItem key={lang.value} value={lang.value}>
-                  {lang.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="flex items-center justify-between px-4 py-2 bg-[#1e1e1e] border-b border-white/10">
+          <div className="flex items-center gap-2 text-sm text-white/70">
+            <span className="font-mono">{language}</span>
+          </div>
 
-          <Button size="sm" variant="ghost" onClick={handleCopy} className="h-8">
-            {copied ? (
-              <>
-                <Check className="h-4 w-4 mr-1" />
-                已复制
-              </>
-            ) : (
-              <>
-                <Copy className="h-4 w-4 mr-1" />
-                复制
-              </>
-            )}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Select value={language} onValueChange={handleLanguageChange}>
+              <SelectTrigger className="w-[140px] h-7 bg-transparent border-white/20 text-white hover:bg-white/10">
+                <SelectValue placeholder="选择语言" />
+              </SelectTrigger>
+              <SelectContent>
+                {CODE_BLOCK_LANGUAGES.map((lang) => (
+                  <SelectItem key={lang.value} value={lang.value}>
+                    {lang.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleCopy}
+              className="h-7 w-7 p-0 hover:bg-white/10 text-white/70 hover:text-white"
+            >
+              {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+            </Button>
+          </div>
         </div>
 
         {/* 代码内容 */}
-        <pre className="p-4 overflow-x-auto">
-          <NodeViewContent as="code" className="language-{language}" />
+        <pre className={`language-${language}`}>
+          <NodeViewContent as="div" />
         </pre>
       </div>
     </NodeViewWrapper>

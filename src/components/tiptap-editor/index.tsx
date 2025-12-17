@@ -12,6 +12,7 @@ import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useEffect, useRef, useState } from "react";
+import { Callout } from "./extensions/callout";
 import { CodeBlockWithSyntax } from "./extensions/code-block-with-syntax";
 import { CustomHeading } from "./extensions/custom-heading";
 import { CustomImage } from "./extensions/custom-image";
@@ -115,6 +116,7 @@ export function TiptapEditor({
       CustomImage,
       FileNode,
       CodeBlockWithSyntax,
+      Callout,
       ...(enableMentions ? [createMentionExtension(onSearchUsers)] : []),
     ],
     content,

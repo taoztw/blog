@@ -110,11 +110,13 @@
 }
 
 .tiptap pre {
-  @apply my-4 rounded-lg overflow-hidden;
+  @apply bg-black rounded-lg text-white my-6 p-3;
+  font-family: "JetBrainsMono", monospace;
 }
 
 .tiptap pre code {
-  @apply block p-0 bg-transparent;
+  @apply bg-transparent text-inherit p-0;
+  font-size: 0.8rem;
 }
 
 /* 水平分割线 */
@@ -172,150 +174,75 @@
   @apply bg-primary/10 text-primary px-1 rounded font-medium;
 }
 
-/* 代码高亮主题（GitHub Dark） */
-.tiptap pre code.hljs {
-  @apply bg-[#0d1117] text-[#c9d1d9];
+/* Callout 样式 */
+.tiptap .callout-wrapper {
+  @apply my-4;
 }
 
-.hljs-doctag,
-.hljs-keyword,
-.hljs-meta .hljs-keyword,
-.hljs-template-tag,
-.hljs-template-variable,
-.hljs-type,
-.hljs-variable.language_ {
-  @apply text-[#ff7b72];
+.tiptap .callout-content {
+  @apply text-inherit;
 }
 
-.hljs-title,
-.hljs-title.class_,
-.hljs-title.class_.inherited__,
-.hljs-title.function_ {
-  @apply text-[#d2a8ff];
+.tiptap .callout-content p {
+  @apply my-1;
 }
 
-.hljs-attr,
-.hljs-attribute,
-.hljs-literal,
-.hljs-meta,
-.hljs-number,
-.hljs-operator,
-.hljs-variable,
-.hljs-selector-attr,
-.hljs-selector-class,
-.hljs-selector-id {
-  @apply text-[#79c0ff];
+.tiptap .callout-content p:first-child {
+  @apply mt-0;
 }
 
-.hljs-regexp,
-.hljs-string,
-.hljs-meta .hljs-string {
-  @apply text-[#a5d6ff];
+.tiptap .callout-content p:last-child {
+  @apply mb-0;
 }
 
-.hljs-built_in,
-.hljs-symbol {
-  @apply text-[#ffa657];
+/* 代码高亮主题 */
+.tiptap pre .hljs-comment,
+.tiptap pre .hljs-quote {
+  color: #616161;
 }
 
-.hljs-comment,
-.hljs-code,
-.hljs-formula {
-  @apply text-[#8b949e];
+.tiptap pre .hljs-variable,
+.tiptap pre .hljs-template-variable,
+.tiptap pre .hljs-attribute,
+.tiptap pre .hljs-tag,
+.tiptap pre .hljs-regexp,
+.tiptap pre .hljs-link,
+.tiptap pre .hljs-name,
+.tiptap pre .hljs-selector-id,
+.tiptap pre .hljs-selector-class {
+  color: #f98181;
 }
 
-.hljs-name,
-.hljs-quote,
-.hljs-selector-tag,
-.hljs-selector-pseudo {
-  @apply text-[#7ee787];
+.tiptap pre .hljs-number,
+.tiptap pre .hljs-meta,
+.tiptap pre .hljs-built_in,
+.tiptap pre .hljs-builtin-name,
+.tiptap pre .hljs-literal,
+.tiptap pre .hljs-type,
+.tiptap pre .hljs-params {
+  color: #fbbc88;
 }
 
-.hljs-subst {
-  @apply text-[#c9d1d9];
+.tiptap pre .hljs-string,
+.tiptap pre .hljs-symbol,
+.tiptap pre .hljs-bullet {
+  color: #b9f18d;
 }
 
-.hljs-section {
-  @apply text-[#1f6feb] font-bold;
+.tiptap pre .hljs-title,
+.tiptap pre .hljs-section {
+  color: #faf594;
 }
 
-.hljs-bullet {
-  @apply text-[#f2cc60];
+.tiptap pre .hljs-keyword,
+.tiptap pre .hljs-selector-tag {
+  color: #70cff8;
 }
 
-.hljs-emphasis {
-  @apply text-[#c9d1d9] italic;
+.tiptap pre .hljs-emphasis {
+  font-style: italic;
 }
 
-.hljs-strong {
-  @apply text-[#c9d1d9] font-bold;
-}
-
-.hljs-addition {
-  @apply text-[#aff5b4] bg-[#033a16];
-}
-
-.hljs-deletion {
-  @apply text-[#ffdcd7] bg-[#67060c];
-}
-
-/* Light theme support */
-@media (prefers-color-scheme: light) {
-  .tiptap pre code.hljs {
-    @apply bg-[#f6f8fa] text-[#24292f];
-  }
-
-  .hljs-doctag,
-  .hljs-keyword,
-  .hljs-meta .hljs-keyword,
-  .hljs-template-tag,
-  .hljs-template-variable,
-  .hljs-type,
-  .hljs-variable.language_ {
-    @apply text-[#d73a49];
-  }
-
-  .hljs-title,
-  .hljs-title.class_,
-  .hljs-title.class_.inherited__,
-  .hljs-title.function_ {
-    @apply text-[#6f42c1];
-  }
-
-  .hljs-attr,
-  .hljs-attribute,
-  .hljs-literal,
-  .hljs-meta,
-  .hljs-number,
-  .hljs-operator,
-  .hljs-variable,
-  .hljs-selector-attr,
-  .hljs-selector-class,
-  .hljs-selector-id {
-    @apply text-[#005cc5];
-  }
-
-  .hljs-regexp,
-  .hljs-string,
-  .hljs-meta .hljs-string {
-    @apply text-[#032f62];
-  }
-
-  .hljs-built_in,
-  .hljs-symbol {
-    @apply text-[#e36209];
-  }
-
-  .hljs-comment,
-  .hljs-code,
-  .hljs-formula {
-    @apply text-[#6a737d];
-  }
-
-  .hljs-name,
-  .hljs-quote,
-  .hljs-selector-tag,
-  .hljs-selector-pseudo {
-    @apply text-[#22863a];
-  }
+.tiptap pre .hljs-strong {
+  font-weight: 700;
 }

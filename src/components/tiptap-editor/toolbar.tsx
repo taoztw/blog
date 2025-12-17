@@ -36,6 +36,7 @@ import {
   Redo,
   RemoveFormatting,
   ChevronDown,
+  AlertCircle,
 } from "lucide-react";
 import { uploadFile, buildFileUrl, getImageDimensions } from "./utils/upload";
 import { validateFile, IMAGE_VALIDATION_OPTIONS, DOCUMENT_VALIDATION_OPTIONS, isImageFile } from "./utils/validators";
@@ -300,6 +301,52 @@ export function EditorToolbar({ editor, enableFileUpload = true }: EditorToolbar
       >
         <Code2 className="h-4 w-4" />
       </Button>
+
+      {/* Callout 下拉菜单 */}
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            size="sm"
+            variant={editor.isActive("callout") ? "secondary" : "ghost"}
+            title="提示框"
+          >
+            <AlertCircle className="h-4 w-4" />
+            <ChevronDown className="h-3 w-3 ml-1" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-48">
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().setCallout({ type: "note" }).run()}
+          >
+            📘 Note
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().setCallout({ type: "info" }).run()}
+          >
+            ℹ️ Info
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().setCallout({ type: "tip" }).run()}
+          >
+            💡 Tip
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().setCallout({ type: "important" }).run()}
+          >
+            ✅ Important
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().setCallout({ type: "warning" }).run()}
+          >
+            ⚠️ Warning
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => editor.chain().focus().setCallout({ type: "caution" }).run()}
+          >
+            🚫 Caution
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <Separator orientation="vertical" className="h-6" />
 
