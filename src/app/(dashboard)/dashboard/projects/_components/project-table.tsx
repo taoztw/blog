@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/dashboard/data-table";
+import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { PaginationComponent } from "@/components/ui_custom/pagination";
 import type { ProjectWithRelations } from "@/global";

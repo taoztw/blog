@@ -1,6 +1,6 @@
 "use client";
 
-import { ImageService } from "@/components/dashboard/image-service";
+import { ImageService } from "@/lib/image-service";
 import { TagsSelect } from "@/components/tags-select";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";

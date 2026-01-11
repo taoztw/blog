@@ -1,6 +1,6 @@
 "use client";
 
-import { ImageService } from "@/components/dashboard/image-service";
+import { ImageService } from "@/lib/image-service";
 import { MarkdownPreview } from "@/components/mardown-preview";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

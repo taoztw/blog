@@ -1,5 +1,5 @@
-import { AdminSidebar } from "@/components/dashboard/admin-sidebar";
-import { DashboardHeader } from "@/components/dashboard/dashboard-header";
+import { AdminSidebar } from "@/components/layouts/admin-sidebar";
+import { DashboardHeader } from "@/app/(dashboard)/dashboard/_components/dashboard-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import ROUTES from "@/constants/routes";
 import { getAuth } from "@/lib/auth/auth";

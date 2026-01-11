@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { PostWithRelations } from "@/global";
-import { ImageService } from "@/components/dashboard/image-service";
+import { ImageService } from "@/lib/image-service";
 
 interface PostColumnsProps {
   onEdit: (post: PostWithRelations) => void;
