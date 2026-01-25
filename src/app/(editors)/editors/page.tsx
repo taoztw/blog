@@ -55,6 +55,7 @@ export default function MyEditorPage() {
       BlockquotePlugin.withComponent(BlockquoteElement),
     ],
     value: () => {
+      if (typeof window === "undefined") return initialValue;
       const savedValue = localStorage.getItem("editorContent");
       return savedValue ? JSON.parse(savedValue) : initialValue;
     },
@@ -64,7 +65,9 @@ export default function MyEditorPage() {
     <Plate
       editor={editor}
       onChange={({ value }) => {
-        localStorage.setItem("editorContent", JSON.stringify(value));
+        if (typeof window !== "undefined") {
+          localStorage.setItem("editorContent", JSON.stringify(value));
+        }
       }}
     >
       <FixedToolbar className="justify-start rounded-t-lg">
@@ -73,17 +76,29 @@ export default function MyEditorPage() {
         <ToolbarButton onClick={() => editor.tf.h2!.toggle()}>H2</ToolbarButton>
         <ToolbarButton onClick={() => editor.tf.h3!.toggle()}>H3</ToolbarButton>
         <ToolbarButton onClick={() => editor.tf.blockquote.toggle()}>Quote</ToolbarButton>
-        <MarkToolbarButton nodeType="bold" tooltip="Bold (⌘+B)">
+        <MarkToolbarButton
+          nodeType="bold"
+          tooltip="Bold (⌘+B)"
+        >
           B
         </MarkToolbarButton>
-        <MarkToolbarButton nodeType="italic" tooltip="Italic (⌘+I)">
+        <MarkToolbarButton
+          nodeType="italic"
+          tooltip="Italic (⌘+I)"
+        >
           I
         </MarkToolbarButton>
-        <MarkToolbarButton nodeType="underline" tooltip="Underline (⌘+U)">
+        <MarkToolbarButton
+          nodeType="underline"
+          tooltip="Underline (⌘+U)"
+        >
           U
         </MarkToolbarButton>
         <div className="flex-1" />
-        <ToolbarButton className="px-2" onClick={() => editor.tf.setValue(initialValue)}>
+        <ToolbarButton
+          className="px-2"
+          onClick={() => editor.tf.setValue(initialValue)}
+        >
           Reset
         </ToolbarButton>
       </FixedToolbar>
