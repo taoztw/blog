@@ -71,7 +71,10 @@ const CommentsSectionSuspense = ({ postId }: CommentsSectionProps) => {
       {comments.pages
         .flatMap((page) => page.items)
         .map((comment) => (
-          <CommentItem key={comment.id} comment={comment} />
+          <CommentItem
+            key={comment.id}
+            comment={comment}
+          />
         ))}
     </div>
   );

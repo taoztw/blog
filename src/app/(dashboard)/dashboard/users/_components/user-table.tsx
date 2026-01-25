@@ -1,6 +1,6 @@
 "use client";
 
-import { DataTable } from "@/components/ui/data-table";
+import { PaginationComponent } from "@/components/pagination";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,8 +13,8 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DataTable } from "@/components/ui/data-table";
 import { Input } from "@/components/ui/input";
-import { PaginationComponent } from "@/components/ui_custom/pagination";
 import { authClient } from "@/lib/auth/authClient";
 import { Search, Shield, Trash2, User as UserIcon, Users } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -233,7 +233,10 @@ export function UserTable() {
             <CardContent>
               <div className="text-2xl font-bold">{userStats.admins}</div>
               <div className="flex items-center">
-                <Badge variant="default" className="text-xs">
+                <Badge
+                  variant="default"
+                  className="text-xs"
+                >
                   {userStats.total > 0 ? Math.round((userStats.admins / userStats.total) * 100) : 0}%
                 </Badge>
               </div>
@@ -247,7 +250,10 @@ export function UserTable() {
             <CardContent>
               <div className="text-2xl font-bold">{userStats.users}</div>
               <div className="flex items-center">
-                <Badge variant="secondary" className="text-xs">
+                <Badge
+                  variant="secondary"
+                  className="text-xs"
+                >
                   {userStats.total > 0 ? Math.round((userStats.users / userStats.total) * 100) : 0}%
                 </Badge>
               </div>
@@ -270,10 +276,18 @@ export function UserTable() {
       </div>
 
       {/* Data Table */}
-      <DataTable columns={columns} data={users} loading={isLoading} />
+      <DataTable
+        columns={columns}
+        data={users}
+        loading={isLoading}
+      />
 
       {/* Pagination */}
-      <PaginationComponent totalItems={totalUsers} itemsPerPage={pageSize} isLoading={isLoading} />
+      <PaginationComponent
+        totalItems={totalUsers}
+        itemsPerPage={pageSize}
+        isLoading={isLoading}
+      />
 
       {/* User Details Modal */}
       <UserDetailsModal
@@ -285,7 +299,10 @@ export function UserTable() {
       />
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog open={!!userToDelete} onOpenChange={() => setUserToDelete(null)}>
+      <AlertDialog
+        open={!!userToDelete}
+        onOpenChange={() => setUserToDelete(null)}
+      >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除用户</AlertDialogTitle>
@@ -298,7 +315,10 @@ export function UserTable() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction onClick={confirmDeleteUser} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction
+              onClick={confirmDeleteUser}
+              className="bg-red-600 hover:bg-red-700"
+            >
               <Trash2 className="h-4 w-4 mr-2" />
               确认删除
             </AlertDialogAction>

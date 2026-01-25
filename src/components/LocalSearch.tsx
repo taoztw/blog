@@ -4,7 +4,7 @@ import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
 import { Search } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
+import { Input } from "./ui/input";
 
 interface Props {
   route: string;

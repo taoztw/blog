@@ -1,5 +1,6 @@
 "use client";
 
+import { PaginationComponent } from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,15 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { PaginationComponent } from "@/components/ui_custom/pagination";
 import type { CreateTagData, Tag } from "@/global";
 import { tagSelectSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
-import type { z } from "zod";
 import { ArrowUpDown, Edit, MoreHorizontal, Trash2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import * as React from "react";
 import { toast } from "sonner";
+import type { z } from "zod";
 import { BatchCreateTagDialog } from "./batch-create-dialog";
 import { CreateOrEditTagDialog } from "./create-dialog";
 
@@ -130,7 +130,11 @@ export function TagTable() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">标签列表</h1>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleInitializeDefaults} disabled={initializeDefaults.isPending}>
+          <Button
+            variant="outline"
+            onClick={handleInitializeDefaults}
+            disabled={initializeDefaults.isPending}
+          >
             {initializeDefaults.isPending ? "初始化中..." : "初始化默认标签"}
           </Button>
           <BatchCreateTagDialog onBatchCreateTags={handleBatchCreateTags} />
@@ -143,7 +147,10 @@ export function TagTable() {
           <TableHeader>
             <TableRow>
               <TableHead>
-                <Button variant="ghost" className="w-full justify-start px-0 hover:bg-transparent">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-start px-0 hover:bg-transparent"
+                >
                   标签名称
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
@@ -151,7 +158,10 @@ export function TagTable() {
               <TableHead>描述</TableHead>
               <TableHead>颜色</TableHead>
               <TableHead>
-                <Button variant="ghost" className="w-full justify-center hover:bg-transparent">
+                <Button
+                  variant="ghost"
+                  className="w-full justify-center hover:bg-transparent"
+                >
                   创建时间
                   <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
@@ -162,7 +172,10 @@ export function TagTable() {
           <TableBody>
             {isFetching ? (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
+                <TableCell
+                  colSpan={5}
+                  className="h-24 text-center"
+                >
                   加载中...
                 </TableCell>
               </TableRow>
@@ -207,7 +220,10 @@ export function TagTable() {
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
+                        <Button
+                          variant="ghost"
+                          className="h-8 w-8 p-0"
+                        >
                           <span className="sr-only">打开操作菜单</span>
                           <MoreHorizontal className="h-4 w-4" />
                         </Button>
@@ -222,7 +238,10 @@ export function TagTable() {
                           <Edit className="mr-2 h-4 w-4" />
                           编辑
                         </DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-500" onClick={() => deleteTag.mutate({ id: tag.id })}>
+                        <DropdownMenuItem
+                          className="text-red-500"
+                          onClick={() => deleteTag.mutate({ id: tag.id })}
+                        >
                           <Trash2 className="mr-2 h-4 w-4" />
                           删除
                         </DropdownMenuItem>
@@ -233,7 +252,10 @@ export function TagTable() {
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={5} className="h-24 text-center">
+                <TableCell
+                  colSpan={5}
+                  className="h-24 text-center"
+                >
                   暂无标签数据
                 </TableCell>
               </TableRow>
@@ -243,7 +265,11 @@ export function TagTable() {
       </div>
 
       {/* 分页组件 */}
-      <PaginationComponent totalItems={data?.pagination?.total ?? 0} itemsPerPage={10} isLoading={isFetching} />
+      <PaginationComponent
+        totalItems={data?.pagination?.total ?? 0}
+        itemsPerPage={10}
+        isLoading={isFetching}
+      />
 
       {/* 编辑弹窗 */}
       {editTag && (

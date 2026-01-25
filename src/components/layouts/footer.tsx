@@ -75,7 +75,13 @@ export function Footer() {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4"></h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {friendLinks.map((link) => (
-              <Link key={link.name} href={link.href} target="_blank" rel="noopener noreferrer" className="group">
+              <Link
+                key={link.name}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group"
+              >
                 <Card className="p-3 hover:shadow-md transition-all duration-200 border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700">
                   <div className="flex items-center justify-between">
                     <div>
@@ -100,7 +106,10 @@ export function Footer() {
             <div className="flex items-center space-x-1">
               <span>© 2025 Tz Blog</span>
             </div>
-            <Separator orientation="vertical" className="h-4" />
+            <Separator
+              orientation="vertical"
+              className="h-4"
+            />
             <div className="flex items-center space-x-1">
               <span>Made with Next.js & Cloudflare</span>
               {/* <Heart className="w-4 h-4 text-red-500" />
@@ -117,8 +126,14 @@ export function Footer() {
             <Link href="/terms" className="hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
               使用条款
             </Link> */}
-            <Separator orientation="vertical" className="h-4" />
-            <Link href="/rss.xml" className="hover:text-orange-500 transition-colors flex items-center space-x-1">
+            <Separator
+              orientation="vertical"
+              className="h-4"
+            />
+            <Link
+              href="/rss.xml"
+              className="hover:text-orange-500 transition-colors flex items-center space-x-1"
+            >
               <Rss className="w-4 h-4" />
               <span>RSS</span>
             </Link>

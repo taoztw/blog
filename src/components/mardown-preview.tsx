@@ -57,7 +57,10 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
             }
 
             return (
-              <code className={className} {...props}>
+              <code
+                className={className}
+                {...props}
+              >
                 {children}
               </code>
             );

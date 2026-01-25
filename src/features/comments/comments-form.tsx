@@ -6,10 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { Button } from "../ui/button";
-import { Form, FormField, FormItem } from "../ui/form";
-import { Textarea } from "../ui/textarea";
-import { UserAvatar } from "../ui_custom/user-avatar";
+import { Button } from "../../components/ui/button";
+import { Form, FormField, FormItem } from "../../components/ui/form";
+import { Textarea } from "../../components/ui/textarea";
+import { UserAvatar } from "../../components/user-avatar";
 
 interface CommentsFormProps {
   postId: string;
@@ -56,8 +56,15 @@ const CommentsForm = ({ postId, parentId, onSuccess, onCancel, variant = "commen
   }
   return (
     <Form {...form}>
-      <form className="flex gap-4 group" onSubmit={form.handleSubmit(onSubmit)}>
-        <UserAvatar imgUrl={session?.user.image || ""} name={session?.user.name} size="base" />
+      <form
+        className="flex gap-4 group"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <UserAvatar
+          imgUrl={session?.user.image || ""}
+          name={session?.user.name}
+          size="base"
+        />
 
         <div className="flex-1">
           <FormField
@@ -76,11 +83,19 @@ const CommentsForm = ({ postId, parentId, onSuccess, onCancel, variant = "commen
           />
           <div className="justify-end gap-2 mt-2 flex">
             {onCancel && (
-              <Button variant="ghost" type="button" onClick={handleCancel}>
+              <Button
+                variant="ghost"
+                type="button"
+                onClick={handleCancel}
+              >
                 Cancle
               </Button>
             )}
-            <Button type="submit" size="sm" variant="outline">
+            <Button
+              type="submit"
+              size="sm"
+              variant="outline"
+            >
               {variant === "reply" ? "Reply" : "Comment"}
             </Button>
           </div>

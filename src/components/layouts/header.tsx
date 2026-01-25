@@ -9,11 +9,11 @@ import { useTheme } from "next-themes";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { GlobalSearch } from "../search/global-search";
+import { GlobalSearch } from "../global-search";
 import { LanguageSwitcher } from "../language-switcher";
 import { Logo } from "../logo";
 import { ThemeSwitcher } from "../theme-switcher";
-import UserAvatarHeader from "../ui_custom/user-avatar-header";
+import UserAvatarHeader from "../user-avatar-header";
 
 interface NavItem {
   name: string;
@@ -140,9 +140,15 @@ export default function Header2() {
               whileHover={{ scale: 1.02 }}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
             >
-              <Link href="/" className="flex items-center space-x-3">
+              <Link
+                href="/"
+                className="flex items-center space-x-3"
+              >
                 <div className="relative">
-                  <Logo size="md" className="" />
+                  <Logo
+                    size="md"
+                    className=""
+                  />
                   {/* <div className="absolute -top-1 -right-1 h-3 w-3 animate-pulse rounded-full bg-green-400"></div> */}
                 </div>
                 {/* <div className="flex flex-col">
@@ -202,7 +208,10 @@ export default function Header2() {
                 );
               })}
             </nav>
-            <motion.div className="hidden items-center space-x-3 lg:flex" variants={itemVariants}>
+            <motion.div
+              className="hidden items-center space-x-3 lg:flex"
+              variants={itemVariants}
+            >
               <motion.button
                 className="text-muted-foreground hover:bg-muted hover:text-foreground rounded-lg p-2 transition-colors duration-200"
                 whileHover={{ scale: 1.05 }}
@@ -223,7 +232,11 @@ export default function Header2() {
               <LanguageSwitcher />
 
               {session?.user?.id ? (
-                <UserAvatarHeader id={session.user.id} name={session.user.name!} imageUrl={session.user?.image} />
+                <UserAvatarHeader
+                  id={session.user.id}
+                  name={session.user.name!}
+                  imageUrl={session.user?.image}
+                />
               ) : (
                 <Link
                   href={ROUTES.SIGN_IN}
@@ -278,7 +291,10 @@ export default function Header2() {
                   {navItems.map((item) => {
                     const isActive = getActiveItem(item.href);
                     return (
-                      <motion.div key={item.name} variants={mobileItemVariants}>
+                      <motion.div
+                        key={item.name}
+                        variants={mobileItemVariants}
+                      >
                         <Link
                           href={item.href}
                           className={`block rounded-lg px-4 py-3 font-medium transition-colors duration-200 ${
@@ -295,7 +311,10 @@ export default function Header2() {
                   })}
                 </div>
 
-                <motion.div className="border-border space-y-3 border-t pt-6" variants={mobileItemVariants}>
+                <motion.div
+                  className="border-border space-y-3 border-t pt-6"
+                  variants={mobileItemVariants}
+                >
                   <Link
                     href="/login"
                     className="text-foreground hover:bg-muted block w-full rounded-lg py-3 text-center font-medium transition-colors duration-200"
@@ -326,7 +345,10 @@ export default function Header2() {
       </AnimatePresence>
 
       {/* Global Search Dialog */}
-      <GlobalSearch open={isSearchOpen} onOpenChange={setIsSearchOpen} />
+      <GlobalSearch
+        open={isSearchOpen}
+        onOpenChange={setIsSearchOpen}
+      />
     </>
   );
 }

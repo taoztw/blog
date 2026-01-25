@@ -63,7 +63,8 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
   const filteredTags = tags?.filter((tag: Tag) => tag.name.toLowerCase().includes(debouncedSearch.toLowerCase())) || [];
 
   const filteredCategories =
-    categories?.filter((category: Category) => category.name.toLowerCase().includes(debouncedSearch.toLowerCase())) || [];
+    categories?.filter((category: Category) => category.name.toLowerCase().includes(debouncedSearch.toLowerCase())) ||
+    [];
 
   const handleSelectPost = (postId: string, slug: string) => {
     onOpenChange(false);
@@ -87,8 +88,16 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
   const hasResults = (posts && posts.items.length > 0) || filteredTags.length > 0 || filteredCategories.length > 0;
 
   return (
-    <CommandDialog open={open} onOpenChange={onOpenChange} shouldFilter={false}>
-      <CommandInput placeholder="Search posts, tags, or categories..." value={search} onValueChange={setSearch} />
+    <CommandDialog
+      open={open}
+      onOpenChange={onOpenChange}
+      shouldFilter={false}
+    >
+      <CommandInput
+        placeholder="Search posts, tags, or categories..."
+        value={search}
+        onValueChange={setSearch}
+      />
       <CommandList>
         {isLoading && (
           <div className="py-6 text-center">
@@ -107,7 +116,11 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
         {!isLoading && posts && posts.items.length > 0 && (
           <CommandGroup heading="Posts">
             {posts.items.map((post: Post) => (
-              <CommandItem key={post.id} value={post.content} onSelect={() => handleSelectPost(post.id, post.slug)}>
+              <CommandItem
+                key={post.id}
+                value={post.content}
+                onSelect={() => handleSelectPost(post.id, post.slug)}
+              >
                 <FileText className="mr-2 h-4 w-4" />
                 <div className="flex flex-col">
                   <span className="font-medium">{post.title}</span>
@@ -121,7 +134,11 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
         {!isLoading && filteredTags.length > 0 && (
           <CommandGroup heading="Tags">
             {filteredTags.slice(0, 5).map((tag: Tag) => (
-              <CommandItem key={tag.id} value={tag.name} onSelect={() => handleSelectTag(tag.name)}>
+              <CommandItem
+                key={tag.id}
+                value={tag.name}
+                onSelect={() => handleSelectTag(tag.name)}
+              >
                 <Hash className="mr-2 h-4 w-4" />
                 <span>{tag.name}</span>
                 {tag.description && <span className="ml-2 text-xs text-muted-foreground">- {tag.description}</span>}

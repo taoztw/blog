@@ -1,11 +1,11 @@
 "use client";
 
+import { LikeButton } from "@/components/like-button";
 import { MarkdownPreview } from "@/components/mardown-preview";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { LikeButton } from "@/components/ui_custom/like-button";
 import type { Post } from "@/global";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
@@ -132,8 +132,14 @@ export const PostSection = ({ post }: PostSectionProps) => {
               </div>
             </div>
             <div className="flex gap-3 items-center">
-              <LikeButton initialCount={post.likeCount} postId={post.id} />
-              <Button variant="ghost" onClick={() => share()}>
+              <LikeButton
+                initialCount={post.likeCount}
+                postId={post.id}
+              />
+              <Button
+                variant="ghost"
+                onClick={() => share()}
+              >
                 <Share2 className="h-4 w-4 text-gray-900/80 cursor-pointer" />
               </Button>
             </div>
@@ -144,13 +150,22 @@ export const PostSection = ({ post }: PostSectionProps) => {
         </div>
 
         {/* Markdown 内容 */}
-        <MarkdownPreview content={post.content} className="max-w-none" />
+        <MarkdownPreview
+          content={post.content}
+          className="max-w-none"
+        />
 
         <div className="flex flex-col space-y-2 mt-8">
           <Separator />
           <div className="flex gap-3 items-center justify-end">
-            <LikeButton initialCount={post.likeCount} postId={post.id} />
-            <Button variant="ghost" onClick={() => share()}>
+            <LikeButton
+              initialCount={post.likeCount}
+              postId={post.id}
+            />
+            <Button
+              variant="ghost"
+              onClick={() => share()}
+            >
               <Share2 className="h-4 w-4 text-gray-900/80 cursor-pointer" />
             </Button>
           </div>

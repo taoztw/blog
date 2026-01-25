@@ -35,7 +35,10 @@ const CommonFilter = ({ filters, otherClasses = "", containerClasses = "" }: Pro
 
   return (
     <div className={cn("relative", containerClasses)}>
-      <Select onValueChange={handleUpdateParams} defaultValue={paramsFilter || undefined}>
+      <Select
+        onValueChange={handleUpdateParams}
+        defaultValue={paramsFilter || undefined}
+      >
         <SelectTrigger
           className={cn(
             "body-regular no-focus light-border background-light800_dark300 text-dark500_light700 border px-5 py-2.5",
@@ -51,7 +54,10 @@ const CommonFilter = ({ filters, otherClasses = "", containerClasses = "" }: Pro
         <SelectContent>
           <SelectGroup>
             {filters.map((item) => (
-              <SelectItem key={item.value} value={item.value}>
+              <SelectItem
+                key={item.value}
+                value={item.value}
+              >
                 {item.name}
               </SelectItem>
             ))}

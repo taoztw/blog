@@ -1,11 +1,10 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
-import { useState, useRef, useEffect } from "react";
-import { Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { api } from "@/trpc/react";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 interface LikeButtonProps {
   initialCount: number;
@@ -66,7 +65,12 @@ export function LikeButton({ initialCount, postId }: LikeButtonProps) {
   return (
     <div className="relative flex items-center">
       <div className="relative">
-        <Button variant="ghost" size="sm" onClick={handleLike} className="bg-none px-1">
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleLike}
+          className="bg-none px-1"
+        >
           <motion.div
             animate={{ scale: isAnimating ? 1.4 : 1 }}
             transition={{ type: "spring", stiffness: 400, damping: 10 }}

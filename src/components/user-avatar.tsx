@@ -1,9 +1,9 @@
 "use client";
 
-import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
+import { cva, type VariantProps } from "class-variance-authority";
 import { useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 const avatarVariants = cva("", {
   variants: {
@@ -72,8 +72,16 @@ export const UserAvatar = ({ imgUrl, name, className, onClick, size }: UserAvata
   }, [name]);
 
   return (
-    <Avatar className={cn(avatarVariants({ size }), className)} onClick={onClick}>
-      {imgUrl && <AvatarImage src={imgUrl || "/placeholder.svg"} alt={name || "Anonymous"} />}
+    <Avatar
+      className={cn(avatarVariants({ size }), className)}
+      onClick={onClick}
+    >
+      {imgUrl && (
+        <AvatarImage
+          src={imgUrl || "/placeholder.svg"}
+          alt={name || "Anonymous"}
+        />
+      )}
       <AvatarFallback
         className={`bg-gradient-to-br ${avatar.gradient} text-white font-medium flex items-center justify-center`}
       >

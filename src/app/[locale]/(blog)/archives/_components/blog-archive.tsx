@@ -1,11 +1,11 @@
 "use client";
 
-import LocalSearch from "@/components/search/LocalSearch";
+import LocalSearch from "@/components/LocalSearch";
+import { PaginationComponent, getCurrentPageData } from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { PaginationComponent, getCurrentPageData } from "@/components/ui_custom/pagination";
 import { api, type RouterOutputs } from "@/trpc/react";
 import { Calendar, ExternalLink, FileText, Folder, FolderOpen, Tag } from "lucide-react";
 import Link from "next/link";
@@ -238,13 +238,20 @@ export function BlogArchive() {
             <div className="flex items-center space-x-4">
               <h1 className="text-2xl font-bold text-foreground">内容归档</h1>
               {!isLoading && (
-                <Badge variant="secondary" className="text-sm">
+                <Badge
+                  variant="secondary"
+                  className="text-sm"
+                >
                   {totalItems} 项内容
                 </Badge>
               )}
             </div>
             <div className="w-full max-w-sm">
-              <LocalSearch route="/archive" placeholder="搜索内容..." otherClasses="bg-background" />
+              <LocalSearch
+                route="/archive"
+                placeholder="搜索内容..."
+                otherClasses="bg-background"
+              />
             </div>
           </div>
         </div>
@@ -330,7 +337,10 @@ export function BlogArchive() {
           {/* Timeline */}
           <div className="space-y-12">
             {paginatedItems.map(({ year, months }) => (
-              <div key={year} className="relative">
+              <div
+                key={year}
+                className="relative"
+              >
                 {/* Year Header */}
                 <div className="sticky top-20 z-10 mb-8 bg-background/95 backdrop-blur py-2">
                   <h2 className="text-3xl font-bold text-primary flex items-center gap-2">
@@ -342,7 +352,10 @@ export function BlogArchive() {
                 {/* Months */}
                 <div className="space-y-8 pl-8 border-l-2 border-border">
                   {months.map(({ month, items }) => (
-                    <div key={month} className="relative">
+                    <div
+                      key={month}
+                      className="relative"
+                    >
                       {/* Month indicator */}
                       <div className="absolute -left-10 top-0 h-4 w-4 rounded-full bg-primary border-4 border-background"></div>
 
@@ -354,7 +367,11 @@ export function BlogArchive() {
                         {(items || []).map((item) => {
                           const IconComponent = getItemIcon(item);
                           return (
-                            <Link key={item.id} href={item.url} className="block">
+                            <Link
+                              key={item.id}
+                              href={item.url}
+                              className="block"
+                            >
                               <Card className="group hover:shadow-md transition-all duration-200 hover:border-primary/20 cursor-pointer">
                                 <CardContent className="p-4">
                                   <div className="flex items-center gap-3">
@@ -376,12 +393,18 @@ export function BlogArchive() {
                                       </div>
 
                                       <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                        <Badge variant="outline" className="text-xs px-2 py-0.5">
+                                        <Badge
+                                          variant="outline"
+                                          className="text-xs px-2 py-0.5"
+                                        >
                                           {item.type === "post" ? "文章" : "项目"}
                                         </Badge>
 
                                         {item.category && (
-                                          <Badge variant="secondary" className="text-xs px-2 py-0.5">
+                                          <Badge
+                                            variant="secondary"
+                                            className="text-xs px-2 py-0.5"
+                                          >
                                             {item.category.name}
                                           </Badge>
                                         )}
@@ -400,7 +423,10 @@ export function BlogArchive() {
                                                 </Badge>
                                               ))}
                                               {item.tags.length > 2 && (
-                                                <Badge variant="secondary" className="text-xs px-1.5 py-0.5">
+                                                <Badge
+                                                  variant="secondary"
+                                                  className="text-xs px-1.5 py-0.5"
+                                                >
                                                   +{item.tags.length - 2}
                                                 </Badge>
                                               )}
@@ -423,7 +449,10 @@ export function BlogArchive() {
             ))}
           </div>
 
-          <PaginationComponent totalItems={totalItems} itemsPerPage={ITEMS_PER_PAGE} />
+          <PaginationComponent
+            totalItems={totalItems}
+            itemsPerPage={ITEMS_PER_PAGE}
+          />
 
           {/* Empty State */}
           {paginatedItems.length === 0 && (

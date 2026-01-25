@@ -12,7 +12,7 @@ import { authClient } from "@/lib/auth/authClient";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "./ui/spinner";
 
 interface Props {
   id: string | null;
@@ -59,7 +59,10 @@ const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackCl
       <DropdownMenuTrigger asChild>
         <Avatar className={cn(className, "cursor-pointer size-7")}>
           {imageUrl ? (
-            <AvatarImage src={imageUrl} alt={name} />
+            <AvatarImage
+              src={imageUrl}
+              alt={name}
+            />
           ) : (
             <AvatarFallback
               className={cn(
@@ -73,7 +76,10 @@ const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackCl
         </Avatar>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-48" align="end">
+      <DropdownMenuContent
+        className="w-48"
+        align="end"
+      >
         <DropdownMenuLabel>{name}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
@@ -84,7 +90,10 @@ const UserAvatarHeader = ({ id, name, imageUrl, className = "size-9", fallbackCl
           <LayoutDashboard className="mr-2 size-4" />
           后台管理
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => handleLogout()} className="cursor-pointer text-red-500">
+        <DropdownMenuItem
+          onClick={() => handleLogout()}
+          className="cursor-pointer text-red-500"
+        >
           <LogOut className="mr-2 size-4" />
           退出登录
         </DropdownMenuItem>

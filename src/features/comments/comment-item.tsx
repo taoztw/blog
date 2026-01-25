@@ -14,9 +14,14 @@ import {
 } from "lucide-react";
 import React from "react";
 import { toast } from "sonner";
-import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { UserAvatar } from "../ui_custom/user-avatar";
+import { Button } from "../../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../../components/ui/dropdown-menu";
+import { UserAvatar } from "../../components/user-avatar";
 import CommentReply from "./comment-reply";
 import CommentsForm from "./comments-form";
 
@@ -80,7 +85,10 @@ const CommentItem = ({ comment, variant = "comment" }: CommentItemProps) => {
   return (
     <div>
       <div className="flex gap-4">
-        <UserAvatar size="base" imgUrl={comment.user.image || ""} />
+        <UserAvatar
+          size="base"
+          imgUrl={comment.user.image || ""}
+        />
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-0.5">
@@ -121,7 +129,12 @@ const CommentItem = ({ comment, variant = "comment" }: CommentItemProps) => {
               <span className="text-muted-foreground text-xs">{comment.dislikeCount}</span>
             </div>
             {variant === "comment" && (
-              <Button variant="ghost" size="sm" className="h-8" onClick={() => setIsReplyOpen(true)}>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8"
+                onClick={() => setIsReplyOpen(true)}
+              >
                 Reply
               </Button>
             )}
@@ -132,7 +145,11 @@ const CommentItem = ({ comment, variant = "comment" }: CommentItemProps) => {
           {(variant === "comment" || comment.user.id === userId) && (
             <DropdownMenu modal={false}>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="size-8"
+                >
                   <MoreVertical className="text-muted-foreground" />
                 </Button>
               </DropdownMenuTrigger>
@@ -174,14 +191,21 @@ const CommentItem = ({ comment, variant = "comment" }: CommentItemProps) => {
 
       {comment.replyCount > 0 && variant === "comment" && (
         <div>
-          <Button size="sm" variant="tertiary" onClick={() => setIsRepliesOpen((current) => !current)}>
+          <Button
+            size="sm"
+            variant="tertiary"
+            onClick={() => setIsRepliesOpen((current) => !current)}
+          >
             {isRepliesOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
             {comment.replyCount} replies
           </Button>
         </div>
       )}
       {comment.replyCount > 0 && variant === "comment" && isRepliesOpen && (
-        <CommentReply parentId={comment.id} postId={comment.postId} />
+        <CommentReply
+          parentId={comment.id}
+          postId={comment.postId}
+        />
       )}
     </div>
   );

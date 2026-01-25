@@ -1,5 +1,5 @@
 "use client";
-import CommentsSection from "@/components/comments/comments-section";
+import CommentsSection from "@/features/comments/comments-section";
 import type { Post } from "@/global";
 import { PostSection } from "./blog-post-section";
 

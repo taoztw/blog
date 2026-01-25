@@ -1,7 +1,5 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -12,7 +10,9 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { formUrlQuery } from "@/lib/url";
+import { useRouter, useSearchParams } from "next/navigation";
 import type { JSX } from "react";
+import { useEffect, useState } from "react";
 
 interface PaginationComponentProps {
   totalItems: number; // 改为传入总数据量而不是总页数

@@ -1,14 +1,14 @@
 "use client";
 
-import { ImageService } from "@/lib/image-service";
-import { TagsSelect } from "@/components/tags-select";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { TagsSelect } from "@/features/tags/tags-select";
 import type { ProjectWithRelations } from "@/global";
+import { ImageService } from "@/lib/image-service";
 import { categorySelectSchema, PROJECT_STATUS_ENUM } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { ImageIcon, Upload, X } from "lucide-react";
@@ -203,7 +203,10 @@ export function CreateOrEditProjectDialog({
         <DialogTitle>{isEditing ? "编辑项目" : "创建项目"}</DialogTitle>
       </DialogHeader>
 
-      <form onSubmit={handleSubmit} className="flex flex-col flex-1 overflow-hidden">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col flex-1 overflow-hidden"
+      >
         <div className="flex-1 overflow-y-auto px-1 -mx-1">
           <div className="grid auto-rows-min gap-6 pr-2">
             <div className="grid gap-3">
@@ -241,7 +244,10 @@ export function CreateOrEditProjectDialog({
                   </SelectTrigger>
                   <SelectContent>
                     {categories.map((category: z.infer<typeof categorySelectSchema>) => (
-                      <SelectItem key={category.id} value={category.id}>
+                      <SelectItem
+                        key={category.id}
+                        value={category.id}
+                      >
                         {category.name}
                       </SelectItem>
                     ))}
@@ -260,7 +266,10 @@ export function CreateOrEditProjectDialog({
                   </SelectTrigger>
                   <SelectContent>
                     {projectStatuses.map((status) => (
-                      <SelectItem key={status.value} value={status.value}>
+                      <SelectItem
+                        key={status.value}
+                        value={status.value}
+                      >
                         {status.label}
                       </SelectItem>
                     ))}
@@ -274,7 +283,11 @@ export function CreateOrEditProjectDialog({
               {formData.imageUrl ? (
                 <div className="relative">
                   <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-                    <img src={formData.imageUrl} alt="项目图片" className="w-full h-full object-cover" />
+                    <img
+                      src={formData.imageUrl}
+                      alt="项目图片"
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   <Button
                     type="button"
@@ -375,10 +388,17 @@ export function CreateOrEditProjectDialog({
         </div>
 
         <DialogFooter className="flex-shrink-0 pt-4 border-t mt-4">
-          <Button type="button" variant="outline" onClick={() => handleOpenChange(false)}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => handleOpenChange(false)}
+          >
             取消
           </Button>
-          <Button type="submit" disabled={isLoading}>
+          <Button
+            type="submit"
+            disabled={isLoading}
+          >
             {isLoading ? "保存中..." : isEditing ? "更新" : "创建"}
           </Button>
         </DialogFooter>
@@ -388,7 +408,10 @@ export function CreateOrEditProjectDialog({
 
   if (trigger) {
     return (
-      <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <Dialog
+        open={isOpen}
+        onOpenChange={handleOpenChange}
+      >
         <DialogTrigger asChild>{trigger}</DialogTrigger>
         {dialogContent}
       </Dialog>
@@ -396,7 +419,10 @@ export function CreateOrEditProjectDialog({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+    <Dialog
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+    >
       {dialogContent}
     </Dialog>
   );

@@ -1,7 +1,7 @@
 "use client";
 
-import { TagBadge } from "@/components/tag-badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TagBadge } from "@/features/tags/tag-badge";
 import { api, type RouterOutputs } from "@/trpc/react";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
@@ -47,7 +47,10 @@ export function BlogSidebar() {
         {isLoadingPosts ? (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className="space-y-2">
+              <div
+                key={i}
+                className="space-y-2"
+              >
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-3 w-2/3" />
               </div>
@@ -56,8 +59,14 @@ export function BlogSidebar() {
         ) : (
           <ol className="space-y-2.5 list-decimal list-inside marker:text-muted-foreground/50">
             {popularPosts?.map((post: PopularPost) => (
-              <li key={post.id} className="text-muted-foreground">
-                <Link href={`/blog/${post.slug}`} className="hover:text-foreground transition-colors text-sm">
+              <li
+                key={post.id}
+                className="text-muted-foreground"
+              >
+                <Link
+                  href={`/blog/${post.slug}`}
+                  className="hover:text-foreground transition-colors text-sm"
+                >
                   {post.title}
                 </Link>
                 <div className="ml-5 mt-0.5 flex gap-3 text-xs text-muted-foreground/60">
@@ -76,7 +85,10 @@ export function BlogSidebar() {
         {isLoadingCategories ? (
           <div className="space-y-2">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className="h-6 w-full" />
+              <Skeleton
+                key={i}
+                className="h-6 w-full"
+              />
             ))}
           </div>
         ) : (
@@ -102,7 +114,10 @@ export function BlogSidebar() {
         {isLoadingTags ? (
           <div className="flex flex-wrap gap-1.5">
             {Array.from({ length: 8 }).map((_, i) => (
-              <Skeleton key={i} className="h-6 w-16" />
+              <Skeleton
+                key={i}
+                className="h-6 w-16"
+              />
             ))}
           </div>
         ) : (

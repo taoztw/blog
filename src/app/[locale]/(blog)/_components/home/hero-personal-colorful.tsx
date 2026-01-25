@@ -1,10 +1,10 @@
 "use client";
 
-import { TagBadge } from "@/components/tag-badge";
+import { AnimatedNumber, AnimatedNumberK } from "@/components/animated-number";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
-import { AnimatedNumber, AnimatedNumberK } from "@/components/ui_custom/animated-number";
+import { TagBadge } from "@/features/tags/tag-badge";
 import { api, type RouterOutputs } from "@/trpc/react";
 import { AnimatePresence, motion } from "framer-motion";
 import { FileText, FolderOpen, Heart, MapPin, Tag, TrendingUp } from "lucide-react";
@@ -122,7 +122,11 @@ export function HeroPersonalColorful() {
             </motion.div>
 
             {/* Photo Thumbnails */}
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
               <div className="flex space-x-3 justify-center">
                 {photos.map((photo, index) => (
                   <motion.button
@@ -136,7 +140,12 @@ export function HeroPersonalColorful() {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                   >
-                    <Image src={photo.src || "/placeholder.svg"} alt={photo.caption} fill className="object-cover" />
+                    <Image
+                      src={photo.src || "/placeholder.svg"}
+                      alt={photo.caption}
+                      fill
+                      className="object-cover"
+                    />
                   </motion.button>
                 ))}
               </div>
@@ -233,7 +242,10 @@ export function HeroPersonalColorful() {
               <div className="flex flex-col sm:flex-row gap-3">
                 {/* 查看我的博客 - 主按钮（绿色渐变） */}
                 <Link href="/blog">
-                  <Button variant="default" className="shadow-md hover:opacity-90">
+                  <Button
+                    variant="default"
+                    className="shadow-md hover:opacity-90"
+                  >
                     <Heart className="w-4 h-4 mr-1" />
                     查看博客
                   </Button>
@@ -241,7 +253,10 @@ export function HeroPersonalColorful() {
 
                 {/* 查看我的项目 - 次按钮（浅灰） */}
                 <Link href="/projects">
-                  <Button variant="secondary" className="dark:text-gray-400 shadow-md hover:bg-secondary/80">
+                  <Button
+                    variant="secondary"
+                    className="dark:text-gray-400 shadow-md hover:bg-secondary/80"
+                  >
                     <FolderOpen className="w-4 h-4 mr-2" />
                     查看项目
                   </Button>
@@ -253,12 +268,20 @@ export function HeroPersonalColorful() {
           {/* Right Side - Music Player & More Info */}
           <div className="lg:col-span-3 space-y-6">
             {/* Music Player with Visualizer */}
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.3 }}>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+            >
               <MusicPlayer />
             </motion.div>
 
             {/* 合并的博客统计 */}
-            <motion.div initial={{ opacity: 0, x: 50 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.5 }}>
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.5 }}
+            >
               <Card className="p-6 bg-gradient-to-br gap-3  hover:shadow-lg transition-all duration-300">
                 <div className="flex items-center space-x-3">
                   <div className="w-6 h-6 rounded-full flex items-center justify-center border border-gray-400 ">

@@ -1,10 +1,10 @@
 "use client";
 
-import { BlogCard } from "@/app/[locale]/(blog)/blog/_components/post-card";
 import { CategoryBadge } from "@/app/[locale]/(blog)/blog/_components/category-badge";
-import { TagBadge } from "@/components/tag-badge";
+import { BlogCard } from "@/app/[locale]/(blog)/blog/_components/post-card";
+import { PaginationComponent } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PaginationComponent } from "@/components/ui_custom/pagination";
+import { TagBadge } from "@/features/tags/tag-badge";
 import { api, type RouterOutputs } from "@/trpc/react";
 import { motion } from "framer-motion";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -79,10 +79,17 @@ export function BlogListPage() {
               <div className="flex items-center gap-2 flex-wrap mb-6">
                 <span className="text-sm text-muted-foreground">当前筛选：</span>
                 {tagName && currentTag && (
-                  <TagBadge name={currentTag.name} color={currentTag.color} onRemove={() => clearFilter("tag")} />
+                  <TagBadge
+                    name={currentTag.name}
+                    color={currentTag.color}
+                    onRemove={() => clearFilter("tag")}
+                  />
                 )}
                 {categoryName && currentCategory && (
-                  <CategoryBadge name={currentCategory.name} onRemove={() => clearFilter("category")} />
+                  <CategoryBadge
+                    name={currentCategory.name}
+                    onRemove={() => clearFilter("category")}
+                  />
                 )}
                 {(tagName || categoryName) && (
                   <button
@@ -98,7 +105,10 @@ export function BlogListPage() {
             <div className="space-y-4">
               {isLoading &&
                 Array.from({ length: 3 }).map((_, i) => (
-                  <div key={i} className="space-y-3">
+                  <div
+                    key={i}
+                    className="space-y-3"
+                  >
                     <Skeleton className="h-6 w-2/3" />
                     <Skeleton className="h-4 w-full" />
                     <Skeleton className="h-4 w-5/6" />
@@ -120,7 +130,10 @@ export function BlogListPage() {
                 ))}
             </div>
             {/* 分页组件 */}
-            <PaginationComponent totalItems={totalItems} itemsPerPage={5} />
+            <PaginationComponent
+              totalItems={totalItems}
+              itemsPerPage={5}
+            />
           </div>
 
           {/* 侧边栏 */}

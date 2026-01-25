@@ -1,8 +1,8 @@
 "use client";
 
-import { DataTable } from "@/components/ui/data-table";
+import { PaginationComponent } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
-import { PaginationComponent } from "@/components/ui_custom/pagination";
+import { DataTable } from "@/components/ui/data-table";
 import type { ProjectWithRelations } from "@/global";
 import { api } from "@/trpc/react";
 import * as React from "react";
@@ -94,9 +94,19 @@ export function ProjectTable() {
         </select>
       </div>
 
-      <DataTable columns={columns} data={data?.items ?? []} loading={isFetching} />
+      <DataTable
+        columns={columns}
+        data={data?.items ?? []}
+        loading={isFetching}
+      />
 
-      {data && <PaginationComponent totalItems={data.total} itemsPerPage={10} isLoading={isFetching} />}
+      {data && (
+        <PaginationComponent
+          totalItems={data.total}
+          itemsPerPage={10}
+          isLoading={isFetching}
+        />
+      )}
 
       {editProject && (
         <CreateOrEditProjectDialog
