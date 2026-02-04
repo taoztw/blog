@@ -5,6 +5,7 @@ import { TagBadge } from "@/features/tags/tag-badge";
 import { api, type RouterOutputs } from "@/trpc/react";
 import { format } from "date-fns";
 import { zhCN } from "date-fns/locale";
+import { Flame, FolderOpen, Hash } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
@@ -43,7 +44,10 @@ export function BlogSidebar() {
     <div className="space-y-8 text-sm">
       {/* 热门文章 */}
       <section>
-        <h3 className="mb-3 text-base font-medium">🔥 热门文章</h3>
+        <h3 className="mb-3 text-base font-medium flex items-center gap-2">
+          <Flame className="h-4 w-4 text-orange-500" />
+          热门文章
+        </h3>
         {isLoadingPosts ? (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -65,7 +69,7 @@ export function BlogSidebar() {
               >
                 <Link
                   href={`/blog/${post.slug}`}
-                  className="hover:text-foreground transition-colors text-sm"
+                  className="hover:text-foreground transition-colors text-sm cursor-pointer"
                 >
                   {post.title}
                 </Link>
@@ -81,7 +85,10 @@ export function BlogSidebar() {
 
       {/* 分类 */}
       <section>
-        <h3 className="mb-3 text-base font-medium">📑 分类</h3>
+        <h3 className="mb-3 text-base font-medium flex items-center gap-2">
+          <FolderOpen className="h-4 w-4 text-blue-500" />
+          分类
+        </h3>
         {isLoadingCategories ? (
           <div className="space-y-2">
             {Array.from({ length: 4 }).map((_, i) => (
@@ -97,7 +104,8 @@ export function BlogSidebar() {
               <li key={category.id}>
                 <button
                   onClick={() => handleCategoryClick(category.name)}
-                  className="flex justify-between w-full text-left text-sm text-muted-foreground hover:text-foreground transition-colors py-0.5"
+                  className="flex justify-between w-full text-left text-sm text-muted-foreground hover:text-foreground transition-colors py-0.5 cursor-pointer"
+                  aria-label={`筛选 ${category.name} 分类`}
                 >
                   <span>{category.name}</span>
                   <span className="text-muted-foreground/50">({category.postCount})</span>
@@ -110,7 +118,10 @@ export function BlogSidebar() {
 
       {/* 标签云 */}
       <section>
-        <h3 className="mb-3 text-base font-medium"># 标签云</h3>
+        <h3 className="mb-3 text-base font-medium flex items-center gap-2">
+          <Hash className="h-4 w-4 text-purple-500" />
+          标签云
+        </h3>
         {isLoadingTags ? (
           <div className="flex flex-wrap gap-1.5">
             {Array.from({ length: 8 }).map((_, i) => (

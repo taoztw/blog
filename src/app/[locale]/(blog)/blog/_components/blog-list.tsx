@@ -70,14 +70,14 @@ export function BlogListPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-8 lg:gap-10">
+      <div className="container mx-auto px-4 py-8 sm:py-12 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] xl:grid-cols-[1fr_320px] gap-8 lg:gap-12">
           {/* 主内容区域 */}
           <div className="w-full min-w-0">
             {/* 筛选条件显示 */}
             {(tagName || categoryName) && (
-              <div className="flex items-center gap-2 flex-wrap mb-6">
-                <span className="text-sm text-muted-foreground">当前筛选：</span>
+              <div className="flex items-center gap-2 flex-wrap mb-8 p-4 bg-accent/30 rounded-lg border border-border/50">
+                <span className="text-sm font-medium text-muted-foreground">当前筛选：</span>
                 {tagName && currentTag && (
                   <TagBadge
                     name={currentTag.name}
@@ -94,7 +94,8 @@ export function BlogListPage() {
                 {(tagName || categoryName) && (
                   <button
                     onClick={clearAllFilters}
-                    className="text-sm text-muted-foreground hover:text-foreground underline"
+                    className="text-sm text-muted-foreground hover:text-foreground underline cursor-pointer transition-colors"
+                    aria-label="清除所有筛选条件"
                   >
                     清除所有筛选
                   </button>
@@ -102,20 +103,47 @@ export function BlogListPage() {
               </div>
             )}
             {/* 文章列表 */}
-            <div className="space-y-4">
+            <div className="space-y-0 divide-y-0">
               {isLoading &&
                 Array.from({ length: 3 }).map((_, i) => (
                   <div
                     key={i}
-                    className="space-y-3"
+                    className="flex flex-col gap-4 py-6 sm:flex-row border-b border-border/40 last:border-b-0 px-4 -mx-4"
                   >
-                    <Skeleton className="h-6 w-2/3" />
-                    <Skeleton className="h-4 w-full" />
-                    <Skeleton className="h-4 w-5/6" />
+                    {/* 图片骨架 */}
+                    <div className="flex-none sm:w-1/4">
+                      <Skeleton className="aspect-4/3 w-full rounded-lg" />
+                    </div>
+                    {/* 内容骨架 */}
+                    <div className="flex flex-col sm:w-3/4 space-y-3">
+                      {/* 标签骨架 */}
+                      <div className="flex gap-2">
+                        <Skeleton className="h-5 w-16" />
+                        <Skeleton className="h-5 w-20" />
+                      </div>
+                      {/* 标题骨架 */}
+                      <Skeleton className="h-6 w-3/4" />
+                      {/* 摘要骨架 */}
+                      <div className="space-y-2">
+                        <Skeleton className="h-4 w-full" />
+                        <Skeleton className="h-4 w-5/6" />
+                      </div>
+                      {/* 元数据骨架 */}
+                      <div className="flex gap-4 mt-auto">
+                        <Skeleton className="h-4 w-20" />
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-4 w-16" />
+                      </div>
+                    </div>
                   </div>
                 ))}
 
-              {!isLoading && posts.length === 0 && <p>没有找到文章</p>}
+              {!isLoading && posts.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <p className="text-lg text-muted-foreground mb-2">没有找到文章</p>
+                  <p className="text-sm text-muted-foreground/70">尝试调整筛选条件或搜索关键词</p>
+                </div>
+              )}
 
               {!isLoading &&
                 posts.map((post: PostWithFilters, index: number) => (
@@ -137,7 +165,7 @@ export function BlogListPage() {
           </div>
 
           {/* 侧边栏 */}
-          <aside className="w-full lg:sticky lg:top-20 ml-10 lg:h-fit">
+          <aside className="w-full lg:sticky lg:top-24 lg:h-fit">
             <BlogSidebar />
           </aside>
         </div>
