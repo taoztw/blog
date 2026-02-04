@@ -1,4 +1,15 @@
-import { BarChart3, FileText, FolderOpen, LayoutDashboard, SquareStack, Tag, Upload, Users, MessageCircleQuestion, BookText } from "lucide-react";
+import {
+  BarChart3,
+  BookText,
+  FileText,
+  FolderOpen,
+  LayoutDashboard,
+  MessageCircleQuestion,
+  SquareStack,
+  Tag,
+  Upload,
+  Users,
+} from "lucide-react";
 import ROUTES from "./routes";
 
 export const DASHBOARD_MENU_ITEMS = [

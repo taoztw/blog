@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ImageService } from "@/lib/image-service";
 import { getTimeStamp } from "@/lib/utils";
 import type { PostListItem } from "@/server/api/types";
 import type { tags } from "@/server/db/schema";
@@ -9,7 +10,6 @@ import { Calendar, ChevronRightIcon, Eye, MessageCircleIcon } from "lucide-react
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ImageService } from "../../../../../components/dashboard/image-service";
 
 interface BlogCardProps {
   post: PostListItem & {
@@ -22,7 +22,10 @@ export function BlogCard({ post }: BlogCardProps) {
   const blogUrl = `${pathname}/${post.slug}`;
   return (
     // <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.1 }}>
-    <article key={post.id} className="group flex flex-col gap-4 py-5 sm:flex-row">
+    <article
+      key={post.id}
+      className="group flex flex-col gap-4 py-5 sm:flex-row"
+    >
       {/* 图片区域 */}
       <div className="flex-none sm:w-1/4">
         <div className="relative aspect-[4/3] overflow-hidden rounded-md">
@@ -50,7 +53,10 @@ export function BlogCard({ post }: BlogCardProps) {
       <div className="flex flex-col sm:w-3/4">
         {/* 分类和标签 */}
         <div className="mb-1 flex items-center gap-2 flex-wrap">
-          <Badge variant="outline" className="text-xs text-muted-foreground font-normal">
+          <Badge
+            variant="outline"
+            className="text-xs text-muted-foreground font-normal"
+          >
             {post.category!.name}
           </Badge>
           {post.tags && post.tags.length > 0 && (
@@ -66,7 +72,10 @@ export function BlogCard({ post }: BlogCardProps) {
                 </Badge>
               ))}
               {post.tags.length > 3 && (
-                <Badge variant="outline" className="text-xs text-muted-foreground font-normal">
+                <Badge
+                  variant="outline"
+                  className="text-xs text-muted-foreground font-normal"
+                >
                   +{post.tags.length - 3}
                 </Badge>
               )}
@@ -76,7 +85,10 @@ export function BlogCard({ post }: BlogCardProps) {
 
         {/* 标题 */}
         <h3 className="group-hover:text-primary/80 mb-1 text-base font-semibold transition-colors">
-          <Link href={blogUrl} className="hover:text-primary">
+          <Link
+            href={blogUrl}
+            className="hover:text-primary"
+          >
             {post.title}
           </Link>
         </h3>

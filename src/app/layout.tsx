@@ -37,14 +37,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geistSans.variable}`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${geistSans.variable}`}
+      suppressHydrationWarning
+    >
       {/* <html lang="en" suppressHydrationWarning> */}
       <body>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
           <NextTopLoader
             initialPosition={0.08}
             crawlSpeed={200}
-            height={3}
+            height={2}
             crawl={true}
             showSpinner={true}
             easing="ease"

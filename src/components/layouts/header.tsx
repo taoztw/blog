@@ -22,7 +22,6 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { name: "blog", href: "/blog" },
-  { name: "qas", href: "/qas" },
   { name: "journals", href: "/journals" },
   { name: "projects", href: "/projects" },
   { name: "archives", href: "/archives" },
