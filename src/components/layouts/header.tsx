@@ -143,13 +143,7 @@ export default function Header2() {
                 href="/"
                 className="flex items-center space-x-3"
               >
-                <div className="relative">
-                  <Logo
-                    size="md"
-                    className=""
-                  />
-                  {/* <div className="absolute -top-1 -right-1 h-3 w-3 animate-pulse rounded-full bg-green-400"></div> */}
-                </div>
+                <Logo size="md" />
                 {/* <div className="flex flex-col">
                   <span className="text-foreground text-md font-bold">Gi</span>
                   <span className="text-muted-foreground -mt-1 text-xs">Build faster</span>

@@ -12,6 +12,18 @@
     "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+/*
+ * 墨色设计系统 — Ink Design System
+ * ─────────────────────────────────
+ * 色相锁定 H≈55-80°（暖褐调），饱和度 C≈0.004-0.030
+ * 灵感：宣纸（ink-50/100）· 松烟墨（ink-700/800）· 朱砂印泥（seal）
+ *
+ * 色阶修正（基于专业评审）：
+ *   P0: ink-500 加深至 #887B6C（小字号对比度 ≥4.0:1）
+ *   P1: ink-50 拉开至 #FEFDFB（与 ink-100 区分度 ΔL≈3）
+ *   P1: 暗色模式辅助文字用 ink-500 替代 ink-600
+ */
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -48,84 +60,159 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+
+  /* 墨色色阶 — Ink Scale (Tailwind: bg-ink-50, text-ink-800, etc.) */
+  --color-ink-50: var(--ink-50);
+  --color-ink-100: var(--ink-100);
+  --color-ink-200: var(--ink-200);
+  --color-ink-300: var(--ink-300);
+  --color-ink-400: var(--ink-400);
+  --color-ink-500: var(--ink-500);
+  --color-ink-600: var(--ink-600);
+  --color-ink-700: var(--ink-700);
+  --color-ink-800: var(--ink-800);
+  --color-ink-900: var(--ink-900);
+
+  /* 印章朱红 — Seal Red */
+  --color-seal: var(--seal);
+
+  /* 功能色 — State Colors (文房四宝意象) */
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+
+  /* 品牌与高亮 */
   --color-brand: var(--brand);
-  --color-highlight:
-    var(--highlight);
+  --color-highlight: var(--highlight);
 }
 
+/* ═══════════════════════════════════════════
+ *  亮色模式 — Light Mode (宣纸)
+ * ═══════════════════════════════════════════ */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-  --brand: oklch(0.623 0.214 259.815);
-  --highlight:
-    oklch(0.852 0.199 91.936);
+
+  /* 墨色色阶（暖褐基调 H≈55-80°） */
+  --ink-50: #fefdfb; /* 纯净宣纸 — card/popover bg */
+  --ink-100: #faf9f6; /* 宣纸底色 — page bg */
+  --ink-200: #f4f2ed; /* 淡墨底 — secondary/muted bg */
+  --ink-300: #e2ddd4; /* 清 — border, subtle elements */
+  --ink-400: #c4bdb0; /* 淡 — disabled, placeholder */
+  --ink-500: #887b6c; /* 重（P0调深）— auxiliary text ≥14px */
+  --ink-600: #6b5f52; /* 浓 — secondary text, muted-foreground */
+  --ink-700: #453b32; /* 焦 — body text */
+  --ink-800: #2c2520; /* 松烟墨 — headings, foreground */
+  --ink-900: #1d1c19; /* 浓墨 — dark mode background */
+
+  /* 印章朱红 */
+  --seal: #c23b22;
+
+  /* 功能色（传统中国色意象） */
+  --success: #5b7a5e; /* 苔绿 */
+  --warning: #b8863e; /* 赭黄 */
+  --info: #5c7a8a; /* 青墨 */
+
+  /* shadcn/ui 语义映射 */
+  --background: #faf9f6;
+  --foreground: #2c2520;
+  --card: #fefdfb;
+  --card-foreground: #2c2520;
+  --popover: #fefdfb;
+  --popover-foreground: #2c2520;
+  --primary: #2c2520;
+  --primary-foreground: #fefdfb;
+  --secondary: #f4f2ed;
+  --secondary-foreground: #453b32;
+  --muted: #f4f2ed;
+  --muted-foreground: #6b5f52;
+  --accent: #f4f2ed;
+  --accent-foreground: #453b32;
+  --destructive: #c23b22;
+  --border: #e2ddd4;
+  --input: #e2ddd4;
+  --ring: #887b6c;
+
+  /* 图表色（文房意象） */
+  --chart-1: #c23b22; /* 朱红 */
+  --chart-2: #5b7a5e; /* 苔绿 */
+  --chart-3: #b8863e; /* 赭黄 */
+  --chart-4: #5c7a8a; /* 青墨 */
+  --chart-5: #887b6c; /* 墨灰 */
+
+  /* 侧边栏 */
+  --sidebar: #faf9f6;
+  --sidebar-foreground: #2c2520;
+  --sidebar-primary: #c23b22;
+  --sidebar-primary-foreground: #fefdfb;
+  --sidebar-accent: #f4f2ed;
+  --sidebar-accent-foreground: #453b32;
+  --sidebar-border: #e2ddd4;
+  --sidebar-ring: #887b6c;
+
+  /* 品牌色 */
+  --brand: #c23b22;
+  --highlight: #b8863e;
 }
 
+/* ═══════════════════════════════════════════
+ *  暗色模式 — Dark Mode (夜墨)
+ * ═══════════════════════════════════════════
+ *  策略：暖对暖（不用纯黑纯白，保留褐调温度）
+ */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
-  --brand: oklch(0.707 0.165 254.624);
-  --highlight:
-    oklch(0.852 0.199 91.936);
+  --ink-50: #fefdfb;
+  --ink-100: #faf9f6;
+  --ink-200: #f4f2ed;
+  --ink-300: #e2ddd4;
+  --ink-400: #c4bdb0;
+  --ink-500: #887b6c;
+  --ink-600: #6b5f52;
+  --ink-700: #453b32;
+  --ink-800: #2c2520;
+  --ink-900: #1d1c19;
+
+  --seal: #d4493a;
+
+  --success: #7a9e7d;
+  --warning: #d4a55a;
+  --info: #7a9db0;
+
+  --background: #1d1c19;
+  --foreground: #e2ddd4;
+  --card: #252320;
+  --card-foreground: #e2ddd4;
+  --popover: #252320;
+  --popover-foreground: #e2ddd4;
+  --primary: #e2ddd4;
+  --primary-foreground: #1d1c19;
+  --secondary: #2a2725;
+  --secondary-foreground: #e2ddd4;
+  --muted: #2a2725;
+  --muted-foreground: #96897a;
+  --accent: #2a2725;
+  --accent-foreground: #e2ddd4;
+  --destructive: #d4493a;
+  --border: rgba(232, 224, 212, 0.08);
+  --input: rgba(232, 224, 212, 0.1);
+  --ring: #96897a;
+
+  --chart-1: #d4493a;
+  --chart-2: #7a9e7d;
+  --chart-3: #d4a55a;
+  --chart-4: #7a9db0;
+  --chart-5: #96897a;
+
+  --sidebar: #1d1c19;
+  --sidebar-foreground: #e2ddd4;
+  --sidebar-primary: #d4493a;
+  --sidebar-primary-foreground: #fefdfb;
+  --sidebar-accent: #2a2725;
+  --sidebar-accent-foreground: #e2ddd4;
+  --sidebar-border: rgba(232, 224, 212, 0.08);
+  --sidebar-ring: #96897a;
+
+  --brand: #d4493a;
+  --highlight: #d4a55a;
 }
 
 @layer base {
@@ -133,6 +220,17 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+  }
+
+  /* 宣纸纹理 — Xuan Paper Texture (极致克制) */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
   }
 }

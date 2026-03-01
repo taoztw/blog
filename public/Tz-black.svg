@@ -1,0 +1,22 @@
+<svg width="320" height="140" viewBox="0 0 320 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- T horizontal -->
+  <path d="M30 28 C32 26, 38 22, 48 20 C70 16, 110 14, 145 15 C158 15.5, 168 17, 172 20 C174 22, 174 25, 172 27"
+    stroke="#1a1510" stroke-width="10" stroke-linecap="round" fill="none" opacity="0.95"/>
+  <!-- T vertical -->
+  <path d="M100 22 C101 28, 102 45, 101 65 C100 80, 98 95, 96 108 C95 114, 93 118, 90 120 C88 121, 86 120, 85 117"
+    stroke="#1a1510" stroke-width="9.5" stroke-linecap="round" fill="none"/>
+  <!-- T base ink dot -->
+  <ellipse cx="88" cy="119" rx="4" ry="2.5" fill="#2c2520" opacity="0.35" transform="rotate(25 88 119)"/>
+  <!-- z top horizontal -->
+  <path d="M145 42 C150 40, 162 38, 178 37 C200 36, 228 37, 248 39 C256 40, 262 42, 264 45 C265 47, 263 48, 258 48"
+    stroke="#1a1510" stroke-width="7.5" stroke-linecap="round" fill="none" opacity="0.92"/>
+  <!-- z diagonal -->
+  <path d="M258 44 C252 52, 235 68, 210 85 C190 98, 168 108, 152 115 C146 118, 141 119, 138 118"
+    stroke="#1a1510" stroke-width="9" stroke-linecap="round" fill="none" opacity="0.95"/>
+  <!-- z bottom horizontal -->
+  <path d="M138 118 C144 119, 158 120, 178 119 C205 117, 240 114, 262 112 C272 111, 280 110, 285 108 C290 105, 292 100, 288 96"
+    stroke="#1a1510" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.9"/>
+  <!-- z finishing flick -->
+  <path d="M285 108 C288 103, 290 98, 289 95"
+    stroke="#2c2520" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.6"/>
+</svg>

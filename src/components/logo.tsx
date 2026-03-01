@@ -1,15 +1,15 @@
-import { cn } from "@/lib/utils"; // shadcn 项目默认提供
+import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import Link from "next/link";
 import type * as React from "react";
 
-const logoVariants = cva("inline-block shrink-0", {
+const logoVariants = cva("inline-block shrink-0 select-none", {
   variants: {
     size: {
-      sm: "h-6 w-6",
-      md: "h-8 w-8",
-      lg: "h-12 w-12",
-      xl: "h-16 w-16",
+      sm: "h-5",
+      md: "h-7",
+      lg: "h-10",
+      xl: "h-14",
     },
   },
   defaultVariants: {
@@ -25,27 +25,34 @@ export interface LogoProps extends React.HTMLAttributes<HTMLSpanElement>, Varian
 }
 
 export function Logo({ size, href, className, alt = "Go Home", ...rest }: LogoProps) {
-  const img = (
-    <img
-      src="/logo.jpeg"
-      alt={alt}
-      className={cn(logoVariants({ size }), className, "h-9 w-9 rounded-md shadow-md")}
-      width={0}
-      height={0}
-    />
+  const logoImage = (
+    <>
+      {/* 亮色模式：深色 logo */}
+      <img
+        src="/Tz-black.svg"
+        alt={alt}
+        className={cn(logoVariants({ size }), "w-auto dark:hidden", className)}
+      />
+      {/* 暗色模式：浅色 logo */}
+      <img
+        src="/Tz-white.svg"
+        alt={alt}
+        className={cn(logoVariants({ size }), "hidden w-auto dark:block", className)}
+      />
+    </>
   );
 
   if (href) {
     return (
       <Link href={href} aria-label={alt} {...rest}>
-        {img}
+        {logoImage}
       </Link>
     );
   }
 
   return (
     <span aria-label={alt} {...rest}>
-      {img}
+      {logoImage}
     </span>
   );
 }

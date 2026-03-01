@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" width="64" height="28">
+  <style>
+    .stroke-main { stroke: #1a1510; }
+    .fill-dot { fill: #2c2520; }
+    .fill-flick { stroke: #2c2520; }
+    @media (prefers-color-scheme: dark) {
+      .stroke-main { stroke: #E8E0D4; }
+      .fill-dot { fill: #D4C8B8; }
+      .fill-flick { stroke: #D4C8B8; }
+    }
+  </style>
+  <!-- T horizontal -->
+  <path d="M30 28 C32 26, 38 22, 48 20 C70 16, 110 14, 145 15 C158 15.5, 168 17, 172 20 C174 22, 174 25, 172 27"
+    class="stroke-main" stroke-width="11" stroke-linecap="round" fill="none"/>
+  <!-- T vertical -->
+  <path d="M100 22 C101 28, 102 45, 101 65 C100 80, 98 95, 96 108 C95 114, 93 118, 90 120"
+    class="stroke-main" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- z top -->
+  <path d="M145 42 C162 38, 200 36, 248 39 C256 40, 262 42, 264 45"
+    class="stroke-main" stroke-width="8" stroke-linecap="round" fill="none"/>
+  <!-- z diagonal -->
+  <path d="M258 44 C235 68, 190 98, 152 115 C146 118, 141 119, 138 118"
+    class="stroke-main" stroke-width="10" stroke-linecap="round" fill="none"/>
+  <!-- z bottom -->
+  <path d="M138 118 C158 120, 205 117, 262 112 C272 111, 285 108 C290 105, 292 100, 288 96"
+    class="stroke-main" stroke-width="8" stroke-linecap="round" fill="none"/>
+</svg>

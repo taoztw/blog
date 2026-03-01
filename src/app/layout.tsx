@@ -1,11 +1,21 @@
+import { FaviconSwitcher } from "@/components/favicon-switcher";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/constants";
 import "@/styles/globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
 import type { Metadata } from "next";
+import { Cormorant_Garamond } from "next/font/google";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
+
+const cormorantGaramond = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["300", "400", "500"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+  display: "swap",
+});
 
 const geistSans = localFont({
   src: [
@@ -22,7 +32,7 @@ const geistSans = localFont({
 export const metadata: Metadata = {
   title: SITE_NAME,
   description: SITE_DESCRIPTION,
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/favicon.svg", type: "image/svg+xml" }],
   metadataBase: new URL(SITE_URL),
   creator: "Tao z(Tz)",
   openGraph: {
@@ -39,7 +49,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${geistSans.variable}`}
+      className={`${geistSans.variable} ${cormorantGaramond.variable}`}
       suppressHydrationWarning
     >
       {/* <html lang="en" suppressHydrationWarning> */}
@@ -58,8 +68,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             showSpinner={true}
             easing="ease"
             speed={200}
-            color="#331"
+            color="#C23B22"
           />
+          <FaviconSwitcher />
           <Toaster position="top-right" />
           <TRPCReactProvider>{children}</TRPCReactProvider>
         </ThemeProvider>
