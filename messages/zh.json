@@ -103,5 +103,20 @@
     "imageUrl": "图片URL（可选）",
     "submit": "创建日志",
     "update": "更新日志"
+  },
+  "Footer": {
+    "description": "一个关于技术、开发与创意探索的个人博客。",
+    "navigation": "导航",
+    "nav": {
+      "blog": "博客",
+      "archives": "归档",
+      "about": "关于",
+      "projects": "项目"
+    },
+    "legal": "法律信息",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "friends": "友情链接",
+    "rights": "保留所有权利。"
   }
 }

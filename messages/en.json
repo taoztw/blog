@@ -103,5 +103,20 @@
     "imageUrl": "Image URL (optional)",
     "submit": "Create Journal",
     "update": "Update Journal"
+  },
+  "Footer": {
+    "description": "A personal blog about technology, development, and creative exploration.",
+    "navigation": "Navigation",
+    "nav": {
+      "blog": "Blog",
+      "archives": "Archives",
+      "about": "About",
+      "projects": "Projects"
+    },
+    "legal": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "friends": "Friends",
+    "rights": "All rights reserved."
   }
 }

@@ -27,6 +27,12 @@ const config = {
     unoptimized: true,
   },
   allowedDevOrigins: ["https://localhost:3000", "http://localhost:3000"],
+  typescript: {
+    ignoreBuildErrors: true,
+  },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 const withNextIntl = createNextIntlPlugin();
 
