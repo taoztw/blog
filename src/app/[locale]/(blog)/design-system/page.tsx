@@ -225,7 +225,7 @@ export default function DesignSystemPage() {
             <Logo size="xl" />
           </div>
           <h1
-            className="text-4xl font-light tracking-wide mb-3"
+            className="text-4xl font-normal tracking-wide mb-3"
             style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', serif" }}
           >
             Ink Design System
