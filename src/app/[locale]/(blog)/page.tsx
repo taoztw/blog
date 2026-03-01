@@ -1,14 +1,9 @@
-import { useTranslations } from "next-intl";
-import { HeroPersonalColorful } from "./_components/home/hero-personal-colorful";
+import { HeroV2 } from "./_components/home/hero-v2";
 
 const Page = () => {
-  const t = useTranslations("HomePage");
   return (
     <div>
-      <HeroPersonalColorful />
-      {/* <RecentBlogSection /> */}
-      {/* 最近的开源项目 */}
-      {/* 哪些正在学习的开源项目 */}
+      <HeroV2 />
     </div>
   );
 };

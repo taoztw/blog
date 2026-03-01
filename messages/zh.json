@@ -104,6 +104,20 @@
     "submit": "创建日志",
     "update": "更新日志"
   },
+  "Home": {
+    "lateNight": "深夜好",
+    "morning": "早上好",
+    "afternoon": "下午好",
+    "evening": "晚上好",
+    "subtitle": "全栈开发工程师 · AI 技术爱好者。用代码创造，用文字记录。",
+    "viewBlog": "阅读博客",
+    "viewProjects": "项目",
+    "posts": "篇文章",
+    "views": "次阅读",
+    "recentPosts": "最近文章",
+    "viewAll": "查看全部",
+    "listening": "正在听"
+  },
   "Footer": {
     "description": "一个关于技术、开发与创意探索的个人博客。",
     "navigation": "导航",

@@ -104,6 +104,20 @@
     "submit": "Create Journal",
     "update": "Update Journal"
   },
+  "Home": {
+    "lateNight": "Late night",
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening",
+    "subtitle": "Full-stack developer & AI enthusiast. Writing about technology, building with code.",
+    "viewBlog": "Read Blog",
+    "viewProjects": "Projects",
+    "posts": "posts",
+    "views": "views",
+    "recentPosts": "Recent Posts",
+    "viewAll": "View all",
+    "listening": "Listening"
+  },
   "Footer": {
     "description": "A personal blog about technology, development, and creative exploration.",
     "navigation": "Navigation",
