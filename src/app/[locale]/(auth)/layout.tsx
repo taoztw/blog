@@ -59,9 +59,9 @@ const AuthLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
           {/* Decorative seal stamp */}
           <div className="flex items-end justify-between">
             <p className="text-xs text-ink-600">&copy; {new Date().getFullYear()} Tz Blog</p>
-            <div className="flex size-14 items-center justify-center rounded-sm border border-seal/50 border-2 text-seal/60 xl:size-16">
+            {/* <div className="flex size-14 items-center justify-center rounded-sm border border-seal/50 border-2 text-seal/60 xl:size-16">
               <span className="font-serif text-2xl xl:text-3xl">陶</span>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
