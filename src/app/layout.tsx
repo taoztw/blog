@@ -5,27 +5,18 @@ import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/constants";
 import "@/styles/globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
 import type { Metadata } from "next";
-import { Cormorant_Garamond } from "next/font/google";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
-
-const cormorantGaramond = Cormorant_Garamond({
-  subsets: ["latin"],
-  weight: ["300", "400", "500"],
-  style: ["normal", "italic"],
-  variable: "--font-cormorant",
-  display: "swap",
-});
 
 const geistSans = localFont({
   src: [
     {
       path: "./fonts/Geist-VariableFont_wght.ttf",
-      weight: "100 900", // 变量字体权重范围
+      weight: "100 900",
       style: "normal",
     },
   ],
-  variable: "--font-geist-sans", // 用 CSS 变量方便在全局/ Tailwind 中使用
+  variable: "--font-geist-sans",
   display: "swap",
 });
 
@@ -49,7 +40,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${cormorantGaramond.variable}`}
+      className={geistSans.variable}
       suppressHydrationWarning
     >
       {/* <html lang="en" suppressHydrationWarning> */}

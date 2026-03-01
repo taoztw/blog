@@ -224,10 +224,7 @@ export default function DesignSystemPage() {
           <div className="hidden lg:block mb-6">
             <Logo size="xl" />
           </div>
-          <h1
-            className="text-4xl font-normal tracking-wide mb-3"
-            style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', serif" }}
-          >
+          <h1 className="text-4xl font-normal tracking-wide mb-3 font-serif">
             Ink Design System
           </h1>
           <p className="text-muted-foreground leading-relaxed">
@@ -432,7 +429,7 @@ export default function DesignSystemPage() {
           <SectionHeader
             id="typography"
             title="Typography"
-            subtitle="Geist Sans 正文 · Cormorant Garamond 装饰标题"
+            subtitle="Geist Sans 正文 · Serif 装饰标题"
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -440,11 +437,8 @@ export default function DesignSystemPage() {
             <div className="rounded-xl border border-border bg-card p-6 space-y-5">
               <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-2">文字层级</p>
               <div>
-                <span className="text-[10px] text-muted-foreground font-mono">text-4xl · font-light</span>
-                <p
-                  className="text-4xl font-light tracking-wide mt-1"
-                  style={{ fontFamily: "var(--font-cormorant), serif" }}
-                >
+                <span className="text-[10px] text-muted-foreground font-mono">text-4xl · font-light · font-serif</span>
+                <p className="text-4xl font-light tracking-wide mt-1 font-serif">
                   Ink Design System
                 </p>
               </div>
@@ -501,18 +495,10 @@ export default function DesignSystemPage() {
                   </p>
                   <Separator />
                   <div className="flex items-baseline gap-4">
-                    <span
-                      className="text-2xl"
-                      style={{ fontFamily: "var(--font-cormorant), 'Cormorant Garamond', serif" }}
-                    >
-                      Cormorant Garamond
-                    </span>
-                    <span className="text-xs text-muted-foreground font-mono">--font-cormorant</span>
+                    <span className="text-2xl font-serif">Serif</span>
+                    <span className="text-xs text-muted-foreground font-mono">font-serif</span>
                   </div>
-                  <p
-                    className="text-sm text-muted-foreground italic"
-                    style={{ fontFamily: "var(--font-cormorant), serif" }}
-                  >
+                  <p className="text-sm text-muted-foreground italic font-serif">
                     ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789
                   </p>
                 </div>
