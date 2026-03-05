@@ -316,28 +316,31 @@ const useResolvedDiscussion = (
 
   const discussions = usePluginOption(discussionPlugin, 'discussions');
 
-  commentNodes.forEach(([node]) => {
-    const id = api.comment.nodeId(node);
-    const map = getOption('uniquePathMap');
+  React.useEffect(() => {
+    commentNodes.forEach(([node]) => {
+      const id = api.comment.nodeId(node);
+      const map = getOption('uniquePathMap');
 
-    if (!id) return;
+      if (!id) return;
 
-    const previousPath = map.get(id);
+      const previousPath = map.get(id);
 
-    // If there are no comment nodes in the corresponding path in the map, then update it.
-    if (PathApi.isPath(previousPath)) {
-      const nodes = api.comment.node({ id, at: previousPath });
+      // If there are no comment nodes in the corresponding path in the map, then update it.
+      if (PathApi.isPath(previousPath)) {
+        const nodes = api.comment.node({ id, at: previousPath });
 
-      if (!nodes) {
-        setOption('uniquePathMap', new Map(map).set(id, blockPath));
+        if (!nodes) {
+          setOption('uniquePathMap', new Map(map).set(id, blockPath));
+          return;
+        }
+
         return;
       }
 
-      return;
-    }
-    // TODO: fix throw error
-    setOption('uniquePathMap', new Map(map).set(id, blockPath));
-  });
+      setOption('uniquePathMap', new Map(map).set(id, blockPath));
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [commentNodes, blockPath]);
 
   const commentsIds = new Set(
     commentNodes.map(([node]) => api.comment.nodeId(node)).filter(Boolean)
