@@ -66,7 +66,8 @@ export function PostTable() {
         <Button asChild>
           <CreateOrEditPostDialog
             onCreatePost={async (d: CreatePostData) => {
-              await createPost.mutateAsync(d);
+              const result = await createPost.mutateAsync(d);
+              return { postId: result.post.id };
             }}
           />
         </Button>

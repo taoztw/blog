@@ -18,7 +18,7 @@ export const posts = sqliteTable(
     title: text("title", { length: 512 }).notNull(),
     slug: text("slug", { length: 512 }).notNull().unique(),
     excerpt: text("excerpt").notNull(),
-    content: text("content").notNull(),
+    content: text("content").notNull().default(""),
     imageUrl: text("image_url", { length: 512 }),
     status: text("status", { enum: POST_STATUS_TUPLE }).default(POST_STATUS_ENUM.DRAFT),
     createdById: text("created_by_id", { length: 255 })

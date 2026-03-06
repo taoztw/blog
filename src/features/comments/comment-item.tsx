@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "../../components/ui/dropdown-menu";
 import { UserAvatar } from "../../components/user-avatar";
+import { CommentContent } from "./comment-content";
 import CommentReply from "./comment-reply";
 import CommentsForm from "./comments-form";
 
@@ -99,7 +100,7 @@ const CommentItem = ({ comment, variant = "comment" }: CommentItemProps) => {
             </span>
           </div>
 
-          <p className="text-sm">{comment.content}</p>
+          <CommentContent content={comment.content} />
           {/* Reactions */}
           <div className="flex items-center gap-2 mt-1">
             <div className="flex items-center">

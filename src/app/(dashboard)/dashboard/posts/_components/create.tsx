@@ -1,9 +1,8 @@
 "use client";
 
 import { ImageService } from "@/lib/image-service";
-import { MarkdownPreview } from "@/components/mardown-preview";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -16,15 +15,14 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { MultiSelect } from "@/components/ui/multi-select";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import type { PostWithRelations } from "@/global";
 import { authClient } from "@/lib/auth/authClient";
-import { markdownString } from "@/lib/fake-data";
 import { categorySelectSchema, POST_STATUS_ENUM, postInsertWithTagsSchema, tagSelectSchema } from "@/server/db/schema";
 import { api } from "@/trpc/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UploadCloud, X } from "lucide-react";
+import { PenLineIcon, UploadCloud, X } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -34,7 +32,7 @@ type CreatePostData = z.infer<typeof postInsertWithTagsSchema>;
 
 interface Props {
   post?: PostWithRelations | null;
-  onCreatePost?: (data: CreatePostData) => Promise<void>;
+  onCreatePost?: (data: CreatePostData) => Promise<{ postId: string } | void>;
   onEditPost?: (id: string, data: CreatePostData) => Promise<void>;
   trigger?: React.ReactNode;
   open?: boolean;
@@ -53,6 +51,7 @@ export function CreateOrEditPostDialog({
   const { data: session, isPending } = authClient.useSession();
   const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
   const setOpen = onOpenChange ?? setInternalOpen;
+  const router = useRouter();
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -69,13 +68,13 @@ export function CreateOrEditPostDialog({
           ...post!,
           categoryId: post?.category?.id ?? undefined,
           imageUrl: post?.imageUrl ? ImageService.getImageUrl(post.imageUrl) : null,
-          tagIds: [], // We'll load this from the post's tags
+          tagIds: [],
         }
       : {
           title: "",
           slug: "",
           excerpt: "",
-          content: markdownString,
+          content: "",
           status: POST_STATUS_ENUM.DRAFT,
           tagIds: [],
         },
@@ -86,7 +85,7 @@ export function CreateOrEditPostDialog({
       form.reset({
         ...post,
         categoryId: post.category?.id ?? undefined,
-        tagIds: [], // TODO: Load actual tags from post
+        tagIds: [],
       });
       setImagePreview(post.imageUrl ? ImageService.getImageUrl(post.imageUrl) : null);
     } else {
@@ -94,7 +93,7 @@ export function CreateOrEditPostDialog({
         title: "",
         slug: "",
         excerpt: "",
-        content: markdownString,
+        content: "",
         status: POST_STATUS_ENUM.DRAFT,
         tagIds: [],
       });
@@ -120,8 +119,6 @@ export function CreateOrEditPostDialog({
   };
 
   const onSubmit = async (values: CreatePostData) => {
-    console.log("Submitting post:", values);
-    console.log("Image file:", imageFile);
     if (imageFile) {
       const formData = new FormData();
       formData.append("file", imageFile);
@@ -153,17 +150,54 @@ export function CreateOrEditPostDialog({
     }
   };
 
+  const onSubmitAndEdit = async (values: CreatePostData) => {
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+      const json = await res.json();
+      if (json.success) {
+        values.imageUrl = json.key;
+      } else {
+        toast.error("图片上传失败: " + json.error);
+        return;
+      }
+    }
+    try {
+      if (isEditMode && post) {
+        if (onEditPost) await onEditPost(post.id, values);
+        setOpen(false);
+        router.push(`/dashboard/posts/${post.id}/edit`);
+      } else if (onCreatePost) {
+        const result = await onCreatePost(values);
+        setOpen(false);
+        if (result?.postId) {
+          router.push(`/dashboard/posts/${result.postId}/edit`);
+        }
+      }
+    } catch (e: any) {
+      toast.error(e.message || "操作失败");
+    }
+  };
+
   const triggerSubmit = (status: string) => {
     form.setValue("status", status);
-    console.log("Form errors:", form.formState.errors);
-
     form.handleSubmit(onSubmit)();
+  };
+
+  const triggerSubmitAndEdit = () => {
+    form.setValue("status", POST_STATUS_ENUM.DRAFT);
+    form.handleSubmit(onSubmitAndEdit)();
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {!isEditMode && <DialogTrigger asChild>{trigger ?? <Button>新建文章</Button>}</DialogTrigger>}
-      <DialogContent className="!max-w-[95vw] lg:!max-w-[1200px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="!max-w-[95vw] lg:!max-w-[900px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{isEditMode ? "编辑文章" : "新建文章"}</DialogTitle>
           <DialogDescription>{isEditMode ? "修改并保存文章" : "填写信息创建新文章"}</DialogDescription>
@@ -171,7 +205,7 @@ export function CreateOrEditPostDialog({
 
         <Form {...form}>
           <form className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* 左两列：标题摘要内容 */}
+            {/* 左两列：标题摘要 */}
             <div className="lg:col-span-2 space-y-6">
               <Card>
                 <CardContent className="p-6 space-y-6">
@@ -215,38 +249,28 @@ export function CreateOrEditPostDialog({
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader>
-                  <CardTitle>内容</CardTitle>
-                  <CardDescription>Markdown 格式</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <FormField
-                    control={form.control}
-                    name="content"
-                    render={({ field }) => (
-                      <FormItem>
-                        <Tabs defaultValue="write" className="w-full">
-                          <TabsList className="grid w-full grid-cols-2">
-                            <TabsTrigger value="write">编辑</TabsTrigger>
-                            <TabsTrigger value="preview">预览</TabsTrigger>
-                          </TabsList>
-                          <TabsContent value="write">
-                            <FormControl>
-                              <Textarea className="mt-2 min-h-[300px] font-mono" {...field} />
-                            </FormControl>
-                          </TabsContent>
-                          <TabsContent value="preview">
-                            <div className="max-w-full overflow-x-auto prose prose-stone dark:prose-invert mt-2 min-h-[300px] rounded-md border p-4">
-                              <MarkdownPreview content={field.value} />
-                            </div>
-                          </TabsContent>
-                        </Tabs>
-                      </FormItem>
-                    )}
-                  />
-                </CardContent>
-              </Card>
+              {/* 编辑内容按钮 */}
+              {isEditMode && post && (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>文章内容</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full h-20"
+                      onClick={() => {
+                        setOpen(false);
+                        router.push(`/dashboard/posts/${post.id}/edit`);
+                      }}
+                    >
+                      <PenLineIcon className="size-5 mr-2" />
+                      打开编辑器编辑内容
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
             {/* 右边一列：分类、状态、封面 */}
@@ -362,13 +386,21 @@ export function CreateOrEditPostDialog({
                 </CardContent>
               </Card>
 
-              <div className="flex gap-2">
-                <Button type="button" variant="outline" onClick={() => triggerSubmit(POST_STATUS_ENUM.DRAFT)}>
-                  保存草稿
-                </Button>
-                <Button type="button" onClick={() => triggerSubmit(POST_STATUS_ENUM.PUBLISHED)}>
-                  发布文章
-                </Button>
+              <div className="flex flex-col gap-2">
+                {!isEditMode && (
+                  <Button type="button" onClick={triggerSubmitAndEdit}>
+                    <PenLineIcon className="size-4 mr-1" />
+                    保存并编辑内容
+                  </Button>
+                )}
+                <div className="flex gap-2">
+                  <Button type="button" variant="outline" onClick={() => triggerSubmit(POST_STATUS_ENUM.DRAFT)}>
+                    保存草稿
+                  </Button>
+                  <Button type="button" onClick={() => triggerSubmit(POST_STATUS_ENUM.PUBLISHED)}>
+                    发布文章
+                  </Button>
+                </div>
               </div>
             </div>
           </form>

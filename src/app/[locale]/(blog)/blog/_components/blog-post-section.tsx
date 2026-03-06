@@ -1,16 +1,19 @@
 "use client";
 
 import { LikeButton } from "@/components/like-button";
-import { MarkdownPreview } from "@/components/mardown-preview";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { EditorStatic } from "@/components/ui/editor-static";
 import { Separator } from "@/components/ui/separator";
+import { BaseEditorKit } from "@/components/editor/editor-base-kit";
 import type { Post } from "@/global";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
 import GithubSlugger from "github-slugger";
 import { Calendar, Eye, MessageCircle, Share2 } from "lucide-react";
+import { createSlateEditor } from "platejs";
+import type { Value } from "platejs";
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 
@@ -24,9 +27,25 @@ interface PostSectionProps {
   post: Post;
 }
 
+const HEADING_TYPES: Record<string, number> = {
+  h1: 1,
+  h2: 2,
+  h3: 3,
+  h4: 4,
+  h5: 5,
+  h6: 6,
+};
+
+function extractText(node: any): string {
+  if (typeof node.text === "string") return node.text;
+  if (Array.isArray(node.children)) {
+    return node.children.map(extractText).join("");
+  }
+  return "";
+}
+
 export const PostSection = ({ post }: PostSectionProps) => {
   const [activeId, setActiveId] = useState("");
-  // console.log(post);
   const createPostView = api.post.createView.useMutation();
 
   useEffect(() => {
@@ -38,7 +57,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
           }
         });
       },
-      { rootMargin: "0px 0px -80% 0px" }
+      { rootMargin: "0px 0px -80% 0px" },
     );
     document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((el) => {
       observer.observe(el);
@@ -48,11 +67,8 @@ export const PostSection = ({ post }: PostSectionProps) => {
   }, []);
 
   useEffect(() => {
-    // 创建文章浏览记录
     createPostView.mutate(
-      {
-        postId: post.id,
-      },
+      { postId: post.id },
       {
         onSuccess: () => {
           console.log("Post view created successfully");
@@ -60,56 +76,59 @@ export const PostSection = ({ post }: PostSectionProps) => {
         onError: (error) => {
           console.error("Failed to create post view:", error);
         },
-      }
+      },
     );
   }, []);
-  const slugger = new GithubSlugger();
+
   const share = () => {
-    // 分享 复制当前链接
     navigator.clipboard
       .writeText(window.location.href)
       .then(() => {
         toast.success("链接已复制到剪贴板");
       })
-      .catch((err) => {
+      .catch(() => {
         toast.error("复制链接失败，请手动复制");
       });
   };
+
+  const parsedContent = useMemo<Value | null>(() => {
+    try {
+      const parsed = JSON.parse(post.content);
+      if (Array.isArray(parsed)) return parsed as Value;
+    } catch {
+      // Not JSON
+    }
+    return null;
+  }, [post.content]);
+
+  const editor = useMemo(() => {
+    if (!parsedContent) return null;
+    return createSlateEditor({
+      plugins: BaseEditorKit,
+      value: parsedContent,
+    });
+  }, [parsedContent]);
+
   const toc: TableOfContentsItem[] = useMemo(() => {
-    const lines = post.content.split("\n");
+    if (!parsedContent) return [];
+
+    const slugger = new GithubSlugger();
     const items: TableOfContentsItem[] = [];
-    const idCountMap: Record<string, number> = {};
-    let inCodeBlock = false;
 
-    for (const line of lines) {
-      // 检查代码块开始/结束
-      if (line.trim().startsWith("```")) {
-        inCodeBlock = !inCodeBlock;
-        continue;
-      }
-
-      if (inCodeBlock) continue; // 代码块中跳过
-
-      const match = /^(#{1,6})\s+(.+)$/.exec(line);
-      if (match) {
-        const level = match[1]!.length;
-        const text = match[2]!.trim();
-        // let id = text.toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g, "-");
-        let id = slugger.slug(text);
-        // 确保 ID 唯一
-        if (idCountMap[id]) {
-          idCountMap[id] = (idCountMap[id] ?? 0) + 1;
-          id = `${id}-${idCountMap[id]}`;
-        } else {
-          idCountMap[id] = 1;
+    for (const node of parsedContent) {
+      const level = HEADING_TYPES[(node as any).type];
+      if (level) {
+        const text = extractText(node);
+        if (text) {
+          const id = slugger.slug(text);
+          items.push({ id, text, level });
         }
-
-        items.push({ id, text, level });
       }
     }
 
     return items;
-  }, [post.content]);
+  }, [parsedContent]);
+
   return (
     <>
       <div className="lg:col-span-3">
@@ -140,7 +159,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
                 variant="ghost"
                 onClick={() => share()}
               >
-                <Share2 className="h-4 w-4 text-gray-900/80 cursor-pointer" />
+                <Share2 className="h-4 w-4 text-muted-foreground cursor-pointer" />
               </Button>
             </div>
           </div>
@@ -149,11 +168,12 @@ export const PostSection = ({ post }: PostSectionProps) => {
           </div>
         </div>
 
-        {/* Markdown 内容 */}
-        <MarkdownPreview
-          content={post.content}
-          className="max-w-none"
-        />
+        {/* 文章内容 */}
+        {editor ? (
+          <EditorStatic editor={editor} variant="default" />
+        ) : (
+          <p className="text-muted-foreground">暂无内容</p>
+        )}
 
         <div className="flex flex-col space-y-2 mt-8">
           <Separator />
@@ -166,7 +186,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
               variant="ghost"
               onClick={() => share()}
             >
-              <Share2 className="h-4 w-4 text-gray-900/80 cursor-pointer" />
+              <Share2 className="h-4 w-4 text-muted-foreground cursor-pointer" />
             </Button>
           </div>
           <Separator />
@@ -190,7 +210,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
                       "block text-sm rounded px-2 py-1 hover:bg-accent hover:text-accent-foreground",
                       activeId === item.id && "bg-accent text-accent-foreground font-medium",
                       item.level === 2 && "pl-4",
-                      item.level === 3 && "pl-6"
+                      item.level === 3 && "pl-6",
                     )}
                   >
                     {item.text}
