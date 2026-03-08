@@ -16,7 +16,7 @@ export default function PostEditPage() {
   const router = useRouter();
   const postId = params.id;
 
-  const { data: postData, isLoading } = api.post.getOne.useQuery({ id: postId });
+  const { data: postData, isLoading } = api.post.getOneForEdit.useQuery({ id: postId });
   const update = api.post.update.useMutation({
     onSuccess: () => {
       toast.success("内容保存成功");
@@ -29,17 +29,17 @@ export default function PostEditPage() {
   const editorValueRef = React.useRef<Value | null>(null);
 
   const initialValue = React.useMemo<Value | undefined>(() => {
-    if (!postData?.post?.content) return undefined;
+    if (!postData?.content) return undefined;
 
     try {
-      const parsed = JSON.parse(postData.post.content);
+      const parsed = JSON.parse(postData.content);
       if (Array.isArray(parsed)) return parsed as Value;
     } catch {
       // Content is not JSON (e.g. old Markdown), start with empty
     }
 
     return undefined;
-  }, [postData?.post?.content]);
+  }, [postData?.content]);
 
   const handleSave = () => {
     const value = editorValueRef.current;
@@ -65,7 +65,7 @@ export default function PostEditPage() {
     );
   }
 
-  if (!postData?.post) {
+  if (!postData) {
     return (
       <div className="flex h-screen items-center justify-center">
         <p className="text-muted-foreground">文章未找到</p>
@@ -85,7 +85,7 @@ export default function PostEditPage() {
           >
             <ArrowLeftIcon className="size-4" />
           </Button>
-          <h1 className="text-sm font-medium truncate max-w-[400px]">{postData.post.title}</h1>
+          <h1 className="text-sm font-medium truncate max-w-[400px]">{postData.title}</h1>
         </div>
 
         <Button

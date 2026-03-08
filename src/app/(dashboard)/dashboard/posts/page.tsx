@@ -4,7 +4,7 @@ import React from "react";
 
 const page = async () => {
   void api.post.getMany.prefetch({
-    limit: 10,
+    limit: 100,
   });
 
   return (
