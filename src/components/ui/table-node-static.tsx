@@ -1,17 +1,14 @@
-import * as React from 'react';
+import * as React from "react";
 
-import type { TTableCellElement, TTableElement } from 'platejs';
-import type { SlateElementProps } from 'platejs/static';
+import type { TTableCellElement, TTableElement } from "platejs";
+import type { SlateElementProps } from "platejs/static";
 
-import { BaseTablePlugin } from '@platejs/table';
-import { SlateElement } from 'platejs/static';
+import { BaseTablePlugin } from "@platejs/table";
+import { SlateElement } from "platejs/static";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils";
 
-export function TableElementStatic({
-  children,
-  ...props
-}: SlateElementProps<TTableElement>) {
+export function TableElementStatic({ children, ...props }: SlateElementProps<TTableElement>) {
   const { disableMarginLeft } = props.editor.getOptions(BaseTablePlugin);
   const marginLeft = disableMarginLeft ? 0 : props.element.marginLeft;
 
@@ -21,10 +18,10 @@ export function TableElementStatic({
       className="py-5"
       style={{ paddingLeft: marginLeft }}
     >
-      <div className="group/table relative w-full">
+      <div className="group/table relative w-full overflow-x-auto">
         <table
-          className="mr-0 ml-px table h-px table-fixed border-collapse"
-          style={{ borderCollapse: 'collapse', width: '100%' }}
+          className="mr-0 ml-0 table h-px table-fixed border-collapse"
+          style={{ borderCollapse: "collapse", width: "100%" }}
         >
           <tbody className="min-w-full">{children}</tbody>
         </table>
@@ -35,7 +32,11 @@ export function TableElementStatic({
 
 export function TableRowElementStatic(props: SlateElementProps) {
   return (
-    <SlateElement {...props} as="tr" className="h-full">
+    <SlateElement
+      {...props}
+      as="tr"
+      className="h-full"
+    >
       {props.children}
     </SlateElement>
   );
@@ -56,26 +57,25 @@ export function TableCellElementStatic({
   return (
     <SlateElement
       {...props}
-      as={isHeader ? 'th' : 'td'}
+      as={isHeader ? "th" : "td"}
       className={cn(
-        'h-full overflow-visible border-none bg-background p-0',
-        element.background ? 'bg-(--cellBackground)' : 'bg-background',
-        isHeader && 'text-left font-normal *:m-0',
-        'before:size-full',
+        "h-full overflow-visible border-none bg-background p-0",
+        element.background ? "bg-(--cellBackground)" : "bg-background",
+        isHeader && "text-left font-normal *:m-0",
+        "before:size-full",
         "before:absolute before:box-border before:select-none before:content-['']",
         borders &&
           cn(
-            borders.bottom?.size && 'before:border-b before:border-b-border',
-            borders.right?.size && 'before:border-r before:border-r-border',
-            borders.left?.size && 'before:border-l before:border-l-border',
-            borders.top?.size && 'before:border-t before:border-t-border'
+            borders.bottom?.size && "before:border-b before:border-b-border",
+            borders.right?.size && "before:border-r before:border-r-border",
+            borders.left?.size && "before:border-l before:border-l-border",
+            borders.top?.size && "before:border-t before:border-t-border"
           )
       )}
       style={
         {
-          '--cellBackground': element.background,
-          maxWidth: width || 240,
-          minWidth: width || 120,
+          "--cellBackground": element.background,
+          width: width || "auto",
         } as React.CSSProperties
       }
       attributes={{
@@ -94,8 +94,11 @@ export function TableCellElementStatic({
   );
 }
 
-export function TableCellHeaderElementStatic(
-  props: SlateElementProps<TTableCellElement>
-) {
-  return <TableCellElementStatic {...props} isHeader />;
+export function TableCellHeaderElementStatic(props: SlateElementProps<TTableCellElement>) {
+  return (
+    <TableCellElementStatic
+      {...props}
+      isHeader
+    />
+  );
 }

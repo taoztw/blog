@@ -45,26 +45,7 @@ function extractText(node: any): string {
 }
 
 export const PostSection = ({ post }: PostSectionProps) => {
-  const [activeId, setActiveId] = useState("");
   const createPostView = api.post.createView.useMutation();
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: "0px 0px -80% 0px" },
-    );
-    document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((el) => {
-      observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     createPostView.mutate(
@@ -101,37 +82,28 @@ export const PostSection = ({ post }: PostSectionProps) => {
     return null;
   }, [post.content]);
 
-  const editor = useMemo(() => {
+  const contentWithoutFirstH1 = useMemo<Value | null>(() => {
     if (!parsedContent) return null;
+    let removed = false;
+    return parsedContent.filter((node) => {
+      if (!removed && (node as any).type === "h1") {
+        removed = true;
+        return false;
+      }
+      return true;
+    }) as Value;
+  }, [parsedContent]);
+
+  const editor = useMemo(() => {
+    if (!contentWithoutFirstH1) return null;
     return createSlateEditor({
       plugins: BaseEditorKit,
-      value: parsedContent,
+      value: contentWithoutFirstH1,
     });
-  }, [parsedContent]);
-
-  const toc: TableOfContentsItem[] = useMemo(() => {
-    if (!parsedContent) return [];
-
-    const slugger = new GithubSlugger();
-    const items: TableOfContentsItem[] = [];
-
-    for (const node of parsedContent) {
-      const level = HEADING_TYPES[(node as any).type];
-      if (level) {
-        const text = extractText(node);
-        if (text) {
-          const id = slugger.slug(text);
-          items.push({ id, text, level });
-        }
-      }
-    }
-
-    return items;
-  }, [parsedContent]);
+  }, [contentWithoutFirstH1]);
 
   return (
     <>
-      <div className="lg:col-span-3">
         {/* 文章头部 */}
         <div className="mb-8">
           <h1 className="text-xl lg:text-2xl font-bold mb-4">{post.title}</h1>
@@ -170,7 +142,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
 
         {/* 文章内容 */}
         {editor ? (
-          <EditorStatic editor={editor} variant="default" />
+          <EditorStatic editor={editor} variant="none" className="w-full text-base" />
         ) : (
           <p className="text-muted-foreground">暂无内容</p>
         )}
@@ -191,36 +163,88 @@ export const PostSection = ({ post }: PostSectionProps) => {
           </div>
           <Separator />
         </div>
-      </div>
-
-      {/* 右侧目录 */}
-      <div className="lg:col-span-1">
-        <div className="sticky top-24 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">目录</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <nav className="space-y-1">
-                {toc.map((item) => (
-                  <a
-                    key={item.id}
-                    href={`#${item.id}`}
-                    className={cn(
-                      "block text-sm rounded px-2 py-1 hover:bg-accent hover:text-accent-foreground",
-                      activeId === item.id && "bg-accent text-accent-foreground font-medium",
-                      item.level === 2 && "pl-4",
-                      item.level === 3 && "pl-6",
-                    )}
-                  >
-                    {item.text}
-                  </a>
-                ))}
-              </nav>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
     </>
+  );
+};
+
+export const PostTableOfContents = ({ post }: PostSectionProps) => {
+  const [activeId, setActiveId] = useState("");
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveId(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "0px 0px -80% 0px" },
+    );
+    document.querySelectorAll("h1, h2, h3, h4, h5, h6").forEach((el) => {
+      observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const parsedContent = useMemo<Value | null>(() => {
+    try {
+      const parsed = JSON.parse(post.content);
+      if (Array.isArray(parsed)) return parsed as Value;
+    } catch {
+      // Not JSON
+    }
+    return null;
+  }, [post.content]);
+
+  const toc: TableOfContentsItem[] = useMemo(() => {
+    if (!parsedContent) return [];
+
+    const slugger = new GithubSlugger();
+    const items: TableOfContentsItem[] = [];
+
+    for (const node of parsedContent) {
+      const level = HEADING_TYPES[(node as any).type];
+      if (level) {
+        const text = extractText(node);
+        if (text) {
+          const id = slugger.slug(text);
+          items.push({ id, text, level });
+        }
+      }
+    }
+
+    return items;
+  }, [parsedContent]);
+
+  if (toc.length === 0) return null;
+
+  return (
+    <div className="sticky top-24 space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg">目录</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <nav className="space-y-1">
+            {toc.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                className={cn(
+                  "block text-sm rounded px-2 py-1 hover:bg-accent hover:text-accent-foreground",
+                  activeId === item.id && "bg-accent text-accent-foreground font-medium",
+                  item.level === 2 && "pl-4",
+                  item.level === 3 && "pl-6",
+                )}
+              >
+                {item.text}
+              </a>
+            ))}
+          </nav>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
