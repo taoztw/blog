@@ -34,10 +34,7 @@ export async function POST(req: NextRequest, { context }: any) {
   const session = await auth.api.getSession({ headers: req.headers });
 
   if (session?.user.role !== "admin") {
-    return Response.json(
-      { success: false, message: "你没有权限上传文件。" },
-      { status: 403 },
-    );
+    return Response.json({ success: false, message: "你没有权限上传文件。" }, { status: 403 });
   }
   const env = getCloudflareContext().env;
 
@@ -46,10 +43,7 @@ export async function POST(req: NextRequest, { context }: any) {
   const file = formData.get("file") as File;
 
   if (!file) {
-    return new NextResponse(
-      JSON.stringify({ success: false, error: "No file provided" }),
-      { status: 400 },
-    );
+    return new NextResponse(JSON.stringify({ success: false, error: "No file provided" }), { status: 400 });
   }
 
   // 验证文件类型
@@ -59,7 +53,7 @@ export async function POST(req: NextRequest, { context }: any) {
         success: false,
         error: `不支持的文件类型: ${file.type}`,
       }),
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -70,7 +64,7 @@ export async function POST(req: NextRequest, { context }: any) {
         success: false,
         error: `文件大小不能超过 ${MAX_FILE_SIZE / (1024 * 1024)}MB`,
       }),
-      { status: 400 },
+      { status: 400 }
     );
   }
 
@@ -80,13 +74,9 @@ export async function POST(req: NextRequest, { context }: any) {
   // 将 File 转成 arrayBuffer 再上传到 R2
   const fileId = nanoid();
   const key = `uploads/${getCurrentDatePath()}/${fileId}${fileType}`;
-  const result = await env.NEXT_INC_CACHE_R2_BUCKET.put(
-    key,
-    await file.arrayBuffer(),
-    {
-      httpMetadata: { contentType: file.type },
-    },
-  );
+  const result = await env.NEXT_INC_CACHE_R2_BUCKET.put(key, await file.arrayBuffer(), {
+    httpMetadata: { contentType: file.type },
+  });
 
   return NextResponse.json({
     success: true,
