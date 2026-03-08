@@ -37,6 +37,16 @@ export function PostTable() {
     },
   });
 
+  const updatePost = api.post.update.useMutation({
+    onSuccess: () => {
+      utils.post.getMany.invalidate();
+      toast.success("文章已设为草稿");
+    },
+    onError: (error) => {
+      toast.error("操作失败: " + error.message);
+    },
+  });
+
   const deletePost = api.post.delete.useMutation({
     onSuccess: () => {
       utils.post.getMany.invalidate();
@@ -50,8 +60,9 @@ export function PostTable() {
         onDelete: (post) => deletePost.mutate({ id: post.id }),
         onEdit: (post) => router.push(`/dashboard/posts/${post.id}`),
         onPublish: (post) => setPublishPost(post),
+        onUnpublish: (post) => updatePost.mutate({ id: post.id, data: { status: "draft" } }),
       }),
-    [deletePost],
+    [deletePost, updatePost],
   );
 
   const { table } = useDataTable({

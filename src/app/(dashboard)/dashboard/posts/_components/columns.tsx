@@ -2,7 +2,7 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { MoreHorizontal, Edit, Trash2, Send } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2, Send, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -21,9 +21,10 @@ interface PostColumnsProps {
   onEdit: (post: PostWithRelations) => void;
   onDelete: (post: PostWithRelations) => void;
   onPublish: (post: PostWithRelations) => void;
+  onUnpublish: (post: PostWithRelations) => void;
 }
 
-export const createPostColumns = ({ onEdit, onDelete, onPublish }: PostColumnsProps): ColumnDef<PostWithRelations>[] => [
+export const createPostColumns = ({ onEdit, onDelete, onPublish, onUnpublish }: PostColumnsProps): ColumnDef<PostWithRelations>[] => [
   {
     accessorKey: "imageUrl",
     header: "封面",
@@ -162,10 +163,18 @@ export const createPostColumns = ({ onEdit, onDelete, onPublish }: PostColumnsPr
               <Edit className="mr-2 h-4 w-4" />
               编辑
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={() => onPublish(post)}>
-              <Send className="mr-2 h-4 w-4" />
-              发布
-            </DropdownMenuItem>
+            {post.status !== "published" && (
+              <DropdownMenuItem onClick={() => onPublish(post)}>
+                <Send className="mr-2 h-4 w-4" />
+                发布
+              </DropdownMenuItem>
+            )}
+            {post.status === "published" && (
+              <DropdownMenuItem onClick={() => onUnpublish(post)}>
+                <EyeOff className="mr-2 h-4 w-4" />
+                取消发布
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem
               className="text-red-500"

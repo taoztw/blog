@@ -463,7 +463,7 @@ export const postRouter = createTRPCRouter({
       .innerJoin(user, eq(posts.createdById, user.id))
       .innerJoin(categorys, eq(posts.categoryId, categorys.id))
       .leftJoin(userPostReactions, eq(userPostReactions.postId, posts.id))
-      .where(eq(posts.slug, input.slug));
+      .where(and(eq(posts.slug, input.slug), eq(posts.status, "published")));
 
     if (!post) {
       throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });

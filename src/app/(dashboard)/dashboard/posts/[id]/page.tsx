@@ -19,9 +19,7 @@ import { PublishDialog } from "./publish-dialog";
 function extractTitle(value: Value): string {
   const first = value[0] as TElement | undefined;
   if (!first || first.type !== "h1") return "";
-  return (first.children as Array<{ text?: string }>)
-    .map((c) => c.text ?? "")
-    .join("");
+  return (first.children as Array<{ text?: string }>).map((c) => c.text ?? "").join("");
 }
 
 /** Build the initial editor value from persisted title + content */
@@ -106,7 +104,7 @@ export default function PostEditorPage() {
     status: string;
   }) => {
     const value = editorValueRef.current;
-    const title = value ? extractTitle(value) : postData?.title ?? "";
+    const title = value ? extractTitle(value) : (postData?.title ?? "");
     await updateWithTags.mutateAsync({
       id: postId,
       data: {
@@ -174,9 +172,7 @@ export default function PostEditorPage() {
           >
             <ArrowLeftIcon className="size-4" />
           </Button>
-          <span className="font-semibold text-foreground tracking-tight hidden sm:block">
-            文章编辑
-          </span>
+          <span className="font-semibold text-foreground tracking-tight hidden sm:block">文章编辑</span>
         </div>
 
         {/* Center: save status */}
@@ -228,7 +224,10 @@ export default function PostEditorPage() {
             <MoreHorizontalIcon className="size-4" />
           </Button>
           <Avatar className="size-8 cursor-pointer">
-            <AvatarImage src={user?.image ?? undefined} alt={user?.name ?? "user"} />
+            <AvatarImage
+              src={user?.image ?? undefined}
+              alt={user?.name ?? "user"}
+            />
             <AvatarFallback className="text-xs bg-ink-300">{initials}</AvatarFallback>
           </Avatar>
         </div>
@@ -236,7 +235,10 @@ export default function PostEditorPage() {
 
       {/* Editor — title is the first h1 block, no separate input */}
       <div className="flex-1 overflow-hidden">
-        <PlateEditor minimal initialValue={initialValue} onChange={handleChange} />
+        <PlateEditor
+          initialValue={initialValue}
+          onChange={handleChange}
+        />
       </div>
 
       {/* Publish dialog */}

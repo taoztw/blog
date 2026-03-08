@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { api, HydrateClient } from "@/trpc/server";
 import BlogView from "../_components/blog-view";
 
@@ -7,13 +8,19 @@ interface PageProps {
 
 export default async function page({ params }: PageProps) {
   const { slug } = await params;
-  const postSlug = slug[0]; // 使用 slug 而不是 id
+  const postSlug = slug[0];
 
   if (!postSlug) {
-    return <div>文章未找到</div>;
+    notFound();
   }
 
-  const post = await api.post.getBySlug({ slug: postSlug });
+  let post: Awaited<ReturnType<typeof api.post.getBySlug>>;
+  try {
+    post = await api.post.getBySlug({ slug: postSlug });
+  } catch {
+    notFound();
+  }
+
   return (
     <HydrateClient>
       <BlogView post={post} />
