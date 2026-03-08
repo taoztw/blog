@@ -13,6 +13,7 @@ import { createProjectColumns } from "./columns";
 import { CreateOrEditProjectDialog } from "./create";
 
 export function ProjectTable() {
+  const [createOpen, setCreateOpen] = React.useState(false);
   const [editProject, setEditProject] = React.useState<ProjectWithRelations | null>(null);
 
   const utils = api.useUtils();
@@ -80,8 +81,10 @@ export function ProjectTable() {
     <div className="p-6 space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">项目管理</h1>
+        <Button onClick={() => setCreateOpen(true)}>创建项目</Button>
         <CreateOrEditProjectDialog
-          trigger={<Button>创建项目</Button>}
+          open={createOpen}
+          onOpenChange={setCreateOpen}
           onSubmit={(data) => createProject.mutate(data)}
           isLoading={createProject.isPending}
         />
