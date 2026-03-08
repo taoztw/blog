@@ -45,6 +45,7 @@ export function CreateOrEditTagDialog({
     name: "",
     description: "",
     color: "",
+    icon: "",
   });
 
   const isEditMode = !!tag;
@@ -55,9 +56,10 @@ export function CreateOrEditTagDialog({
         name: tag.name || "",
         description: tag.description || "",
         color: tag.color || "",
+        icon: tag.icon || "",
       });
     } else {
-      setFormData({ name: "", description: "", color: "" });
+      setFormData({ name: "", description: "", color: "", icon: "" });
     }
   }, [tag, isEditMode, open]);
 
@@ -72,15 +74,17 @@ export function CreateOrEditTagDialog({
           name: formData.name.trim(),
           description: formData.description?.trim() || undefined,
           color: formData.color?.trim() || undefined,
+          icon: formData.icon?.trim() || undefined,
         });
       } else if (onCreateTag) {
         await onCreateTag({
           name: formData.name.trim(),
           description: formData.description?.trim() || undefined,
           color: formData.color?.trim() || undefined,
+          icon: formData.icon?.trim() || undefined,
         });
       }
-      setFormData({ name: "", description: "", color: "" });
+      setFormData({ name: "", description: "", color: "", icon: "" });
       setOpen(false);
     } catch (error) {
       console.error(`${isEditMode ? "编辑" : "创建"}标签失败:`, error);
@@ -90,7 +94,10 @@ export function CreateOrEditTagDialog({
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
       {!isEditMode && (
         <DialogTrigger asChild>
           {/* 新建的时候才显示触发按钮 */}
@@ -112,7 +119,10 @@ export function CreateOrEditTagDialog({
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name" className="text-right">
+              <Label
+                htmlFor="name"
+                className="text-right"
+              >
                 名称 *
               </Label>
               <Input
@@ -125,7 +135,10 @@ export function CreateOrEditTagDialog({
               />
             </div>
             <div className="grid grid-cols-4 items-start gap-4">
-              <Label htmlFor="description" className="text-right pt-2">
+              <Label
+                htmlFor="description"
+                className="text-right pt-2"
+              >
                 描述
               </Label>
               <Textarea
@@ -138,7 +151,10 @@ export function CreateOrEditTagDialog({
               />
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="color" className="text-right">
+              <Label
+                htmlFor="color"
+                className="text-right"
+              >
                 颜色
               </Label>
               <div className="col-span-3 flex items-center gap-2">
@@ -157,12 +173,52 @@ export function CreateOrEditTagDialog({
                 />
               </div>
             </div>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label
+                htmlFor="icon"
+                className="text-right pt-2"
+              >
+                图标
+              </Label>
+              <div className="col-span-3 space-y-2">
+                <Textarea
+                  id="icon"
+                  value={formData.icon || ""}
+                  onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+                  className="col-span-3 max-h-32 overflow-y-auto font-mono text-xs"
+                  placeholder="粘贴 SVG 代码（可选）"
+                  rows={3}
+                />
+                {formData.icon && (
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    {formData.icon.trimStart().startsWith("<svg") ? (
+                      <>
+                        <span>预览:</span>
+                        <span
+                          className="size-6 [&>svg]:size-full"
+                          dangerouslySetInnerHTML={{ __html: formData.icon }}
+                        />
+                      </>
+                    ) : (
+                      <span className="text-destructive">请输入有效的 SVG 代码</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
           <DialogFooter>
-            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setOpen(false)}
+            >
               取消
             </Button>
-            <Button type="submit" disabled={loading || !formData.name.trim()}>
+            <Button
+              type="submit"
+              disabled={loading || !formData.name.trim()}
+            >
               {loading ? (isEditMode ? "保存中..." : "创建中...") : isEditMode ? "保存" : "创建"}
             </Button>
           </DialogFooter>

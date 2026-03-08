@@ -54,6 +54,7 @@ type ProjectWithRelations = z.infer<typeof projectSelectSchema> & {
       name: string;
       description: string | null;
       color: string | null;
+      icon: string | null;
     };
   }>;
 };

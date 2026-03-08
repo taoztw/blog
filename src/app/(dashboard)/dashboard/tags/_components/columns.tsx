@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,7 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
+import { TagBadge } from "@/components/tag-badge";
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { type Tag } from "@/global";
 
 interface TagColumnsProps {
@@ -22,39 +23,40 @@ interface TagColumnsProps {
 export const createTagColumns = ({ onEdit, onDelete }: TagColumnsProps): ColumnDef<Tag>[] => [
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="w-full justify-start px-0 hover:bg-transparent"
-        >
-          标签名称
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    meta: {
+      label: "标签名称",
+      placeholder: "搜索标签...",
+      variant: "text",
     },
+    header: ({ column }) => <DataTableColumnHeader column={column} label="标签名称" />,
     cell: ({ row }) => {
-      const color = row.original.color;
+      const { color, icon } = row.original;
       return (
-        <div className="flex items-center gap-2">
-          <Badge 
-            variant="secondary" 
-            className="font-medium"
-            style={{ 
-              backgroundColor: color ? `${color}20` : undefined,
-              borderColor: color || undefined,
-              color: color || undefined
-            }}
-          >
-            {row.getValue("name")}
-          </Badge>
-        </div>
+        <TagBadge name={row.getValue("name")} color={color} icon={icon} />
       );
     },
+    enableColumnFilter: true,
+  },
+  {
+    accessorKey: "icon",
+    meta: { label: "图标" },
+    header: "图标",
+    cell: ({ row }) => {
+      const icon = row.getValue("icon") as string | null;
+      return icon ? (
+        <span
+          className="inline-block size-5 [&>svg]:size-full"
+          dangerouslySetInnerHTML={{ __html: icon }}
+        />
+      ) : (
+        <span className="text-xs text-muted-foreground">无</span>
+      );
+    },
+    enableSorting: false,
   },
   {
     accessorKey: "description",
+    meta: { label: "描述" },
     header: "描述",
     cell: ({ row }) => {
       const description = row.getValue("description") as string | null;
@@ -63,6 +65,7 @@ export const createTagColumns = ({ onEdit, onDelete }: TagColumnsProps): ColumnD
   },
   {
     accessorKey: "color",
+    meta: { label: "颜色" },
     header: "颜色",
     cell: ({ row }) => {
       const color = row.getValue("color") as string | null;
@@ -70,10 +73,7 @@ export const createTagColumns = ({ onEdit, onDelete }: TagColumnsProps): ColumnD
         <div className="flex items-center gap-2">
           {color && (
             <>
-              <div 
-                className="w-4 h-4 rounded border border-border"
-                style={{ backgroundColor: color }}
-              />
+              <div className="w-4 h-4 rounded border border-border" style={{ backgroundColor: color }} />
               <span className="text-xs text-muted-foreground">{color}</span>
             </>
           )}
@@ -84,18 +84,8 @@ export const createTagColumns = ({ onEdit, onDelete }: TagColumnsProps): ColumnD
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="w-full justify-center hover:bg-transparent"
-        >
-          创建时间
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    meta: { label: "创建时间" },
+    header: ({ column }) => <DataTableColumnHeader column={column} label="创建时间" />,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
       const formatted = date.toLocaleDateString("zh-CN");

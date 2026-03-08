@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import type { ProjectWithRelations } from "@/global";
 import { formatDistanceToNow } from "date-fns";
 import { zhCN } from "date-fns/locale";
@@ -40,53 +41,77 @@ export function createProjectColumns({ onEdit, onDelete }: ColumnProps): ColumnD
             <Image src={imageUrl} alt="项目图片" fill className="object-cover" />
           </div>
         ) : (
-          <div className="w-16 h-12 bg-gray-200 rounded flex items-center justify-center text-gray-400 text-xs">
+          <div className="w-16 h-12 bg-ink-200 rounded flex items-center justify-center text-muted-foreground text-xs">
             无图片
           </div>
         );
       },
+      enableSorting: false,
+      enableHiding: false,
     },
     {
       accessorKey: "title",
-      header: "项目名称",
+      meta: {
+        label: "项目名称",
+        placeholder: "搜索项目...",
+        variant: "text",
+      },
+      header: ({ column }) => <DataTableColumnHeader column={column} label="项目名称" />,
       cell: ({ row }) => {
         const title = row.getValue("title") as string;
         return <div className="font-medium">{title}</div>;
       },
+      enableColumnFilter: true,
     },
     {
       accessorKey: "description",
+      meta: { label: "描述" },
       header: "描述",
       cell: ({ row }) => {
         const description = row.getValue("description") as string;
-        return <div className="max-w-[200px] truncate text-sm text-gray-600">{description}</div>;
+        return <div className="max-w-[200px] truncate text-sm text-muted-foreground">{description}</div>;
       },
     },
     {
       accessorKey: "category",
+      meta: { label: "分类" },
       header: "分类",
       cell: ({ row }) => {
         const project = row.original;
         return <Badge variant="outline">{project.category?.name || "未分类"}</Badge>;
       },
+      enableSorting: false,
     },
     {
       accessorKey: "status",
-      header: "状态",
+      meta: {
+        label: "状态",
+        variant: "select",
+        options: [
+          { label: "已发布", value: "published" },
+          { label: "草稿", value: "draft" },
+        ],
+      },
+      header: ({ column }) => <DataTableColumnHeader column={column} label="状态" />,
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
         return <Badge variant={getStatusVariant(status)}>{getStatusLabel(status)}</Badge>;
       },
+      filterFn: (row, id, value) => {
+        return Array.isArray(value) ? value.includes(row.getValue(id)) : true;
+      },
+      enableColumnFilter: true,
     },
     {
       accessorKey: "tags",
+      meta: { label: "标签" },
       header: "标签",
       cell: ({ row }) => {
         const project = row.original;
         const tags = project.tags || [];
 
         if (tags.length === 0) {
-          return <span className="text-gray-400">-</span>;
+          return <span className="text-muted-foreground">-</span>;
         }
 
         return (
@@ -96,14 +121,16 @@ export function createProjectColumns({ onEdit, onDelete }: ColumnProps): ColumnD
                 {projectTag.tag.name}
               </Badge>
             ))}
-            {tags.length > 2 && <span className="text-xs text-gray-500">+{tags.length - 2}</span>}
+            {tags.length > 2 && <span className="text-xs text-muted-foreground">+{tags.length - 2}</span>}
           </div>
         );
       },
+      enableSorting: false,
     },
     {
       accessorKey: "sortOrder",
-      header: "排序",
+      meta: { label: "排序" },
+      header: ({ column }) => <DataTableColumnHeader column={column} label="排序" />,
       cell: ({ row }) => {
         const sortOrder = row.getValue("sortOrder") as number;
         return <div className="text-center">{sortOrder}</div>;
@@ -111,11 +138,12 @@ export function createProjectColumns({ onEdit, onDelete }: ColumnProps): ColumnD
     },
     {
       accessorKey: "createdAt",
-      header: "创建时间",
+      meta: { label: "创建时间" },
+      header: ({ column }) => <DataTableColumnHeader column={column} label="创建时间" />,
       cell: ({ row }) => {
         const createdAt = row.getValue("createdAt") as Date;
         return (
-          <div className="text-sm text-gray-500">
+          <div className="text-sm text-muted-foreground">
             {formatDistanceToNow(createdAt, { addSuffix: true, locale: zhCN })}
           </div>
         );
@@ -123,13 +151,13 @@ export function createProjectColumns({ onEdit, onDelete }: ColumnProps): ColumnD
     },
     {
       id: "actions",
-      header: "操作",
+      enableSorting: false,
+      enableHiding: false,
       cell: ({ row }) => {
         const project = row.original;
 
         return (
           <div className="flex items-center gap-2">
-            {/* 快速链接按钮 */}
             <div className="flex gap-1">
               {project.githubUrl && (
                 <Button

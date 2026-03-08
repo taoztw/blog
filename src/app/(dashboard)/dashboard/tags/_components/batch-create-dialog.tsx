@@ -22,10 +22,7 @@ interface BatchCreateTagDialogProps {
   trigger?: React.ReactNode;
 }
 
-export function BatchCreateTagDialog({
-  onBatchCreateTags,
-  trigger,
-}: BatchCreateTagDialogProps) {
+export function BatchCreateTagDialog({ onBatchCreateTags, trigger }: BatchCreateTagDialogProps) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [tagText, setTagText] = useState("");
@@ -33,18 +30,23 @@ export function BatchCreateTagDialog({
 
   const parseTagsFromText = (text: string) => {
     // 支持多种分隔符：逗号、换行、分号
-    const lines = text.split(/[,\n;]/).map(line => line.trim()).filter(Boolean);
-    
-    const tags: CreateTagData[] = lines.map(line => {
-      // 支持格式：标签名 或 标签名|描述 或 标签名|描述|颜色
-      const parts = line.split('|').map(part => part.trim());
-      
-      return {
-        name: parts[0] || '',
-        description: parts[1] || '',
-        color: parts[2] || '',
-      };
-    }).filter(tag => tag.name); // 过滤掉空名称的标签
+    const lines = text
+      .split(/[,\n;]/)
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    const tags: CreateTagData[] = lines
+      .map((line) => {
+        // 支持格式：标签名 或 标签名|描述 或 标签名|描述|颜色
+        const parts = line.split("|").map((part) => part.trim());
+
+        return {
+          name: parts[0] || "",
+          description: parts[1] || "",
+          color: parts[2] || "",
+        };
+      })
+      .filter((tag) => tag.name); // 过滤掉空名称的标签
 
     setParsedTags(tags);
   };
@@ -57,15 +59,17 @@ export function BatchCreateTagDialog({
   const removeTag = (index: number) => {
     const newTags = parsedTags.filter((_, i) => i !== index);
     setParsedTags(newTags);
-    
+
     // 更新文本
-    const newText = newTags.map(tag => {
-      const parts = [tag.name];
-      if (tag.description) parts.push(tag.description);
-      if (tag.color) parts.push(tag.color);
-      return parts.join('|');
-    }).join('\n');
-    
+    const newText = newTags
+      .map((tag) => {
+        const parts = [tag.name];
+        if (tag.description) parts.push(tag.description);
+        if (tag.color) parts.push(tag.color);
+        return parts.join("|");
+      })
+      .join("\n");
+
     setTagText(newText);
   };
 
@@ -87,33 +91,47 @@ export function BatchCreateTagDialog({
 
   const getRandomColor = () => {
     const colors = [
-      "#3b82f6", "#ef4444", "#10b981", "#f59e0b", 
-      "#8b5cf6", "#06b6d4", "#84cc16", "#f97316",
-      "#ec4899", "#6366f1", "#14b8a6", "#eab308"
+      "#3b82f6",
+      "#ef4444",
+      "#10b981",
+      "#f59e0b",
+      "#8b5cf6",
+      "#06b6d4",
+      "#84cc16",
+      "#f97316",
+      "#ec4899",
+      "#6366f1",
+      "#14b8a6",
+      "#eab308",
     ];
     return colors[Math.floor(Math.random() * colors.length)];
   };
 
   const assignRandomColors = () => {
-    const updatedTags = parsedTags.map(tag => ({
+    const updatedTags = parsedTags.map((tag) => ({
       ...tag,
-      color: tag.color || getRandomColor()
+      color: tag.color || getRandomColor(),
     }));
     setParsedTags(updatedTags);
-    
+
     // 更新文本
-    const newText = updatedTags.map(tag => {
-      const parts = [tag.name];
-      if (tag.description) parts.push(tag.description);
-      if (tag.color) parts.push(tag.color);
-      return parts.join('|');
-    }).join('\n');
-    
+    const newText = updatedTags
+      .map((tag) => {
+        const parts = [tag.name];
+        if (tag.description) parts.push(tag.description);
+        if (tag.color) parts.push(tag.color);
+        return parts.join("|");
+      })
+      .join("\n");
+
     setTagText(newText);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog
+      open={open}
+      onOpenChange={setOpen}
+    >
       <DialogTrigger asChild>
         {trigger ?? (
           <Button variant="outline">
@@ -127,12 +145,9 @@ export function BatchCreateTagDialog({
           <DialogTitle>批量创建标签</DialogTitle>
           <DialogDescription>
             输入标签信息，每行一个标签。支持格式：
-            <br />
-            • <code>标签名</code>
-            <br />
-            • <code>标签名|描述</code>
-            <br />
-            • <code>标签名|描述|颜色</code>
+            <br />• <code>标签名</code>
+            <br />• <code>标签名|描述</code>
+            <br />• <code>标签名|描述|颜色</code>
             <br />
             可使用逗号、换行或分号分隔。
             <br />
@@ -141,7 +156,7 @@ export function BatchCreateTagDialog({
             <span className="text-amber-600">⚠️ 单次最多50个标签。</span>
           </DialogDescription>
         </DialogHeader>
-        
+
         <div className="grid gap-4 py-4">
           <div>
             <Label htmlFor="tagText">标签列表</Label>
@@ -167,11 +182,11 @@ Node.js|后端Node.js技术
               >
                 随机分配颜色
               </Button>
-              <span className={`text-sm self-center ${
-                parsedTags.length > 50 
-                  ? "text-amber-600 font-medium" 
-                  : "text-muted-foreground"
-              }`}>
+              <span
+                className={`text-sm self-center ${
+                  parsedTags.length > 50 ? "text-amber-600 font-medium" : "text-muted-foreground"
+                }`}
+              >
                 已解析 {parsedTags.length} 个标签
                 {parsedTags.length > 50 && " (建议分批创建)"}
               </span>
@@ -194,9 +209,7 @@ Node.js|后端Node.js技术
                     }}
                   >
                     <span>{tag.name}</span>
-                    {tag.description && (
-                      <span className="text-xs opacity-70">({tag.description})</span>
-                    )}
+                    {tag.description && <span className="text-xs opacity-70">({tag.description})</span>}
                     <button
                       onClick={() => removeTag(index)}
                       className="ml-1 hover:bg-destructive/20 rounded-sm"
@@ -211,11 +224,15 @@ Node.js|后端Node.js技术
         </div>
 
         <DialogFooter>
-          <Button type="button" variant="outline" onClick={() => setOpen(false)}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setOpen(false)}
+          >
             取消
           </Button>
-          <Button 
-            onClick={handleSubmit} 
+          <Button
+            onClick={handleSubmit}
             disabled={loading || parsedTags.length === 0}
           >
             {loading ? "创建中..." : `创建 ${parsedTags.length} 个标签`}

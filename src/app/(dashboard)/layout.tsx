@@ -5,6 +5,8 @@ import ROUTES from "@/constants/routes";
 import { getAuth } from "@/lib/auth/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { NextIntlClientProvider } from "next-intl";
 import type React from "react";
 
 interface LayoutProps {
@@ -21,13 +23,17 @@ const Layout = async ({ children }: LayoutProps) => {
     redirect(ROUTES.HOME);
   }
   return (
-    <SidebarProvider>
-      <AdminSidebar />
-      <SidebarInset>
-        <DashboardHeader />
-        <main>{children}</main>
-      </SidebarInset>
-    </SidebarProvider>
+    <NextIntlClientProvider>
+    <NuqsAdapter>
+      <SidebarProvider>
+        <AdminSidebar />
+        <SidebarInset>
+          <DashboardHeader />
+          <main>{children}</main>
+        </SidebarInset>
+      </SidebarProvider>
+    </NuqsAdapter>
+    </NextIntlClientProvider>
   );
 };
 

@@ -19,6 +19,54 @@ import { and, desc, eq, getTableColumns, inArray, like, lt, or, sql } from "driz
 import z from "zod";
 
 export const postRouter = createTRPCRouter({
+  // 🔹 创建草稿（编辑器用）
+  createDraft: protectedProcedure.mutation(async ({ ctx }) => {
+    const draftSlug = `draft-${crypto.randomUUID().slice(0, 8)}`;
+    const [insertedPost] = await ctx.db
+      .insert(posts)
+      .values({
+        title: "",
+        slug: draftSlug,
+        excerpt: "",
+        content: "",
+        status: "draft",
+        createdById: ctx.session.user.id,
+      })
+      .returning();
+
+    if (!insertedPost) {
+      throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Failed to create draft" });
+    }
+
+    return { post: insertedPost };
+  }),
+
+  // 🔹 获取文章（编辑器用，不要求分类）
+  getOneForEdit: protectedProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.db.query.posts.findFirst({
+        where: eq(posts.id, input.id),
+        with: {
+          category: { columns: { id: true, name: true } },
+          tags: {
+            with: {
+              tag: true,
+            },
+          },
+        },
+      });
+
+      if (!post) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
+
+      return {
+        ...post,
+        tags: post.tags.map((pt) => pt.tag),
+      };
+    }),
+
   // 🔹 创建文章
   create: protectedProcedure.input(postInsertSchema).mutation(async ({ ctx, input }) => {
     const validate = postInsertSchema.safeParse(input);
@@ -54,6 +102,13 @@ export const postRouter = createTRPCRouter({
   }),
   // 🔹 删除文章
   delete: protectedProcedure.input(z.object({ id: z.string() })).mutation(async ({ ctx, input }) => {
+    await Promise.all([
+      ctx.db.delete(comments).where(eq(comments.postId, input.id)),
+      ctx.db.delete(postReactions).where(eq(postReactions.postId, input.id)),
+      ctx.db.delete(postViews).where(eq(postViews.postId, input.id)),
+      ctx.db.delete(postTags).where(eq(postTags.postId, input.id)),
+    ]);
+
     const [deletedPost] = await ctx.db.delete(posts).where(eq(posts.id, input.id)).returning();
 
     if (!deletedPost) {

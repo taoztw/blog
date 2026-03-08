@@ -85,9 +85,7 @@ export default function PostEditPage() {
           >
             <ArrowLeftIcon className="size-4" />
           </Button>
-          <h1 className="text-sm font-medium truncate max-w-[400px]">
-            {postData.post.title}
-          </h1>
+          <h1 className="text-sm font-medium truncate max-w-[400px]">{postData.post.title}</h1>
         </div>
 
         <Button
@@ -95,11 +93,7 @@ export default function PostEditPage() {
           onClick={handleSave}
           disabled={update.isPending}
         >
-          {update.isPending ? (
-            <Spinner className="size-4" />
-          ) : (
-            <SaveIcon className="size-4" />
-          )}
+          {update.isPending ? <Spinner className="size-4" /> : <SaveIcon className="size-4" />}
           保存
         </Button>
       </div>

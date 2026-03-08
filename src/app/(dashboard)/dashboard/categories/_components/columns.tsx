@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -11,6 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { type Category } from "@/global";
 
 interface CategoryColumnsProps {
@@ -21,24 +22,20 @@ interface CategoryColumnsProps {
 export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps): ColumnDef<Category>[] => [
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="w-full justify-start px-0 hover:bg-transparent"
-        >
-          类别名称
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    meta: {
+      label: "类别名称",
+      placeholder: "搜索类别...",
+      variant: "text",
     },
+    header: ({ column }) => <DataTableColumnHeader column={column} label="类别名称" />,
     cell: ({ row }) => {
       return <div className="flex font-medium justify-start ml-3">{row.getValue("name")}</div>;
     },
+    enableColumnFilter: true,
   },
   {
     accessorKey: "description",
+    meta: { label: "描述" },
     header: "描述",
     cell: ({ row }) => {
       const description = row.getValue("description") as string | null;
@@ -47,18 +44,8 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="w-full justify-center hover:bg-transparent"
-        >
-          创建时间
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    meta: { label: "创建时间" },
+    header: ({ column }) => <DataTableColumnHeader column={column} label="创建时间" />,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
       const formatted = date.toLocaleDateString("zh-CN");

@@ -11,8 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { type ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Ban, Eye, MoreHorizontal, Shield, ShieldCheck, Trash2, User } from "lucide-react";
+import { Ban, Eye, MoreHorizontal, Shield, ShieldCheck, Trash2, User } from "lucide-react";
 
 interface UserData {
   id: string;
@@ -60,21 +61,16 @@ export const createUserColumns = ({
       );
     },
     enableSorting: false,
+    enableHiding: false,
   },
   {
     accessorKey: "name",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="w-full justify-start px-0 hover:bg-transparent"
-        >
-          姓名
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
+    meta: {
+      label: "姓名",
+      placeholder: "搜索用户...",
+      variant: "text",
     },
+    header: ({ column }) => <DataTableColumnHeader column={column} label="姓名" />,
     cell: ({ row }) => {
       const user = row.original;
       return (
@@ -84,10 +80,19 @@ export const createUserColumns = ({
         </div>
       );
     },
+    enableColumnFilter: true,
   },
   {
     accessorKey: "role",
-    header: "角色",
+    meta: {
+      label: "角色",
+      variant: "select",
+      options: [
+        { label: "管理员", value: "admin" },
+        { label: "用户", value: "user" },
+      ],
+    },
+    header: ({ column }) => <DataTableColumnHeader column={column} label="角色" />,
     cell: ({ row }) => {
       const user = row.original;
       const role = row.getValue("role") as string;
@@ -109,9 +114,14 @@ export const createUserColumns = ({
         </div>
       );
     },
+    filterFn: (row, id, value) => {
+      return Array.isArray(value) ? value.includes(row.getValue(id)) : true;
+    },
+    enableColumnFilter: true,
   },
   {
     accessorKey: "emailVerified",
+    meta: { label: "邮箱验证" },
     header: "邮箱验证",
     cell: ({ row }) => {
       const verified = row.getValue("emailVerified") as boolean;
@@ -124,18 +134,8 @@ export const createUserColumns = ({
   },
   {
     accessorKey: "createdAt",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="w-full justify-start px-0 hover:bg-transparent"
-        >
-          注册时间
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    meta: { label: "注册时间" },
+    header: ({ column }) => <DataTableColumnHeader column={column} label="注册时间" />,
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
       return <div className="text-sm">{date.toLocaleDateString("zh-CN")}</div>;

@@ -18,10 +18,10 @@ export function TableElementStatic({
   return (
     <SlateElement
       {...props}
-      className="overflow-x-auto py-5"
+      className="py-5"
       style={{ paddingLeft: marginLeft }}
     >
-      <div className="group/table relative w-fit">
+      <div className="group/table relative w-full">
         <table
           className="mr-0 ml-px table h-px table-fixed border-collapse"
           style={{ borderCollapse: 'collapse', width: '100%' }}

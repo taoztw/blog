@@ -12,6 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **API**: tRPC for type-safe API calls
 - **UI**: Tailwind CSS + shadcn/ui components
 - **Internationalization**: next-intl (supports English and Chinese)
+- **URL State**: nuqs for syncing UI state to URL query params
 - **Deployment**: Cloudflare Workers with OpenNext
 
 ### Project Structure
@@ -125,6 +126,120 @@ Tailwind usage: `bg-ink-50`, `text-ink-800`, `border-ink-300`, etc.
 | 900 | `font-black` | Black / 极粗 |
 
 ### UI Components
+
+#### Data Table System
+
+Dashboard tables use a shared component system located in `src/components/data-table/`, built on TanStack React Table v8.
+
+**Components:**
+
+| File | Purpose |
+|------|---------|
+| `data-table.tsx` | Core table wrapper, renders headers/body/pagination |
+| `data-table-column-header.tsx` | Column header with sort dropdown (升序/降序/重置) and hide toggle |
+| `data-table-toolbar.tsx` | Auto-renders filters based on column `meta.variant`, includes reset and view options |
+| `data-table-view-options.tsx` | Popover for toggling column visibility |
+| `data-table-pagination.tsx` | Page size selector + first/prev/next/last navigation |
+| `data-table-faceted-filter.tsx` | Popover multi/single select filter with badges |
+| `data-table-skeleton.tsx` | Loading skeleton matching table layout |
+
+**Supporting files:** `src/types/data-table.ts` (ColumnMeta type augmentation), `src/lib/data-table.ts` (pinning utility)
+
+**URL State Management (nuqs):**
+
+Table state (pagination, sorting, filters) is synced to URL query params via [`nuqs`](https://nuqs.47ng.com/). Filters/sort/page survive page refresh and can be shared via URL.
+
+- **Provider**: `NuqsAdapter` wraps the dashboard layout (`src/app/(dashboard)/layout.tsx`)
+- **Hook**: `useDataTable` (`src/hooks/use-data-table.ts`) bridges TanStack Table state with URL
+- **Parsers**: `src/lib/parsers.ts` — custom `createParser` for sorting state (JSON serialization with Zod validation)
+- **Debounce**: Text filter values debounced 300ms before URL update (`src/hooks/use-debounced-callback.ts`)
+- **Column visibility**: stays in React state (not URL)
+
+nuqs key APIs used:
+- `useQueryState(key, parser)` — single URL param (pagination, sorting)
+- `useQueryStates(parsers)` — multiple URL params at once (all column filters)
+- `parseAsInteger`, `parseAsString`, `parseAsArrayOf` — built-in type parsers
+- `createParser({ parse, serialize, eq })` — custom parser for complex types (sorting JSON)
+- `.withOptions({ history: "replace", clearOnDefault: true, shallow: true })` — URL update behavior
+- `.withDefault(value)` — fallback when param is absent from URL
+
+URL param examples: `?page=2&perPage=20&sort=[{"id":"title","desc":false}]&title=search&status=PUBLISHED,DRAFT`
+
+**Architecture pattern — Table page component:**
+
+```tsx
+"use client";
+
+import { DataTable } from "@/components/data-table/data-table";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { useDataTable } from "@/hooks/use-data-table";
+
+export function XxxTable() {
+  const { data, isFetching } = api.xxx.getMany.useQuery({ limit: 100 });
+
+  const columns = useMemo(() => createXxxColumns({ onEdit, onDelete }), [deps]);
+
+  const { table } = useDataTable({
+    data: data?.items ?? [],
+    columns,
+  });
+
+  if (isFetching && !data) {
+    return <DataTableSkeleton columnCount={N} rowCount={10} filterCount={2} />;
+  }
+
+  return (
+    <DataTable table={table}>
+      <DataTableToolbar table={table} />
+    </DataTable>
+  );
+}
+```
+
+**Architecture pattern — Column definitions:**
+
+```tsx
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
+
+export const createXxxColumns = ({ onEdit, onDelete }): ColumnDef<Xxx>[] => [
+  {
+    accessorKey: "title",
+    meta: { label: "标题", placeholder: "搜索...", variant: "text" }, // text search filter
+    header: ({ column }) => <DataTableColumnHeader column={column} label="标题" />,
+    enableColumnFilter: true,
+  },
+  {
+    accessorKey: "status",
+    meta: {
+      label: "状态",
+      variant: "select", // or "multiSelect"
+      options: [
+        { label: "已发布", value: "published" },
+        { label: "草稿", value: "draft" },
+      ],
+    },
+    header: ({ column }) => <DataTableColumnHeader column={column} label="状态" />,
+    filterFn: (row, id, value) => Array.isArray(value) ? value.includes(row.getValue(id)) : true,
+    enableColumnFilter: true,
+  },
+  {
+    id: "actions",
+    enableSorting: false,
+    enableHiding: false,
+    cell: ({ row }) => { /* DropdownMenu with edit/delete */ },
+  },
+];
+```
+
+**Key rules:**
+- Column `meta.variant` controls filter type: `"text"` = input, `"select"` / `"multiSelect"` = faceted popover
+- Column `meta.label` is used in view-options toggle and column header
+- Always set `enableColumnFilter: true` on columns with filter `variant`
+- For select filters, add `filterFn` that handles array values
+- Set `enableSorting: false` and `enableHiding: false` on image/actions columns
+- Data is fetched with `limit: 100` for client-side pagination/filtering/sorting
+- Use `DataTableSkeleton` for initial loading state (before data arrives)
 
 #### Spinner Component
 

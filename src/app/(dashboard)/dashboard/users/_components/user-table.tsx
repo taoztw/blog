@@ -1,6 +1,6 @@
 "use client";
 
-import { PaginationComponent } from "@/components/pagination";
+import * as React from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,12 +13,12 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { DataTable } from "@/components/ui/data-table";
-import { Input } from "@/components/ui/input";
+import { DataTable } from "@/components/data-table/data-table";
+import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { useDataTable } from "@/hooks/use-data-table";
 import { authClient } from "@/lib/auth/authClient";
-import { Search, Shield, Trash2, User as UserIcon, Users } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import * as React from "react";
+import { Shield, Trash2, User as UserIcon, Users } from "lucide-react";
 import { toast } from "sonner";
 import { createUserColumns } from "./columns";
 import { UserDetailsModal } from "./user-details-modal";
@@ -39,37 +39,19 @@ interface UserData {
 
 export function UserTable() {
   const { data: session } = authClient.useSession();
-  const searchParams = useSearchParams();
-  const currentPage = parseInt(searchParams.get("page") || "1", 10);
-  const pageSize = 10;
-  const [search, setSearch] = React.useState("");
-  const [debouncedSearch, setDebouncedSearch] = React.useState("");
   const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null);
   const [userToDelete, setUserToDelete] = React.useState<UserData | null>(null);
   const [users, setUsers] = React.useState<UserData[]>([]);
   const [totalUsers, setTotalUsers] = React.useState(0);
   const [isLoading, setIsLoading] = React.useState(false);
 
-  // Debounce search
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [search]);
-
-  // Fetch users using Better Auth admin API
   const fetchUsers = React.useCallback(async () => {
     setIsLoading(true);
     try {
       const { data, error } = await authClient.admin.listUsers({
         query: {
-          limit: pageSize,
-          offset: (currentPage - 1) * pageSize,
-          searchValue: debouncedSearch || undefined,
-          searchField: "email",
-          searchOperator: "contains",
+          limit: 100,
+          offset: 0,
         },
       });
 
@@ -88,13 +70,12 @@ export function UserTable() {
     } finally {
       setIsLoading(false);
     }
-  }, [currentPage, debouncedSearch, pageSize]);
+  }, []);
 
   React.useEffect(() => {
     void fetchUsers();
   }, [fetchUsers]);
 
-  // Calculate user stats from the fetched users
   const userStats = React.useMemo(() => {
     const admins = users.filter((u) => u.role === "admin").length;
     const regularUsers = users.filter((u) => u.role === "user").length;
@@ -194,13 +175,23 @@ export function UserTable() {
     }
   };
 
-  const columns = createUserColumns({
-    onViewDetails: handleViewDetails,
-    onUpdateRole: handleUpdateRole,
-    onDelete: handleDeleteUser,
-    onBanUser: handleBanUser,
-    onUnbanUser: handleUnbanUser,
-    currentUserId: session?.user?.id || "",
+  const columns = React.useMemo(
+    () =>
+      createUserColumns({
+        onViewDetails: handleViewDetails,
+        onUpdateRole: handleUpdateRole,
+        onDelete: handleDeleteUser,
+        onBanUser: handleBanUser,
+        onUnbanUser: handleUnbanUser,
+        currentUserId: session?.user?.id || "",
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [session?.user?.id],
+  );
+
+  const { table } = useDataTable({
+    data: users,
+    columns,
   });
 
   return (
@@ -233,10 +224,7 @@ export function UserTable() {
             <CardContent>
               <div className="text-2xl font-bold">{userStats.admins}</div>
               <div className="flex items-center">
-                <Badge
-                  variant="default"
-                  className="text-xs"
-                >
+                <Badge variant="default" className="text-xs">
                   {userStats.total > 0 ? Math.round((userStats.admins / userStats.total) * 100) : 0}%
                 </Badge>
               </div>
@@ -250,10 +238,7 @@ export function UserTable() {
             <CardContent>
               <div className="text-2xl font-bold">{userStats.users}</div>
               <div className="flex items-center">
-                <Badge
-                  variant="secondary"
-                  className="text-xs"
-                >
+                <Badge variant="secondary" className="text-xs">
                   {userStats.total > 0 ? Math.round((userStats.users / userStats.total) * 100) : 0}%
                 </Badge>
               </div>
@@ -262,32 +247,14 @@ export function UserTable() {
         </div>
       )}
 
-      {/* Search */}
-      <div className="flex items-center space-x-2">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="搜索用户姓名或邮箱..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-8"
-          />
-        </div>
-      </div>
-
       {/* Data Table */}
-      <DataTable
-        columns={columns}
-        data={users}
-        loading={isLoading}
-      />
-
-      {/* Pagination */}
-      <PaginationComponent
-        totalItems={totalUsers}
-        itemsPerPage={pageSize}
-        isLoading={isLoading}
-      />
+      {isLoading && users.length === 0 ? (
+        <DataTableSkeleton columnCount={6} rowCount={10} filterCount={2} />
+      ) : (
+        <DataTable table={table}>
+          <DataTableToolbar table={table} />
+        </DataTable>
+      )}
 
       {/* User Details Modal */}
       <UserDetailsModal
@@ -299,10 +266,7 @@ export function UserTable() {
       />
 
       {/* Delete Confirmation Dialog */}
-      <AlertDialog
-        open={!!userToDelete}
-        onOpenChange={() => setUserToDelete(null)}
-      >
+      <AlertDialog open={!!userToDelete} onOpenChange={() => setUserToDelete(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>确认删除用户</AlertDialogTitle>
@@ -315,10 +279,7 @@ export function UserTable() {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>取消</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={confirmDeleteUser}
-              className="bg-red-600 hover:bg-red-700"
-            >
+            <AlertDialogAction onClick={confirmDeleteUser} className="bg-red-600 hover:bg-red-700">
               <Trash2 className="h-4 w-4 mr-2" />
               确认删除
             </AlertDialogAction>

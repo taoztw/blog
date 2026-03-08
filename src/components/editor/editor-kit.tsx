@@ -38,7 +38,7 @@ import { TableKit } from "@/components/editor/plugins/table-kit";
 import { TocKit } from "@/components/editor/plugins/toc-kit";
 import { ToggleKit } from "@/components/editor/plugins/toggle-kit";
 
-export const EditorKit = [
+const CorePlugins = [
   ...CopilotKit,
   ...AIKit,
 
@@ -86,7 +86,17 @@ export const EditorKit = [
 
   // UI
   ...BlockPlaceholderKit,
+];
+
+export const EditorKit = [
+  ...CorePlugins,
   ...FixedToolbarKit,
+  ...FloatingToolbarKit,
+];
+
+/** Editor plugins without fixed toolbar — clean Medium-like experience */
+export const MinimalEditorKit = [
+  ...CorePlugins,
   ...FloatingToolbarKit,
 ];
 

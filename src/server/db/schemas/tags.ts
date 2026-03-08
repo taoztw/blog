@@ -10,6 +10,7 @@ export const tags = sqliteTable("tag", {
   name: text("name", { length: 255 }).notNull().unique(),
   description: text("description", { length: 512 }),
   color: text("color", { length: 7 }), // hex color code
+  icon: text("icon"), // SVG string for tag icon
   ...commonColumns,
 });
 
