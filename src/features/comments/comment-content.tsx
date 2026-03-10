@@ -1,46 +1,28 @@
-"use client";
-
-import * as React from "react";
-import type { Value } from "platejs";
-import { Plate, usePlateEditor } from "platejs/react";
-
-import { CommentEditorKit } from "@/components/editor/plugins/comment-editor-kit";
-import { Editor, EditorContainer } from "@/components/ui/editor";
+import React from "react";
 
 interface CommentContentProps {
   content: string;
 }
 
 export function CommentContent({ content }: CommentContentProps) {
-  let parsedValue: Value | null = null;
+  // Try to parse JSON (legacy rich text content) and extract plain text
+  let displayText = content;
 
   try {
     const parsed = JSON.parse(content);
     if (Array.isArray(parsed)) {
-      parsedValue = parsed as Value;
+      displayText = parsed
+        .map((node: { children?: { text?: string }[] }) =>
+          node.children?.map((child) => child.text || "").join("") || ""
+        )
+        .join("\n")
+        .trim();
     }
   } catch {
-    // Not JSON, render as plain text
+    // Not JSON, use as-is
   }
-
-  if (!parsedValue) {
-    return <p className="text-sm">{content}</p>;
-  }
-
-  return <CommentRichContent value={parsedValue} />;
-}
-
-function CommentRichContent({ value }: { value: Value }) {
-  const editor = usePlateEditor({
-    plugins: CommentEditorKit,
-    value,
-  });
 
   return (
-    <Plate editor={editor} readOnly>
-      <EditorContainer variant="comment">
-        <Editor variant="comment" className="text-sm" readOnly />
-      </EditorContainer>
-    </Plate>
+    <p className="text-sm whitespace-pre-wrap">{displayText}</p>
   );
 }
