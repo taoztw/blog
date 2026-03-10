@@ -232,22 +232,7 @@ export function BlogArchive() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
-        <div className="container mx-auto px-4 py-4 space-y-4">
-          {/* Title Row */}
-          <div className="flex items-center gap-4">
-            <h1 className="font-cormorant text-3xl font-medium text-ink-800 dark:text-ink-200 tracking-wide">
-              内容归档
-            </h1>
-            {!isLoading && (
-              <Badge
-                variant="outline"
-                className="text-sm border-border text-muted-foreground bg-transparent"
-              >
-                {totalItems} 项内容
-              </Badge>
-            )}
-          </div>
-
+        <div className="container mx-auto px-4 py-4">
           {/* Search and Filters Row */}
           <div className="flex items-center gap-3 flex-wrap">
             {/* Search */}

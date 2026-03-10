@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { PaginationComponent } from "@/components/pagination";
 import { api } from "@/trpc/react";
-import { PlusCircle, BookOpen } from "lucide-react";
+import { BookOpen, PlusCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { JournalCard } from "./_components/journal-card";
@@ -96,38 +96,25 @@ export default function JournalsPage() {
   return (
     <>
       <div className="min-h-screen bg-background">
-        {/* Header */}
-        <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
-          <div className="container mx-auto px-4 py-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <BookOpen className="size-6 text-seal" />
-                <h1 className="font-cormorant text-3xl font-medium text-ink-800 dark:text-ink-200 tracking-wide">
-                  日志
-                </h1>
-              </div>
-
-              {isAdmin && (
-                <Button
-                  onClick={() =>
-                    createJournal.mutate({
-                      content: JSON.stringify([{ type: "p", children: [{ text: "" }] }]),
-                    })
-                  }
-                  disabled={createJournal.isPending}
-                  size="sm"
-                >
-                  {createJournal.isPending ? (
-                    <Spinner className="size-4 mr-2" />
-                  ) : (
-                    <PlusCircle className="size-4 mr-2" />
-                  )}
-                  新建日志
-                </Button>
-              )}
+        {/* Admin action bar */}
+        {isAdmin && (
+          <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
+            <div className="container mx-auto px-4 py-3 flex justify-end">
+              <Button
+                onClick={() =>
+                  createJournal.mutate({
+                    content: JSON.stringify([{ type: "p", children: [{ text: "" }] }]),
+                  })
+                }
+                disabled={createJournal.isPending}
+                size="sm"
+              >
+                {createJournal.isPending ? <Spinner className="size-4 mr-2" /> : <PlusCircle className="size-4 mr-2" />}
+                新建日志
+              </Button>
             </div>
-          </div>
-        </header>
+          </header>
+        )}
 
         {/* Content */}
         <div className="container mx-auto px-4 py-8 max-w-4xl">

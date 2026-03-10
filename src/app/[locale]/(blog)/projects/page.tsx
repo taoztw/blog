@@ -49,38 +49,35 @@ const page = async ({ searchParams }: PageProps) => {
 
   return (
     <HydrateClient>
-      <div className="container mx-auto px-4 py-12 max-w-7xl">
-        {/* Header Section */}
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4 dark:text-gray-50">Projects</h1>
-          <p className="text-lg text-muted-foreground">A showcase of my work and collaborations.</p>
-        </div>
-
-        {/* Search section */}
-        <div className="flex flex-col lg:flex-row justify-between items-center mt-5">
-          <section className="">
-            <LocalSearch
-              route={ROUTES.PROJECTS}
-              placeholder="Search projects..."
-              otherClasses=""
-            />
-          </section>
-
-          <div className="flex">
-            <FilterCarousel
-              data={projectFilters}
-              value={categoryId || "all"}
-            />
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-8 max-w-7xl">
+          {/* Search section */}
+          <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
+            <section>
+              <LocalSearch
+                route={ROUTES.PROJECTS}
+                placeholder="Search projects..."
+                otherClasses=""
+              />
+            </section>
+            <div className="flex">
+              <FilterCarousel
+                data={projectFilters}
+                value={categoryId || "all"}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Projects Grid */}
-        <Suspense fallback={<ProjectsGridSkeleton />}>
-          <ProjectsGrid
-            search={search}
-            categoryId={categoryId}
-          />
-        </Suspense>
+          <div className="border-b border-border mt-4" />
+
+          {/* Projects Grid */}
+          <Suspense fallback={<ProjectsGridSkeleton />}>
+            <ProjectsGrid
+              search={search}
+              categoryId={categoryId}
+            />
+          </Suspense>
+        </div>
       </div>
     </HydrateClient>
   );
