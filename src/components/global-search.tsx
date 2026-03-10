@@ -92,13 +92,14 @@ export function GlobalSearch({ open, onOpenChange }: GlobalSearchProps) {
       open={open}
       onOpenChange={onOpenChange}
       shouldFilter={false}
+      className="sm:max-w-3xl"
     >
       <CommandInput
         placeholder="Search posts, tags, or categories..."
         value={search}
         onValueChange={setSearch}
       />
-      <CommandList>
+      <CommandList className="max-h-[500px] min-h-[500px]">
         {isLoading && (
           <div className="py-6 text-center">
             <Spinner className="size-5 mx-auto" />
