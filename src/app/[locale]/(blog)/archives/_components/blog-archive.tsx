@@ -3,9 +3,8 @@
 import LocalSearch from "@/components/LocalSearch";
 import { PaginationComponent, getCurrentPageData } from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { api, type RouterOutputs } from "@/trpc/react";
 import { Calendar, ExternalLink, FileText, Folder, FolderOpen, Tag } from "lucide-react";
 import Link from "next/link";
@@ -230,29 +229,109 @@ export function BlogArchive() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-ink-50">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between flex-wrap gap-4">
-            <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-bold text-foreground">内容归档</h1>
-              {!isLoading && (
-                <Badge
-                  variant="secondary"
-                  className="text-sm"
-                >
-                  {totalItems} 项内容
-                </Badge>
-              )}
-            </div>
-            <div className="w-full max-w-sm">
+      <header className="sticky top-0 z-50 w-full border-b border-ink-200 bg-ink-50/95 backdrop-blur supports-[backdrop-filter]:bg-ink-50/80">
+        <div className="container mx-auto px-4 py-4 space-y-4">
+          {/* Title Row */}
+          <div className="flex items-center gap-4">
+            <h1 className="font-cormorant text-3xl font-medium text-ink-800 tracking-wide">内容归档</h1>
+            {!isLoading && (
+              <Badge
+                variant="outline"
+                className="text-sm border-ink-300 text-ink-600 bg-transparent"
+              >
+                {totalItems} 项内容
+              </Badge>
+            )}
+          </div>
+
+          {/* Search and Filters Row */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Search */}
+            <div className="flex-1 min-w-[200px] max-w-md">
               <LocalSearch
                 route="/archive"
                 placeholder="搜索内容..."
-                otherClasses="bg-background"
+                otherClasses="bg-ink-100 border-ink-200"
               />
             </div>
+
+            {/* Content Type Filter */}
+            <Select
+              value={selectedContentType}
+              onValueChange={handleContentTypeChange}
+            >
+              <SelectTrigger
+                size="sm"
+                className="w-[120px] bg-ink-100 border-ink-200 text-xs"
+              >
+                <SelectValue placeholder="内容类型" />
+              </SelectTrigger>
+              <SelectContent>
+                {contentTypes.map((type) => (
+                  <SelectItem
+                    key={type}
+                    value={type}
+                    className="text-xs"
+                  >
+                    {type}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
+            {/* Category Filter */}
+            {availableCategories.length > 1 && (
+              <Select
+                value={selectedCategory}
+                onValueChange={handleCategoryChange}
+              >
+                <SelectTrigger
+                  size="sm"
+                  className="w-[140px] bg-ink-100 border-ink-200 text-xs"
+                >
+                  <SelectValue placeholder="选择分类" />
+                </SelectTrigger>
+                <SelectContent>
+                  {availableCategories.map((category) => (
+                    <SelectItem
+                      key={category}
+                      value={category}
+                      className="text-xs"
+                    >
+                      {category}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
+            {/* Tag Filter */}
+            {availableTags.length > 1 && (
+              <Select
+                value={selectedTag}
+                onValueChange={handleTagChange}
+              >
+                <SelectTrigger
+                  size="sm"
+                  className="w-[140px] bg-ink-100 border-ink-200 text-xs"
+                >
+                  <SelectValue placeholder="选择标签" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[300px]">
+                  {availableTags.map((tag) => (
+                    <SelectItem
+                      key={tag}
+                      value={tag}
+                      className="text-xs"
+                    >
+                      {tag}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
           </div>
         </div>
       </header>
@@ -263,72 +342,8 @@ export function BlogArchive() {
         </div>
       ) : (
         <div className="container mx-auto px-4 py-8">
-          {/* Filters */}
-          <div className="mb-8 space-y-4">
-            {/* Content Type Filters */}
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">内容类型</h3>
-              <div className="flex flex-wrap gap-2">
-                {contentTypes.map((type) => (
-                  <Button
-                    key={type}
-                    variant={selectedContentType === type ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handleContentTypeChange(type)}
-                    className="text-sm"
-                  >
-                    {type}
-                  </Button>
-                ))}
-              </div>
-            </div>
-
-            {/* Category Filters */}
-            {availableCategories.length > 1 && (
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">分类</h3>
-                <div className="flex flex-wrap gap-2">
-                  {availableCategories.map((category) => (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleCategoryChange(category)}
-                      className="text-sm"
-                    >
-                      {category}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Tag Filters */}
-            {availableTags.length > 1 && (
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">标签</h3>
-                <div className="flex flex-wrap gap-2">
-                  {availableTags.slice(0, 10).map((tag) => (
-                    <Button
-                      key={tag}
-                      variant={selectedTag === tag ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleTagChange(tag)}
-                      className="text-sm"
-                    >
-                      {tag}
-                    </Button>
-                  ))}
-                  {availableTags.length > 10 && (
-                    <span className="text-sm text-muted-foreground self-center">+{availableTags.length - 10} 更多</span>
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-
           {totalItems > 0 && (
-            <div className="mb-6 text-sm text-muted-foreground">
+            <div className="mb-8 text-sm text-ink-500 font-light">
               显示第 {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)}{" "}
               项，共 {totalItems} 项内容
             </div>
@@ -342,102 +357,116 @@ export function BlogArchive() {
                 className="relative"
               >
                 {/* Year Header */}
-                <div className="sticky top-20 z-10 mb-8 bg-background/95 backdrop-blur py-2">
-                  <h2 className="text-3xl font-bold text-primary flex items-center gap-2">
-                    <Calendar className="h-8 w-8" />
-                    {year}
+                <div className="sticky top-32 z-10 mb-10 bg-ink-50/95 backdrop-blur py-3">
+                  <h2 className="font-cormorant text-5xl font-light text-ink-800 flex items-center gap-3">
+                    <Calendar className="h-7 w-7 text-seal/60" />
+                    <span className="tracking-wider">{year}</span>
                   </h2>
                 </div>
 
                 {/* Months */}
-                <div className="space-y-8 pl-8 border-l-2 border-border">
+                <div className="space-y-10 pl-10 relative">
+                  {/* Timeline gradient line */}
+                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-seal/30 via-ink-300 to-transparent"></div>
                   {months.map(({ month, items }) => (
                     <div
                       key={month}
                       className="relative"
                     >
                       {/* Month indicator */}
-                      <div className="absolute -left-10 top-0 h-4 w-4 rounded-full bg-primary border-4 border-background"></div>
+                      <div className="absolute -left-[1.6rem] top-1 flex items-center justify-center">
+                        <div className="h-5 w-5 rounded-full bg-seal/20 border-2 border-seal shadow-sm"></div>
+                        <div className="absolute h-2 w-2 rounded-full bg-seal animate-pulse"></div>
+                      </div>
 
                       {/* Month header */}
-                      <h3 className="text-xl font-semibold text-foreground mb-4">{month}</h3>
+                      <h3 className="text-lg font-medium text-ink-700 mb-6 tracking-wide">{month}</h3>
 
                       {/* Items */}
-                      <div className="space-y-3">
+                      <div className="space-y-4">
                         {(items || []).map((item) => {
                           const IconComponent = getItemIcon(item);
                           return (
                             <Link
                               key={item.id}
                               href={item.url}
-                              className="block"
+                              className="block group"
                             >
-                              <Card className="group hover:shadow-md transition-all duration-200 hover:border-primary/20 cursor-pointer">
-                                <CardContent className="p-4">
-                                  <div className="flex items-center gap-3">
-                                    <div className="flex-shrink-0">
-                                      <IconComponent className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                                    </div>
-                                    <div className="flex-1 min-w-0">
-                                      <div className="flex items-center justify-between gap-2">
-                                        <h4 className="font-medium text-foreground group-hover:text-primary transition-colors line-clamp-1 flex-1">
-                                          {item.title}
-                                        </h4>
-                                        <div className="flex items-center gap-2 flex-shrink-0">
-                                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                                            <Calendar className="h-3 w-3" />
-                                            {new Date(item.date).toLocaleDateString("zh-CN")}
-                                          </div>
-                                          <ExternalLink className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
-                                        </div>
-                                      </div>
+                              <article className="relative pb-5 border-b border-ink-200 hover:border-seal/30 transition-all duration-300 cursor-pointer">
+                                {/* Decorative corner accent */}
+                                <div className="absolute -left-10 top-0 w-8 h-[2px] bg-gradient-to-r from-seal/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-                                      <div className="flex items-center gap-2 mt-2 flex-wrap">
-                                        <Badge
-                                          variant="outline"
-                                          className="text-xs px-2 py-0.5"
-                                        >
-                                          {item.type === "post" ? "文章" : "项目"}
-                                        </Badge>
-
-                                        {item.category && (
-                                          <Badge
-                                            variant="secondary"
-                                            className="text-xs px-2 py-0.5"
-                                          >
-                                            {item.category.name}
-                                          </Badge>
-                                        )}
-
-                                        {item.tags.length > 0 && (
-                                          <div className="flex items-center gap-1">
-                                            <Tag className="h-3 w-3 text-muted-foreground" />
-                                            <div className="flex gap-1 flex-wrap">
-                                              {item.tags.slice(0, 2).map((tag) => (
-                                                <Badge
-                                                  key={tag.id}
-                                                  variant="secondary"
-                                                  className="text-xs px-1.5 py-0.5"
-                                                >
-                                                  {tag.name}
-                                                </Badge>
-                                              ))}
-                                              {item.tags.length > 2 && (
-                                                <Badge
-                                                  variant="secondary"
-                                                  className="text-xs px-1.5 py-0.5"
-                                                >
-                                                  +{item.tags.length - 2}
-                                                </Badge>
-                                              )}
-                                            </div>
-                                          </div>
-                                        )}
-                                      </div>
+                                <div className="flex items-start gap-4 mb-3">
+                                  <div className="flex-shrink-0">
+                                    <div className="mt-1 p-2 rounded-lg bg-ink-100 group-hover:bg-seal/10 transition-colors duration-300">
+                                      <IconComponent className="h-4 w-4 text-ink-500 group-hover:text-seal transition-colors duration-300" />
                                     </div>
                                   </div>
-                                </CardContent>
-                              </Card>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-start justify-between gap-3 mb-2">
+                                      <h4 className="text-lg font-medium text-ink-800 group-hover:text-seal transition-colors duration-300 line-clamp-2 flex-1 leading-relaxed">
+                                        {item.title}
+                                      </h4>
+                                      <div className="flex items-center gap-2 flex-shrink-0 mt-1">
+                                        <time className="flex items-center gap-1.5 text-xs text-ink-500 font-light">
+                                          <Calendar className="h-3.5 w-3.5" />
+                                          {new Date(item.date).toLocaleDateString("zh-CN")}
+                                        </time>
+                                        <ExternalLink className="h-3.5 w-3.5 text-ink-400 group-hover:text-seal transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                      </div>
+                                    </div>
+
+                                    {item.description && (
+                                      <p className="text-sm text-ink-600 line-clamp-2 mb-3 leading-relaxed font-light">
+                                        {item.description}
+                                      </p>
+                                    )}
+
+                                    <div className="flex items-center gap-2 flex-wrap">
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs px-2.5 py-0.5 border-ink-300 text-ink-600 bg-transparent font-light"
+                                      >
+                                        {item.type === "post" ? "文章" : "项目"}
+                                      </Badge>
+
+                                      {item.category && (
+                                        <Badge
+                                          variant="outline"
+                                          className="text-xs px-2.5 py-0.5 border-seal/30 text-seal bg-seal/5 font-light"
+                                        >
+                                          {item.category.name}
+                                        </Badge>
+                                      )}
+
+                                      {item.tags.length > 0 && (
+                                        <div className="flex items-center gap-1">
+                                          <Tag className="h-3 w-3 text-ink-400" />
+                                          <div className="flex gap-1.5 flex-wrap">
+                                            {item.tags.slice(0, 2).map((tag) => (
+                                              <Badge
+                                                key={tag.id}
+                                                variant="outline"
+                                                className="text-xs px-2 py-0.5 border-ink-200 text-ink-500 bg-ink-100/50 font-light"
+                                              >
+                                                {tag.name}
+                                              </Badge>
+                                            ))}
+                                            {item.tags.length > 2 && (
+                                              <Badge
+                                                variant="outline"
+                                                className="text-xs px-2 py-0.5 border-ink-200 text-ink-500 bg-ink-100/50 font-light"
+                                              >
+                                                +{item.tags.length - 2}
+                                              </Badge>
+                                            )}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              </article>
                             </Link>
                           );
                         })}
@@ -457,8 +486,8 @@ export function BlogArchive() {
           {/* Empty State */}
           {paginatedItems.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-muted-foreground text-lg mb-2">没有找到匹配的内容</div>
-              <div className="text-sm text-muted-foreground">尝试调整搜索关键词或选择不同的筛选条件</div>
+              <div className="text-ink-600 text-lg mb-2 font-light">没有找到匹配的内容</div>
+              <div className="text-sm text-ink-500 font-light">尝试调整搜索关键词或选择不同的筛选条件</div>
             </div>
           )}
         </div>

@@ -308,13 +308,20 @@ export const postRouter = createTRPCRouter({
       const { page, limit, search } = input;
       const offset = (page - 1) * limit;
 
-      const where = search
-        ? or(
+      // Build where conditions - always filter published posts only
+      const conditions = [eq(posts.status, "published")];
+
+      if (search) {
+        conditions.push(
+          or(
             like(sql`LOWER(${posts.title})`, `%${search.toLowerCase()}%`),
             like(sql`LOWER(${posts.excerpt})`, `%${search.toLowerCase()}%`),
             like(sql`LOWER(${categorys.name})`, `%${search.toLowerCase()}%`)
-          )
-        : undefined;
+          )!
+        );
+      }
+
+      const where = conditions.length > 1 ? and(...conditions) : conditions[0];
 
       // 这里直接用聚合函数一次性统计
       const items = await ctx.db

@@ -12,6 +12,13 @@
     "Segoe UI Symbol", "Noto Color Emoji";
 }
 
+// 解决滚动锁定时的布局抖动（如模态框打开时）
+
+html body[data-scroll-locked] {
+  overflow: visible !important;
+  margin-right: 0 !important;
+}
+
 /*
  * 墨色设计系统 — Ink Design System
  * ─────────────────────────────────
