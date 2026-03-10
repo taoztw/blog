@@ -10,6 +10,7 @@ import { PlusCircle, BookOpen } from "lucide-react";
 import { toast } from "sonner";
 import { useSearchParams } from "next/navigation";
 import { JournalCard } from "./_components/journal-card";
+import { JournalCommentPanel } from "./_components/journal-comment-panel";
 import { JournalEditorDialog } from "./_components/journal-editor-dialog";
 
 const ITEMS_PER_PAGE = 50;
@@ -21,6 +22,11 @@ export default function JournalsPage() {
   const [editingJournal, setEditingJournal] = React.useState<{
     id: string;
     content: string;
+  } | null>(null);
+  const [commentPanelOpen, setCommentPanelOpen] = React.useState(false);
+  const [activeCommentJournal, setActiveCommentJournal] = React.useState<{
+    id: string;
+    createdAt: Date;
   } | null>(null);
 
   const page = parseInt(searchParams.get("page") ?? "1", 10);
@@ -55,6 +61,11 @@ export default function JournalsPage() {
   const handleCloseDialog = () => {
     setEditorOpen(false);
     setEditingJournal(null);
+  };
+
+  const handleOpenComments = (journal: { id: string; createdAt: Date }) => {
+    setActiveCommentJournal(journal);
+    setCommentPanelOpen(true);
   };
 
   // Group journals by date
@@ -153,6 +164,8 @@ export default function JournalsPage() {
                           key={journal.id}
                           journal={journal}
                           onEdit={handleEdit}
+                          onOpenComments={handleOpenComments}
+                          isCommentsActive={activeCommentJournal?.id === journal.id && commentPanelOpen}
                         />
                       ))}
                     </div>
@@ -170,6 +183,16 @@ export default function JournalsPage() {
           )}
         </div>
       </div>
+
+      {/* Comment Panel */}
+      <JournalCommentPanel
+        open={commentPanelOpen}
+        onOpenChange={(open) => {
+          setCommentPanelOpen(open);
+          if (!open) setActiveCommentJournal(null);
+        }}
+        journal={activeCommentJournal}
+      />
 
       {/* Editor Dialog */}
       <JournalEditorDialog

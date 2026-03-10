@@ -12,6 +12,7 @@ export * from "./schemas/categories";
 export * from "./schemas/comments";
 export * from "./schemas/common";
 export * from "./schemas/enums";
+export * from "./schemas/journal-comments";
 export * from "./schemas/journals";
 export * from "./schemas/posts";
 export * from "./schemas/projects";

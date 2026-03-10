@@ -1,5 +1,5 @@
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
-import { journalInsertSchema, journals, journalUpdateSchema, user } from "@/server/db/schema";
+import { journalComments, journalInsertSchema, journals, journalUpdateSchema, user } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import z from "zod";
@@ -85,6 +85,8 @@ export const journalRouter = createTRPCRouter({
         .select({
           ...getTableColumns(journals),
           author: user,
+          commentCount:
+            sql<number>`(SELECT COUNT(*) FROM ${journalComments} WHERE ${journalComments.journalId} = ${journals.id})`,
         })
         .from(journals)
         .leftJoin(user, eq(journals.authorId, user.id))

@@ -4,6 +4,7 @@ import { answerRouter } from "./routers/answers";
 import { categoryRouter } from "./routers/categories";
 import { commentReactionRouter } from "./routers/comment-reaction";
 import { commentsRouter } from "./routers/comments";
+import { journalCommentsRouter } from "./routers/journal-comments";
 import { journalRouter } from "./routers/journals";
 import { projectRouter } from "./routers/project";
 import { questionRouter } from "./routers/questions";
@@ -24,6 +25,7 @@ export const appRouter = createTRPCRouter({
   question: questionRouter,
   answer: answerRouter,
   journal: journalRouter,
+  journalComment: journalCommentsRouter,
 });
 
 // export type definition of API

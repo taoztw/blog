@@ -22,9 +22,10 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { api } from "@/trpc/react";
+import { cn } from "@/lib/utils";
 import { createSlateEditor } from "platejs";
 import type { Value } from "platejs";
-import { Calendar, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { Calendar, MessageSquare, MoreVertical, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -33,6 +34,7 @@ interface JournalCardProps {
     id: string;
     content: string;
     createdAt: Date;
+    commentCount?: number;
     author: {
       id: string;
       name: string | null;
@@ -40,9 +42,11 @@ interface JournalCardProps {
     } | null;
   };
   onEdit?: (journal: { id: string; content: string }) => void;
+  onOpenComments?: (journal: { id: string; createdAt: Date }) => void;
+  isCommentsActive?: boolean;
 }
 
-export function JournalCard({ journal, onEdit }: JournalCardProps) {
+export function JournalCard({ journal, onEdit, onOpenComments, isCommentsActive }: JournalCardProps) {
   const { data: session } = authClient.useSession();
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const utils = api.useUtils();
@@ -84,7 +88,12 @@ export function JournalCard({ journal, onEdit }: JournalCardProps) {
 
   return (
     <>
-      <article className="group relative bg-card border border-border rounded-lg p-6 hover:border-seal/30 transition-all duration-300 shadow-sm hover:shadow-md">
+      <article className={cn(
+        "group relative bg-card border rounded-lg p-6 transition-all duration-300 shadow-sm hover:shadow-md",
+        isCommentsActive
+          ? "border-seal/50 shadow-seal/10"
+          : "border-border hover:border-seal/30"
+      )}>
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
@@ -141,19 +150,38 @@ export function JournalCard({ journal, onEdit }: JournalCardProps) {
           )}
         </div>
 
-        {/* Author */}
-        {journal.author && (
-          <div className="mt-4 pt-4 border-t border-border flex items-center gap-2 text-xs text-muted-foreground">
-            {journal.author.image && (
-              <img
-                src={journal.author.image}
-                alt={journal.author.name || "作者"}
-                className="size-6 rounded-full"
-              />
+        {/* Footer: author + comment button */}
+        <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
+          {journal.author ? (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              {journal.author.image && (
+                <img
+                  src={journal.author.image}
+                  alt={journal.author.name || "作者"}
+                  className="size-6 rounded-full"
+                />
+              )}
+              <span>{journal.author.name || "匿名用户"}</span>
+            </div>
+          ) : (
+            <span />
+          )}
+
+          <Button
+            variant="ghost"
+            size="sm"
+            className={cn(
+              "h-7 px-2 gap-1.5 text-xs",
+              isCommentsActive
+                ? "text-seal hover:text-seal"
+                : "text-muted-foreground hover:text-foreground"
             )}
-            <span>{journal.author.name || "匿名用户"}</span>
-          </div>
-        )}
+            onClick={() => onOpenComments?.({ id: journal.id, createdAt: journal.createdAt })}
+          >
+            <MessageSquare className="size-3.5" />
+            {journal.commentCount ? `${journal.commentCount} 条评论` : "评论"}
+          </Button>
+        </div>
       </article>
 
       {/* Delete Dialog */}
