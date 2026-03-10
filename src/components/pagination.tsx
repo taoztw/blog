@@ -59,7 +59,6 @@ export function PaginationComponent({
   };
 
   if (isLoading || totalPages <= 1) {
-    console.log("不显示分页组件", { isLoading, totalPages });
     return null;
   }
 

@@ -10,8 +10,6 @@ interface CommentReplyProps {
 }
 
 const CommentReply = ({ parentId, postId }: CommentReplyProps) => {
-  console.log("parentId", parentId);
-  console.log("videoId", postId);
   const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = api.comment.getMany.useInfiniteQuery(
     {
       limit: 10,
@@ -38,10 +36,21 @@ const CommentReply = ({ parentId, postId }: CommentReplyProps) => {
         {!isLoading &&
           data?.pages
             .flatMap((page) => page.items)
-            .map((comment) => <CommentItem key={comment.id} comment={comment} variant="reply" />)}
+            .map((comment) => (
+              <CommentItem
+                key={comment.id}
+                comment={comment}
+                variant="reply"
+              />
+            ))}
       </div>
       {hasNextPage && (
-        <Button variant="tertiary" size="sm" onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+        <Button
+          variant="tertiary"
+          size="sm"
+          onClick={() => fetchNextPage()}
+          disabled={isFetchingNextPage}
+        >
           <CornerDownRightIcon />
           Show more replies
         </Button>

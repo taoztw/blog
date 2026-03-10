@@ -4,7 +4,6 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest, { params }: { params: Promise<{ key: string }> }) {
   try {
     const { key } = await params;
-    console.log(key);
     if (!key) {
       return NextResponse.json({ error: "Image key is required" }, { status: 400 });
     }

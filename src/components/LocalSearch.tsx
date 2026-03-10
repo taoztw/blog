@@ -46,16 +46,16 @@ const LocalSearch = ({ route, placeholder, otherClasses }: Props) => {
 
   return (
     <div
-      className={`relative bg-light-800 dark:dark-gradient flex min-h-[56px] grow items-center gap-4 rounded-[10px] min-w-[300px]   ${otherClasses}`}
+      className={`relative flex min-h-10 grow items-center gap-4 rounded-[10px] min-w-[300px] ${otherClasses || "bg-muted border border-border"}`}
     >
       <Input
         type="text"
         placeholder={placeholder}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full pl-4 py-2 rounded-full border focus:outline-none"
+        className="w-full pl-4 py-2 rounded-full border-0 bg-transparent focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
       />
-      <Search className="absolute right-1 size-5 mr-3 " />
+      <Search className="absolute right-1 size-5 mr-3 text-muted-foreground" />
     </div>
   );
 };

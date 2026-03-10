@@ -229,17 +229,19 @@ export function BlogArchive() {
   };
 
   return (
-    <div className="min-h-screen bg-ink-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b border-ink-200 bg-ink-50/95 backdrop-blur supports-[backdrop-filter]:bg-ink-50/80">
+      <header className="sticky top-0 z-40 w-full border-b border-border bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/80">
         <div className="container mx-auto px-4 py-4 space-y-4">
           {/* Title Row */}
           <div className="flex items-center gap-4">
-            <h1 className="font-cormorant text-3xl font-medium text-ink-800 tracking-wide">内容归档</h1>
+            <h1 className="font-cormorant text-3xl font-medium text-ink-800 dark:text-ink-200 tracking-wide">
+              内容归档
+            </h1>
             {!isLoading && (
               <Badge
                 variant="outline"
-                className="text-sm border-ink-300 text-ink-600 bg-transparent"
+                className="text-sm border-border text-muted-foreground bg-transparent"
               >
                 {totalItems} 项内容
               </Badge>
@@ -253,7 +255,7 @@ export function BlogArchive() {
               <LocalSearch
                 route="/archive"
                 placeholder="搜索内容..."
-                otherClasses="bg-ink-100 border-ink-200"
+                otherClasses="bg-muted border-border"
               />
             </div>
 
@@ -264,7 +266,7 @@ export function BlogArchive() {
             >
               <SelectTrigger
                 size="sm"
-                className="w-[120px] bg-ink-100 border-ink-200 text-xs"
+                className="w-[120px] bg-muted border-border text-xs"
               >
                 <SelectValue placeholder="内容类型" />
               </SelectTrigger>
@@ -289,7 +291,7 @@ export function BlogArchive() {
               >
                 <SelectTrigger
                   size="sm"
-                  className="w-[140px] bg-ink-100 border-ink-200 text-xs"
+                  className="w-[140px] bg-muted border-border text-xs"
                 >
                   <SelectValue placeholder="选择分类" />
                 </SelectTrigger>
@@ -315,7 +317,7 @@ export function BlogArchive() {
               >
                 <SelectTrigger
                   size="sm"
-                  className="w-[140px] bg-ink-100 border-ink-200 text-xs"
+                  className="w-[140px] bg-muted border-border text-xs"
                 >
                   <SelectValue placeholder="选择标签" />
                 </SelectTrigger>
@@ -343,7 +345,7 @@ export function BlogArchive() {
       ) : (
         <div className="container mx-auto px-4 py-8">
           {totalItems > 0 && (
-            <div className="mb-8 text-sm text-ink-500 font-light">
+            <div className="mb-8 text-sm text-muted-foreground font-light">
               显示第 {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, totalItems)}{" "}
               项，共 {totalItems} 项内容
             </div>
@@ -357,8 +359,8 @@ export function BlogArchive() {
                 className="relative"
               >
                 {/* Year Header */}
-                <div className="sticky top-32 z-10 mb-10 bg-ink-50/95 backdrop-blur py-3">
-                  <h2 className="font-cormorant text-5xl font-light text-ink-800 flex items-center gap-3">
+                <div className="sticky top-32 z-10 mb-10 bg-background/95 backdrop-blur py-3">
+                  <h2 className="font-cormorant text-5xl font-light text-foreground flex items-center gap-3">
                     <Calendar className="h-7 w-7 text-seal/60" />
                     <span className="tracking-wider">{year}</span>
                   </h2>
@@ -367,7 +369,7 @@ export function BlogArchive() {
                 {/* Months */}
                 <div className="space-y-10 pl-10 relative">
                   {/* Timeline gradient line */}
-                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-seal/30 via-ink-300 to-transparent"></div>
+                  <div className="absolute left-0 top-0 bottom-0 w-[2px] bg-gradient-to-b from-seal/30 via-border to-transparent"></div>
                   {months.map(({ month, items }) => (
                     <div
                       key={month}
@@ -380,7 +382,7 @@ export function BlogArchive() {
                       </div>
 
                       {/* Month header */}
-                      <h3 className="text-lg font-medium text-ink-700 mb-6 tracking-wide">{month}</h3>
+                      <h3 className="text-lg font-medium text-foreground mb-6 tracking-wide">{month}</h3>
 
                       {/* Items */}
                       <div className="space-y-4">
@@ -392,32 +394,32 @@ export function BlogArchive() {
                               href={item.url}
                               className="block group"
                             >
-                              <article className="relative pb-5 border-b border-ink-200 hover:border-seal/30 transition-all duration-300 cursor-pointer">
+                              <article className="relative pb-5 border-b border-border hover:border-seal/30 transition-all duration-300 cursor-pointer">
                                 {/* Decorative corner accent */}
                                 <div className="absolute -left-10 top-0 w-8 h-[2px] bg-gradient-to-r from-seal/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
                                 <div className="flex items-start gap-4 mb-3">
                                   <div className="flex-shrink-0">
-                                    <div className="mt-1 p-2 rounded-lg bg-ink-100 group-hover:bg-seal/10 transition-colors duration-300">
-                                      <IconComponent className="h-4 w-4 text-ink-500 group-hover:text-seal transition-colors duration-300" />
+                                    <div className="mt-1 p-2 rounded-lg bg-muted group-hover:bg-seal/10 transition-colors duration-300">
+                                      <IconComponent className="h-4 w-4 text-muted-foreground group-hover:text-seal transition-colors duration-300" />
                                     </div>
                                   </div>
                                   <div className="flex-1 min-w-0">
                                     <div className="flex items-start justify-between gap-3 mb-2">
-                                      <h4 className="text-lg font-medium text-ink-800 group-hover:text-seal transition-colors duration-300 line-clamp-2 flex-1 leading-relaxed">
+                                      <h4 className="text-lg font-medium text-foreground group-hover:text-seal transition-colors duration-300 line-clamp-2 flex-1 leading-relaxed">
                                         {item.title}
                                       </h4>
                                       <div className="flex items-center gap-2 flex-shrink-0 mt-1">
-                                        <time className="flex items-center gap-1.5 text-xs text-ink-500 font-light">
+                                        <time className="flex items-center gap-1.5 text-xs text-muted-foreground font-light">
                                           <Calendar className="h-3.5 w-3.5" />
                                           {new Date(item.date).toLocaleDateString("zh-CN")}
                                         </time>
-                                        <ExternalLink className="h-3.5 w-3.5 text-ink-400 group-hover:text-seal transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                                        <ExternalLink className="h-3.5 w-3.5 text-muted-foreground group-hover:text-seal transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                                       </div>
                                     </div>
 
                                     {item.description && (
-                                      <p className="text-sm text-ink-600 line-clamp-2 mb-3 leading-relaxed font-light">
+                                      <p className="text-sm text-muted-foreground line-clamp-2 mb-3 leading-relaxed font-light">
                                         {item.description}
                                       </p>
                                     )}
@@ -425,7 +427,7 @@ export function BlogArchive() {
                                     <div className="flex items-center gap-2 flex-wrap">
                                       <Badge
                                         variant="outline"
-                                        className="text-xs px-2.5 py-0.5 border-ink-300 text-ink-600 bg-transparent font-light"
+                                        className="text-xs px-2.5 py-0.5 border-border text-muted-foreground bg-transparent font-light"
                                       >
                                         {item.type === "post" ? "文章" : "项目"}
                                       </Badge>
@@ -441,13 +443,13 @@ export function BlogArchive() {
 
                                       {item.tags.length > 0 && (
                                         <div className="flex items-center gap-1">
-                                          <Tag className="h-3 w-3 text-ink-400" />
+                                          <Tag className="h-3 w-3 text-muted-foreground" />
                                           <div className="flex gap-1.5 flex-wrap">
                                             {item.tags.slice(0, 2).map((tag) => (
                                               <Badge
                                                 key={tag.id}
                                                 variant="outline"
-                                                className="text-xs px-2 py-0.5 border-ink-200 text-ink-500 bg-ink-100/50 font-light"
+                                                className="text-xs px-2 py-0.5 border-border text-muted-foreground bg-muted/50 font-light"
                                               >
                                                 {tag.name}
                                               </Badge>
@@ -455,7 +457,7 @@ export function BlogArchive() {
                                             {item.tags.length > 2 && (
                                               <Badge
                                                 variant="outline"
-                                                className="text-xs px-2 py-0.5 border-ink-200 text-ink-500 bg-ink-100/50 font-light"
+                                                className="text-xs px-2 py-0.5 border-border text-muted-foreground bg-muted/50 font-light"
                                               >
                                                 +{item.tags.length - 2}
                                               </Badge>
@@ -486,8 +488,8 @@ export function BlogArchive() {
           {/* Empty State */}
           {paginatedItems.length === 0 && (
             <div className="text-center py-12">
-              <div className="text-ink-600 text-lg mb-2 font-light">没有找到匹配的内容</div>
-              <div className="text-sm text-ink-500 font-light">尝试调整搜索关键词或选择不同的筛选条件</div>
+              <div className="text-muted-foreground text-lg mb-2 font-light">没有找到匹配的内容</div>
+              <div className="text-sm text-muted-foreground font-light">尝试调整搜索关键词或选择不同的筛选条件</div>
             </div>
           )}
         </div>
