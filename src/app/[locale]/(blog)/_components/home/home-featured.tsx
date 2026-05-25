@@ -73,7 +73,7 @@ function FeaturedCover({ post, rankBadge }: { post: PopularPost; rankBadge: stri
 
 export function HomeFeatured() {
   const t = useTranslations("Home");
-  const { data: popularPosts, isLoading } = api.post.getPopular.useQuery({ limit: 5 });
+  const { data: popularPosts, isLoading } = api.post.getPopular.useQuery({ limit: 4 });
 
   if (isLoading) {
     return (
@@ -162,7 +162,7 @@ export function HomeFeatured() {
             {t("continueReading")} · {t("byHeat")}
           </motion.div>
 
-          <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {rest.map((post, i) => (
               <motion.li
                 key={post.id}

@@ -8,17 +8,13 @@ import { notFound } from "next/navigation";
 const RSS_MAX_ITEMS = 50;
 const SITE_NAME = "Tz Blog";
 
-const xmlEscape = (s: string) =>
-  s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const xmlEscape = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 const attrEscape = (s: string) => xmlEscape(s).replace(/"/g, "&quot;");
 
 const cdataEscape = (s: string) => s.replace(/]]>/g, "]]]]><![CDATA[>");
 
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ locale: string }> }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!routing.locales.includes(locale as (typeof routing.locales)[number])) {
     notFound();

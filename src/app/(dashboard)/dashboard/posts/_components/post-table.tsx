@@ -5,7 +5,6 @@ import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { useDataTable } from "@/hooks/use-data-table";
 import type { PostWithRelations } from "@/global";
 import { api } from "@/trpc/react";
@@ -21,15 +20,6 @@ export function PostTable() {
   const router = useRouter();
   const utils = api.useUtils();
   const { data, isFetching } = api.post.getMany.useQuery({ limit: 100 });
-
-  const createDraft = api.post.createDraft.useMutation({
-    onSuccess: (result) => {
-      router.push(`/dashboard/posts/${result.post.id}`);
-    },
-    onError: (error) => {
-      toast.error("创建失败: " + error.message);
-    },
-  });
 
   const updateWithTags = api.post.updateWithTags.useMutation({
     onSuccess: () => {
@@ -85,12 +75,8 @@ export function PostTable() {
     <div className="p-6 space-y-4">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">文章列表</h1>
-        <Button onClick={() => createDraft.mutate()} disabled={createDraft.isPending}>
-          {createDraft.isPending ? (
-            <Spinner className="size-4 mr-1" />
-          ) : (
-            <PenLineIcon className="size-4 mr-1" />
-          )}
+        <Button onClick={() => router.push("/dashboard/posts/new")}>
+          <PenLineIcon className="size-4 mr-1" />
           新建文章
         </Button>
       </div>

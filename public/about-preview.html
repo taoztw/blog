@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Preview</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    :root {
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .font-mono {
+      font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+    }
+    /* 让 bento 块在 hover 时有点呼吸感 */
+    .bento {
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .bento:hover {
+      transform: translateY(-2px);
+    }
+    /* 时间戳跳动 */
+    .blink {
+      animation: blink 1.2s steps(2, start) infinite;
+    }
+    @keyframes blink {
+      to {
+        visibility: hidden;
+      }
+    }
+  </style>
+</head>
+<body class="bg-neutral-50 text-neutral-900 antialiased">
+  <main class="mx-auto max-w-5xl px-6 py-16 sm:py-24">
+    <!-- ╔══════════ Header ══════════╗ -->
+    <section class="mb-12">
+      <div class="mb-6 flex items-center gap-3">
+        <span class="h-2 w-2 rounded-full bg-emerald-500 blink"></span>
+        <p class="font-mono text-xs uppercase tracking-widest text-neutral-500">
+          online · <span id="now-mono"></span>
+        </p>
+      </div>
+
+      <h1 class="text-5xl font-black leading-tight tracking-tight sm:text-7xl">
+        你好,我是
+        <span class="bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 bg-clip-text text-transparent">
+          TZ
+        </span>
+        。
+      </h1>
+      <p class="mt-6 max-w-2xl text-lg leading-relaxed text-neutral-600 sm:text-xl">
+        Agent 工程师 — 在构建 Agent 系统,把大模型变成真正能解决业务问题的工具。
+      </p>
+    </section>
+
+    <!-- ╔══════════ Bento Grid ══════════╗ -->
+    <section class="mb-16 grid grid-cols-1 gap-4 sm:grid-cols-6">
+      <!-- 现在 (主块) -->
+      <div class="bento sm:col-span-4 overflow-hidden rounded-2xl bg-blue-600 p-8 text-white">
+        <div class="mb-4 flex items-center gap-2">
+          <span class="rounded-md bg-white/15 px-2 py-1 font-mono text-[10px] uppercase tracking-widest">
+            currently
+          </span>
+          <span class="font-mono text-xs text-blue-200">// 2024 → now</span>
+        </div>
+        <h2 class="text-3xl font-bold sm:text-4xl">Agent 工程师</h2>
+        <p class="mt-4 text-base leading-relaxed text-blue-100 sm:text-lg">
+          构建生产级 Agent 系统 —— RAG、工具调用、工作流编排,让 LLM 真正接入业务流程。
+        </p>
+
+        <div class="mt-6 flex flex-wrap gap-2">
+          <span class="rounded-md bg-white/10 px-2.5 py-1 font-mono text-xs">LLM</span>
+          <span class="rounded-md bg-white/10 px-2.5 py-1 font-mono text-xs">RAG</span>
+          <span class="rounded-md bg-white/10 px-2.5 py-1 font-mono text-xs">Agent</span>
+          <span class="rounded-md bg-white/10 px-2.5 py-1 font-mono text-xs">Workflow</span>
+        </div>
+      </div>
+
+      <!-- 经验年数 -->
+      <div class="bento sm:col-span-2 flex flex-col justify-between rounded-2xl bg-cyan-500 p-6 text-white">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-cyan-100">
+          experience
+        </p>
+        <div>
+          <p class="text-7xl font-black leading-none">
+            <span id="years">5</span><span class="text-3xl">y</span>
+          </p>
+          <p class="mt-2 text-sm text-cyan-50">since 2021</p>
+        </div>
+      </div>
+
+      <!-- 当前时间 (终端风) -->
+      <div class="bento sm:col-span-2 rounded-2xl bg-neutral-900 p-6 text-white">
+        <div class="mb-3 flex items-center gap-1.5">
+          <span class="h-2.5 w-2.5 rounded-full bg-red-400"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-yellow-400"></span>
+          <span class="h-2.5 w-2.5 rounded-full bg-green-400"></span>
+          <span class="ml-2 font-mono text-[10px] uppercase tracking-widest text-neutral-500">
+            ~/now
+          </span>
+        </div>
+        <div class="font-mono text-xs leading-relaxed">
+          <p><span class="text-cyan-400">$</span> <span class="text-neutral-400">date</span></p>
+          <p class="text-green-400" id="now-date">2026-05-26</p>
+          <p class="mt-2"><span class="text-cyan-400">$</span> <span class="text-neutral-400">uptime</span></p>
+          <p class="text-amber-400"><span id="days-since">1942</span> days online</p>
+        </div>
+      </div>
+
+      <!-- 角色数 -->
+      <div class="bento sm:col-span-2 rounded-2xl bg-purple-600 p-6 text-white">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-purple-200">
+          past roles
+        </p>
+        <p class="mt-2 text-7xl font-black leading-none">04</p>
+        <p class="mt-3 text-sm text-purple-100">
+          算法 · PM · 全栈 · Agent
+        </p>
+      </div>
+
+      <!-- 联系 -->
+      <div class="bento sm:col-span-4 rounded-2xl bg-gradient-to-br from-orange-500 to-pink-500 p-8 text-white">
+        <p class="font-mono text-[10px] uppercase tracking-widest text-white/80">
+          contact
+        </p>
+        <a
+          href="mailto:tztw4723@gmail.com"
+          class="mt-3 inline-block font-mono text-2xl font-bold underline decoration-white/40 decoration-2 underline-offset-4 transition hover:decoration-white sm:text-3xl"
+        >
+          tztw4723@gmail.com
+        </a>
+        <p class="mt-3 text-sm text-white/90">
+          想聊 Agent / 找我合作 / 随便扯几句,都欢迎。
+        </p>
+      </div>
+    </section>
+
+    <!-- ╔══════════ 职业轨迹 ══════════╗ -->
+    <section class="mb-16">
+      <div class="mb-8 flex items-baseline justify-between">
+        <h2 class="text-2xl font-bold sm:text-3xl">职业轨迹</h2>
+        <p class="font-mono text-xs text-neutral-500">2021 → now</p>
+      </div>
+
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <!-- 01 -->
+        <div class="bento group relative rounded-xl border border-neutral-200 bg-white p-5">
+          <div
+            class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 font-mono font-bold text-purple-700"
+          >
+            01
+          </div>
+          <h3 class="text-lg font-bold">机器翻译算法</h3>
+          <p class="mt-1 text-sm text-neutral-500">NMT · 序列模型</p>
+          <div class="mt-3 h-1 w-12 rounded-full bg-purple-500"></div>
+        </div>
+
+        <!-- 02 -->
+        <div class="bento group relative rounded-xl border border-neutral-200 bg-white p-5">
+          <div
+            class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-pink-100 font-mono font-bold text-pink-700"
+          >
+            02
+          </div>
+          <h3 class="text-lg font-bold">产品经理</h3>
+          <p class="mt-1 text-sm text-neutral-500">需求 · 设计 · 落地</p>
+          <div class="mt-3 h-1 w-12 rounded-full bg-pink-500"></div>
+        </div>
+
+        <!-- 03 -->
+        <div class="bento group relative rounded-xl border border-neutral-200 bg-white p-5">
+          <div
+            class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-100 font-mono font-bold text-emerald-700"
+          >
+            03
+          </div>
+          <h3 class="text-lg font-bold">前后端开发</h3>
+          <p class="mt-1 text-sm text-neutral-500">Python · React · Next.js</p>
+          <div class="mt-3 h-1 w-12 rounded-full bg-emerald-500"></div>
+        </div>
+
+        <!-- 04 (current) -->
+        <div class="bento relative rounded-xl border-2 border-blue-600 bg-blue-50 p-5">
+          <span
+            class="absolute right-3 top-3 rounded-full bg-blue-600 px-2 py-0.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white"
+          >
+            now
+          </span>
+          <div
+            class="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600 font-mono font-bold text-white"
+          >
+            04
+          </div>
+          <h3 class="text-lg font-bold text-blue-900">Agent 工程师</h3>
+          <p class="mt-1 text-sm text-blue-700">LLM · RAG · 业务落地</p>
+          <div class="mt-3 h-1 w-12 rounded-full bg-blue-600"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ╔══════════ Footer ══════════╗ -->
+    <footer
+      class="mt-20 flex flex-col justify-between gap-3 border-t border-neutral-200 pt-8 text-sm text-neutral-500 sm:flex-row"
+    >
+      <p class="font-mono">© <span id="year">2026</span> TZ · made by hand</p>
+      <p class="font-mono">
+        <span class="text-emerald-600">●</span> still building
+      </p>
+    </footer>
+  </main>
+
+  <script>
+    const now = new Date();
+    const year = now.getFullYear();
+    const yearsExp = year - 2021;
+
+    document.getElementById("years").textContent = yearsExp;
+    document.getElementById("year").textContent = year;
+
+    const pad = (n) => String(n).padStart(2, "0");
+    const dateStr = `${year}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
+
+    document.getElementById("now-date").textContent = dateStr;
+    document.getElementById("now-mono").textContent = `${dateStr} ${timeStr}`;
+
+    // 自毕业日开始天数
+    const grad = new Date("2021-07-01");
+    const days = Math.floor((now - grad) / (1000 * 60 * 60 * 24));
+    document.getElementById("days-since").textContent = days.toLocaleString();
+  </script>
+</body>
+</html>

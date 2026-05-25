@@ -2,11 +2,11 @@ import { FaviconSwitcher } from "@/components/favicon-switcher";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/constants";
-import "@/styles/globals.css";
 import { TRPCReactProvider } from "@/trpc/react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import NextTopLoader from "nextjs-toploader";
+import "@/styles/globals.css";
 
 const geistSans = localFont({
   src: [
