@@ -224,9 +224,7 @@ export default function DesignSystemPage() {
           <div className="hidden lg:block mb-6">
             <Logo size="xl" />
           </div>
-          <h1 className="text-4xl font-normal tracking-wide mb-3 font-serif">
-            Ink Design System
-          </h1>
+          <h1 className="text-4xl font-normal tracking-wide mb-3 font-serif">Ink Design System</h1>
           <p className="text-muted-foreground leading-relaxed">
             墨色设计系统 — 源自宣纸与松烟墨的暖褐色阶，搭配印章朱红强调色。 所有色相锁定在
             H≈40°-80°，避免了纯灰的「塑料感」。 本页展示博客使用的全部设计标记（Design Tokens）与组件样式。
@@ -438,9 +436,7 @@ export default function DesignSystemPage() {
               <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-2">文字层级</p>
               <div>
                 <span className="text-[10px] text-muted-foreground font-mono">text-4xl · font-light · font-serif</span>
-                <p className="text-4xl font-light tracking-wide mt-1 font-serif">
-                  Ink Design System
-                </p>
+                <p className="text-4xl font-light tracking-wide mt-1 font-serif">Ink Design System</p>
               </div>
               <Separator />
               <div>

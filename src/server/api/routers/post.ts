@@ -523,6 +523,7 @@ export const postRouter = createTRPCRouter({
           title: posts.title,
           slug: posts.slug,
           excerpt: posts.excerpt,
+          imageUrl: posts.imageUrl,
           createdAt: posts.createdAt,
           viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
           category: categorys,
@@ -712,6 +713,25 @@ export const postRouter = createTRPCRouter({
         .limit(limit);
 
       return recentPosts;
+    }),
+
+  // Daily published-post counts for the last N days — homepage heatmap
+  getActivity: publicProcedure
+    .input(z.object({ days: z.number().min(30).max(400).default(371) }).optional())
+    .query(async ({ ctx, input }) => {
+      const days = input?.days ?? 371;
+      const sinceMs = Date.now() - days * 24 * 60 * 60 * 1000;
+
+      const rows = await ctx.db
+        .select({
+          date: sql<string>`strftime('%Y-%m-%d', ${posts.createdAt} / 1000, 'unixepoch', 'localtime')`,
+          count: sql<number>`COUNT(*)`.mapWith(Number),
+        })
+        .from(posts)
+        .where(and(eq(posts.status, "published"), sql`${posts.createdAt} >= ${sinceMs}`))
+        .groupBy(sql`strftime('%Y-%m-%d', ${posts.createdAt} / 1000, 'unixepoch', 'localtime')`);
+
+      return rows;
     }),
 
   // Get statistics (total posts count and total views) with 1-hour cache

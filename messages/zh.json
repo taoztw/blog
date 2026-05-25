@@ -124,7 +124,19 @@
     "projectsLabel": "项目",
     "noContent": "暂无内容",
     "essayCategory": "随笔",
-    "minutesRead": "{minutes} 分钟阅读"
+    "minutesRead": "{minutes} 分钟阅读",
+    "activityLabel": "写作热力",
+    "pastYear": "过去一年",
+    "streak": "当前连续",
+    "streakDays": "天",
+    "legendLess": "少",
+    "legendMore": "多",
+    "topicsLabel": "主题",
+    "allTags": "所有标签",
+    "mostReadRank": "#1 最受欢迎",
+    "byHeat": "按热度",
+    "monthSuffix": "月",
+    "noActivity": "无写作"
   },
   "Footer": {
     "description": "一个关于技术、开发与创意探索的个人博客。",

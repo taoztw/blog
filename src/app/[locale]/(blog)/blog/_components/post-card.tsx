@@ -19,14 +19,14 @@ function MiniThumb({ post, href }: { post: PostListItem; href: string }) {
     return (
       <Link
         href={href}
-        className="relative block size-[84px] overflow-hidden rounded-sm"
+        className="relative block size-[92px] shrink-0 self-start overflow-hidden rounded sm:size-[120px] lg:size-[140px]"
         aria-label={post.title}
       >
         <Image
           alt={post.title}
           src={ImageService.getImageUrl(post.imageUrl)}
           fill
-          sizes="84px"
+          sizes="(min-width: 1024px) 140px, (min-width: 640px) 120px, 92px"
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
           loading="lazy"
         />
@@ -34,17 +34,16 @@ function MiniThumb({ post, href }: { post: PostListItem; href: string }) {
     );
   }
 
-  // 无图: 极简日期戳保持对齐
   const day = format(post.createdAt, "dd");
   const month = format(post.createdAt, "MMM");
   return (
     <Link
       href={href}
-      className="flex size-[84px] flex-col items-center justify-center rounded-sm border border-ink-200 bg-ink-100 transition-colors group-hover:border-ink-300"
+      className="flex size-[92px] shrink-0 flex-col items-center justify-center self-start rounded border border-ink-200 bg-ink-100 transition-colors group-hover:border-ink-300 sm:size-[120px] lg:size-[140px]"
       aria-label={post.title}
     >
-      <span className="font-cormorant text-2xl leading-none font-light text-ink-700">{day}</span>
-      <span className="mt-1 text-[9px] tracking-[0.2em] text-ink-500 uppercase">{month}</span>
+      <span className="text-3xl font-light leading-none text-ink-700 tabular-nums sm:text-4xl">{day}</span>
+      <span className="mt-1.5 text-[10px] uppercase tracking-[0.2em] text-ink-500">{month}</span>
     </Link>
   );
 }
@@ -54,75 +53,44 @@ export function BlogCard({ post }: BlogCardProps) {
   const blogUrl = `${pathname}/${post.slug}`;
 
   return (
-    <article
-      className="group grid grid-cols-[60px_1fr] gap-x-5 gap-y-3 border-b border-dotted border-ink-300 py-7 last:border-b-0 sm:grid-cols-[84px_1fr] lg:grid-cols-[84px_1fr_180px] lg:gap-x-8"
-    >
+    <article className="group flex items-start gap-6 border-b border-dotted border-ink-300 py-8 last:border-b-0 sm:gap-8 sm:py-10">
       <MiniThumb post={post} href={blogUrl} />
 
-      <div className="min-w-0">
-        <div className="mb-1 font-cormorant text-xs tracking-[0.05em] text-ink-400 italic">
-          — {format(post.createdAt, "yyyy·MM·dd")}
+      <div className="min-w-0 flex-1">
+        <div className="mb-2 text-[11px] uppercase tracking-[0.18em] text-ink-400 tabular-nums">
+          {format(post.createdAt, "yyyy · MM · dd")}
         </div>
-        <h3 className="font-cormorant text-xl leading-snug font-normal text-ink-800 transition-colors group-hover:text-seal">
+        <h3 className="text-xl font-light leading-snug tracking-tight text-ink-800 transition-colors group-hover:text-seal sm:text-2xl">
           <Link href={blogUrl}>{post.title}</Link>
         </h3>
         {post.excerpt && (
-          <p className="mt-2 line-clamp-2 max-w-xl text-sm leading-relaxed text-ink-500">{post.excerpt}</p>
+          <p className="mt-3 line-clamp-2 max-w-2xl text-[15px] leading-relaxed text-ink-600">
+            {post.excerpt}
+          </p>
         )}
 
-        {/* 小屏 inline meta */}
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] tracking-wide text-ink-500 lg:hidden">
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] tracking-wide text-ink-500">
           {post.category && (
             <span>
-              <span className="text-ink-400">cat</span> {post.category.name}
+              <span className="text-ink-400">cat</span>{" "}
+              <span className="text-ink-700">{post.category.name}</span>
             </span>
           )}
           <span>
-            <span className="text-ink-400">views</span> {post.viewCount}
+            <span className="text-ink-400">views</span>{" "}
+            <span className="tabular-nums text-ink-700">{post.viewCount}</span>
           </span>
           <span>
-            <span className="text-ink-400">comments</span> {post.commentCount}
+            <span className="text-ink-400">comments</span>{" "}
+            <span className="tabular-nums text-ink-700">{post.commentCount}</span>
           </span>
           {post.tags?.slice(0, 3).map((t) => (
-            <span
-              key={t.id}
-              style={{ color: t.color ?? undefined }}
-            >
+            <span key={t.id} className="text-seal">
               #{t.name}
             </span>
           ))}
         </div>
       </div>
-
-      {/* 大屏右栏 marginalia */}
-      <aside className="hidden border-l border-ink-200 pl-4 font-mono text-[11px] leading-relaxed text-ink-400 lg:block">
-        {post.category && (
-          <div className="flex justify-between">
-            <span>cat</span>
-            <span className="text-ink-600">{post.category.name}</span>
-          </div>
-        )}
-        <div className="flex justify-between">
-          <span>views</span>
-          <span className="text-ink-600">{post.viewCount}</span>
-        </div>
-        <div className="flex justify-between">
-          <span>comments</span>
-          <span className="text-ink-600">{post.commentCount}</span>
-        </div>
-        {post.tags && post.tags.length > 0 && (
-          <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1">
-            {post.tags.slice(0, 4).map((t) => (
-              <span
-                key={t.id}
-                style={{ color: t.color ?? undefined }}
-              >
-                #{t.name}
-              </span>
-            ))}
-          </div>
-        )}
-      </aside>
     </article>
   );
 }

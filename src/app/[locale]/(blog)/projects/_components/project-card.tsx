@@ -1,10 +1,9 @@
 import type { ProjectWithRelations } from "@/global";
-import { ExternalLink, Github } from "lucide-react";
+import { ExternalLink, FileText, Github } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Badge } from "../../../../../components/ui/badge";
-import { Button } from "../../../../../components/ui/button";
 import {
   Card,
   CardContent,
@@ -48,8 +47,8 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
     },
     project.blogUrl && {
       href: project.blogUrl,
-      label: "Blog Post",
-      icon: ExternalLink,
+      label: "Blog",
+      icon: FileText,
     },
   ].filter(Boolean) as Array<{
     href: string;
@@ -98,28 +97,23 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
         )}
       </CardContent>
       <CardFooter className="pb-4">
-        {/* 链接按钮 */}
         {links.length > 0 && (
-          <div className="flex gap-2">
-            {links.slice(0, 2).map((link, index) => {
+          <div className="flex flex-wrap gap-2">
+            {links.map((link, index) => {
               const Icon = link.icon;
               return (
-                <Button key={index} asChild size="sm" variant={index === 0 ? "default" : "outline"} className="flex-1">
-                  <Link href={link.href} target="_blank" rel="noopener noreferrer">
-                    <Icon className="mr-2 h-4 w-4" />
-                    {link.label}
-                  </Link>
-                </Button>
+                <Link
+                  key={index}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-ink-300 px-3.5 py-1.5 text-[13px] text-ink-700 transition-colors hover:border-ink-800 hover:text-ink-900"
+                >
+                  <Icon className="size-3.5" />
+                  {link.label}
+                </Link>
               );
             })}
-            {links.length > 2 && (
-              <Button asChild size="sm" variant="outline" className="flex-1">
-                <Link href={links[2]!.href} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  More
-                </Link>
-              </Button>
-            )}
           </div>
         )}
       </CardFooter>

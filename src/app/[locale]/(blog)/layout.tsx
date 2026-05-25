@@ -1,6 +1,7 @@
 import { Footer } from "@/components/layouts/footer";
 import Header2 from "@/components/layouts/header";
 import { routing } from "@/i18n/routing";
+import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -8,6 +9,18 @@ import React from "react";
 interface LayoutProps {
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  if (!hasLocale(routing.locales, locale)) return {};
+  return {
+    alternates: {
+      types: {
+        "application/rss+xml": [{ url: `/${locale}/rss.xml`, title: "Tz Blog RSS" }],
+      },
+    },
+  };
 }
 
 const Layout = async ({ children, params }: LayoutProps) => {

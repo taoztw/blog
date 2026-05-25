@@ -61,102 +61,136 @@ export function BlogListPage() {
     router.push(`${pathname}?${params.toString()}`);
   };
 
+  const hasActiveFilter = !!categoryName || !!tagName;
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto max-w-4xl px-6 py-8 sm:py-10">
-        {/* 快速筛选栏 — 单行横滚 */}
-        <section className="mb-8 -mx-6 px-6">
-          <div className="scrollbar-hide flex items-baseline gap-x-4 overflow-x-auto whitespace-nowrap pb-1">
-            <button
-              onClick={clearAll}
-              className={cn(
-                "shrink-0 cursor-pointer text-sm transition-colors",
-                !categoryName && !tagName ? "font-medium text-seal" : "text-ink-600 hover:text-ink-900",
+      <div className="container mx-auto max-w-6xl px-6 py-10 sm:py-14">
+        {/* ── Filter ── */}
+        <section className="mb-12">
+          <div className="-mx-6 px-6">
+            <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1">
+              <button
+                onClick={clearAll}
+                className={cn(
+                  "inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] transition-colors",
+                  !hasActiveFilter
+                    ? "border-ink-800 bg-ink-800 text-ink-100"
+                    : "border-ink-300 text-ink-700 hover:border-ink-500 hover:text-ink-900"
+                )}
+              >
+                全部
+              </button>
+
+              {categoriesWithCount?.map((c: CategoryWithCount) => {
+                const active = c.name === categoryName;
+                return (
+                  <button
+                    key={c.id}
+                    onClick={() => toggleCategory(c.name)}
+                    className={cn(
+                      "inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] transition-colors",
+                      active
+                        ? "border-ink-800 bg-ink-800 text-ink-100"
+                        : "border-ink-300 text-ink-700 hover:border-ink-500 hover:text-ink-900"
+                    )}
+                  >
+                    {c.name}
+                    <span
+                      className={cn(
+                        "text-[11px] tabular-nums",
+                        active ? "text-ink-100/70" : "text-ink-400"
+                      )}
+                    >
+                      {c.postCount}
+                    </span>
+                  </button>
+                );
+              })}
+
+              {tagsWithCount && tagsWithCount.length > 0 && (
+                <span className="mx-1 shrink-0 text-ink-300">·</span>
               )}
-            >
-              全部
-            </button>
-            {categoriesWithCount?.map((c: CategoryWithCount) => {
-              const active = c.name === categoryName;
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => toggleCategory(c.name)}
-                  className={cn(
-                    "shrink-0 cursor-pointer text-sm transition-colors",
-                    active ? "font-medium text-seal" : "text-ink-700 hover:text-ink-900",
-                  )}
-                >
-                  {c.name}
-                  <span className="ml-1 font-mono text-[10px] text-ink-400">{c.postCount}</span>
-                </button>
-              );
-            })}
-            {tagsWithCount && tagsWithCount.length > 0 && (
-              <span className="shrink-0 text-ink-300">|</span>
-            )}
-            {tagsWithCount?.map((t: TagWithCount) => {
-              const active = t.name === tagName;
-              return (
-                <button
-                  key={t.id}
-                  onClick={() => toggleTag(t.name)}
-                  className={cn("shrink-0 cursor-pointer text-sm transition-opacity", active ? "font-medium" : "hover:opacity-70")}
-                  style={{ color: active ? "var(--seal)" : t.color ?? "var(--ink-600)" }}
-                >
-                  #{t.name}
-                </button>
-              );
-            })}
+
+              {tagsWithCount?.map((t: TagWithCount) => {
+                const active = t.name === tagName;
+                return (
+                  <button
+                    key={t.id}
+                    onClick={() => toggleTag(t.name)}
+                    className={cn(
+                      "inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] transition-colors",
+                      active
+                        ? "border-seal bg-seal text-white"
+                        : "border-ink-300 text-ink-700 hover:border-seal hover:text-seal"
+                    )}
+                  >
+                    <span>#{t.name}</span>
+                    <span
+                      className={cn(
+                        "text-[11px] tabular-nums",
+                        active ? "text-white/75" : "text-ink-400"
+                      )}
+                    >
+                      {t.postCount}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </section>
 
-        {/* 文章列表 */}
-        <div>
-          {isLoading &&
-            Array.from({ length: 3 }).map((_, i) => (
-              <div
-                key={i}
-                className="grid grid-cols-[60px_1fr] gap-x-5 gap-y-3 border-b border-dotted border-ink-300 py-7 sm:grid-cols-[84px_1fr] lg:grid-cols-[84px_1fr_180px] lg:gap-x-8"
-              >
-                <Skeleton className="size-[84px] rounded-sm" />
-                <div className="space-y-2">
-                  <Skeleton className="h-3 w-24" />
-                  <Skeleton className="h-5 w-3/4" />
-                  <Skeleton className="h-4 w-full" />
+        {/* ── Dispatches ── */}
+        <section>
+          <div className="mb-2 flex items-baseline gap-3">
+            <span className="text-[10px] uppercase tracking-[0.3em] text-ink-400">Dispatches</span>
+            {!isLoading && <span className="font-mono text-[10px] text-ink-400">{totalItems} 篇</span>}
+            <span className="h-px flex-1 bg-ink-200" />
+          </div>
+
+          <div className="grid gap-x-10 md:grid-cols-2">
+            {isLoading &&
+              Array.from({ length: 4 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-5 border-b border-dotted border-ink-300 py-7 sm:gap-6"
+                >
+                  <Skeleton className="size-[60px] rounded-sm sm:size-[84px]" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-3 w-24" />
+                    <Skeleton className="h-5 w-3/4" />
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
                 </div>
-                <div className="hidden space-y-1 lg:block">
-                  <Skeleton className="h-3 w-full" />
-                  <Skeleton className="h-3 w-2/3" />
-                  <Skeleton className="h-3 w-1/2" />
-                </div>
+              ))}
+
+            {!isLoading && posts.length === 0 && (
+              <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
+                <p className="font-cormorant text-xl text-ink-600 italic">No entries found.</p>
+                <p className="mt-2 text-sm text-ink-500">尝试调整筛选条件或搜索关键词</p>
               </div>
-            ))}
+            )}
 
-          {!isLoading && posts.length === 0 && (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <p className="font-cormorant text-xl text-ink-600 italic">No entries found.</p>
-              <p className="mt-2 text-sm text-ink-500">尝试调整筛选条件或搜索关键词</p>
-            </div>
-          )}
+            {!isLoading &&
+              posts.map((post: PostWithFilters, index: number) => (
+                <motion.div
+                  key={post.id}
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.06, duration: 0.4, ease: "easeOut" }}
+                >
+                  <BlogCard post={post} />
+                </motion.div>
+              ))}
+          </div>
 
-          {!isLoading &&
-            posts.map((post: PostWithFilters, index: number) => (
-              <motion.div
-                key={post.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.06, duration: 0.4, ease: "easeOut" }}
-              >
-                <BlogCard post={post} />
-              </motion.div>
-            ))}
-        </div>
-
-        <PaginationComponent
-          totalItems={totalItems}
-          itemsPerPage={10}
-        />
+          <PaginationComponent
+            totalItems={totalItems}
+            itemsPerPage={10}
+          />
+        </section>
       </div>
     </div>
   );

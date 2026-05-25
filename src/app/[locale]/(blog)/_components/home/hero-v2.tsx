@@ -9,7 +9,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { HomeFeatured } from "./home-featured";
+import { HomeHeatmap } from "./home-heatmap";
 import { HomeStreams } from "./home-streams";
+import { HomeTopics } from "./home-topics";
 
 const fade = {
   hidden: { opacity: 0, y: 24 },
@@ -54,88 +56,103 @@ export function HeroV2() {
 
   return (
     <section className="relative pb-24 pt-12 lg:pt-20">
-      {/* ── Identity Hero ── */}
-      <div className="mx-auto max-w-3xl">
-        <motion.p
-          custom={0}
-          variants={fade}
-          initial="hidden"
-          animate="show"
-          className="mb-4 text-sm tracking-wide text-muted-foreground"
-        >
-          {greeting}，{time}
-        </motion.p>
+      {/* ── Hero + Heatmap (7/5 split) ── */}
+      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-12 lg:gap-16">
+        <div className="lg:col-span-7">
+          <motion.p
+            custom={0}
+            variants={fade}
+            initial="hidden"
+            animate="show"
+            className="mb-4 text-sm tracking-wide text-muted-foreground"
+          >
+            {greeting}，{time}
+          </motion.p>
 
-        <motion.h1
-          custom={1}
-          variants={fade}
-          initial="hidden"
-          animate="show"
-          className="text-5xl font-extralight tracking-tight text-foreground sm:text-6xl lg:text-7xl"
-        >
-          Tz
-          <span className="text-seal">.</span>
-        </motion.h1>
+          <motion.h1
+            custom={1}
+            variants={fade}
+            initial="hidden"
+            animate="show"
+            className="text-5xl font-extralight tracking-tight text-foreground sm:text-6xl lg:text-7xl"
+          >
+            Tz
+            <span className="text-seal">.</span>
+          </motion.h1>
 
-        <motion.p
+          <motion.p
+            custom={2}
+            variants={fade}
+            initial="hidden"
+            animate="show"
+            className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground"
+          >
+            {t("subtitle")}
+          </motion.p>
+
+          <motion.div
+            custom={3}
+            variants={fade}
+            initial="hidden"
+            animate="show"
+            className="mt-8 flex flex-wrap items-center gap-6"
+          >
+            <Link
+              href="/blog"
+              className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
+            >
+              {t("viewBlog")}
+              <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
+            </Link>
+            <Link
+              href="/projects"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-ink-200"
+            >
+              {t("viewProjects")}
+            </Link>
+
+            <div className="flex items-center gap-5 text-sm text-muted-foreground">
+              <span className="inline-flex items-center gap-1.5">
+                <BookOpen className="size-3.5" />
+                {statsLoading ? (
+                  <Spinner className="size-3.5" />
+                ) : (
+                  <span className="font-medium text-foreground">
+                    <AnimatedNumber value={stats?.totalPosts ?? 0} />
+                  </span>
+                )}
+                {t("posts")}
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <Eye className="size-3.5" />
+                {statsLoading ? (
+                  <Spinner className="size-3.5" />
+                ) : (
+                  <span className="font-medium text-foreground">
+                    <AnimatedNumberK value={stats?.totalViews ?? 0} />
+                  </span>
+                )}
+                {t("views")}
+              </span>
+            </div>
+          </motion.div>
+        </div>
+
+        <motion.div
           custom={2}
           variants={fade}
           initial="hidden"
           animate="show"
-          className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground"
+          className="lg:col-span-5"
         >
-          {t("subtitle")}
-        </motion.p>
-
-        <motion.div
-          custom={3}
-          variants={fade}
-          initial="hidden"
-          animate="show"
-          className="mt-8 flex flex-wrap items-center gap-6"
-        >
-          <Link
-            href="/blog"
-            className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
-          >
-            {t("viewBlog")}
-            <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-0.5" />
-          </Link>
-          <Link
-            href="/projects"
-            className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-ink-200"
-          >
-            {t("viewProjects")}
-          </Link>
-
-          <div className="flex items-center gap-5 text-sm text-muted-foreground">
-            <span className="inline-flex items-center gap-1.5">
-              <BookOpen className="size-3.5" />
-              {statsLoading ? (
-                <Spinner className="size-3.5" />
-              ) : (
-                <span className="font-medium text-foreground">
-                  <AnimatedNumber value={stats?.totalPosts ?? 0} />
-                </span>
-              )}
-              {t("posts")}
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Eye className="size-3.5" />
-              {statsLoading ? (
-                <Spinner className="size-3.5" />
-              ) : (
-                <span className="font-medium text-foreground">
-                  <AnimatedNumberK value={stats?.totalViews ?? 0} />
-                </span>
-              )}
-              {t("views")}
-            </span>
-          </div>
+          <HomeHeatmap />
         </motion.div>
       </div>
 
-      {/* ── Featured + Continue Reading ── */}
+      {/* ── Topics cloud ── */}
+      <HomeTopics />
+
+      {/* ── Featured (Popular) + Continue Reading ── */}
       <HomeFeatured />
 
       {/* ── Journal Stream + Projects ── */}

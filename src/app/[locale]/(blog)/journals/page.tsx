@@ -7,12 +7,10 @@ import { Spinner } from "@/components/ui/spinner";
 import { PaginationComponent } from "@/components/pagination";
 import { api } from "@/trpc/react";
 import { BookOpen, Plus } from "lucide-react";
-import { toast } from "sonner";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { JournalCard } from "./_components/journal-card";
 import { JournalCommentPanel } from "./_components/journal-comment-panel";
-import { JournalEditorDialog } from "./_components/journal-editor-dialog";
 
 const ITEMS_PER_PAGE = 50;
 
@@ -40,11 +38,7 @@ function formatDateLabel(date: Date) {
 export default function JournalsPage() {
   const { data: session } = authClient.useSession();
   const searchParams = useSearchParams();
-  const [editorOpen, setEditorOpen] = React.useState(false);
-  const [editingJournal, setEditingJournal] = React.useState<{
-    id: string;
-    content: string;
-  } | null>(null);
+  const router = useRouter();
   const [commentPanelOpen, setCommentPanelOpen] = React.useState(false);
   const [activeCommentJournal, setActiveCommentJournal] = React.useState<{
     id: string;
@@ -57,32 +51,11 @@ export default function JournalsPage() {
     page,
     limit: ITEMS_PER_PAGE,
   });
-  const utils = api.useUtils();
 
   const isAdmin = session?.user?.role === "admin";
 
-  const createJournal = api.journal.create.useMutation({
-    onSuccess: (result) => {
-      void utils.journal.getByPage.invalidate();
-      setEditingJournal({
-        id: result.journal.id,
-        content: result.journal.content,
-      });
-      setEditorOpen(true);
-    },
-    onError: (error) => {
-      toast.error("创建失败: " + error.message);
-    },
-  });
-
   const handleEdit = (journal: { id: string; content: string }) => {
-    setEditingJournal(journal);
-    setEditorOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setEditorOpen(false);
-    setEditingJournal(null);
+    router.push(`/dashboard/journals/${journal.id}`);
   };
 
   const handleOpenComments = (journal: { id: string; createdAt: Date }) => {
@@ -91,9 +64,7 @@ export default function JournalsPage() {
   };
 
   const handleCreate = () => {
-    createJournal.mutate({
-      content: JSON.stringify([{ type: "p", children: [{ text: "" }] }]),
-    });
+    router.push("/dashboard/journals/new");
   };
 
   // Group journals by date
@@ -187,35 +158,27 @@ export default function JournalsPage() {
       {isAdmin && (
         <button
           onClick={handleCreate}
-          disabled={createJournal.isPending}
           aria-label="新建日志"
           className={cn(
             "group/fab fixed bottom-6 right-6 z-40 flex size-14 items-center justify-center rounded-full",
             "bg-ink-800 text-ink-50 shadow-lg shadow-ink-900/20",
             "transition-all duration-200 hover:-translate-y-0.5 hover:bg-ink-900 hover:shadow-xl hover:shadow-ink-900/25",
-            "disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0",
             "sm:bottom-8 sm:right-8"
           )}
         >
-          {createJournal.isPending ? (
-            <Spinner className="size-5 text-ink-50" />
-          ) : (
-            <>
-              <Plus className="size-6 stroke-[2.5]" />
-              <span
-                className={cn(
-                  "pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md px-3 py-1.5 text-sm",
-                  "bg-ink-800 text-ink-50 shadow-md",
-                  "opacity-0 translate-x-2 transition-all duration-200",
-                  "group-hover/fab:opacity-100 group-hover/fab:translate-x-0",
-                  "after:absolute after:left-full after:top-1/2 after:-translate-y-1/2",
-                  "after:border-[5px] after:border-transparent after:border-l-ink-800"
-                )}
-              >
-                新建日志
-              </span>
-            </>
-          )}
+          <Plus className="size-6 stroke-[2.5]" />
+          <span
+            className={cn(
+              "pointer-events-none absolute right-full mr-3 whitespace-nowrap rounded-md px-3 py-1.5 text-sm",
+              "bg-ink-800 text-ink-50 shadow-md",
+              "opacity-0 translate-x-2 transition-all duration-200",
+              "group-hover/fab:opacity-100 group-hover/fab:translate-x-0",
+              "after:absolute after:left-full after:top-1/2 after:-translate-y-1/2",
+              "after:border-[5px] after:border-transparent after:border-l-ink-800"
+            )}
+          >
+            新建日志
+          </span>
         </button>
       )}
 
@@ -227,14 +190,6 @@ export default function JournalsPage() {
           if (!open) setActiveCommentJournal(null);
         }}
         journal={activeCommentJournal}
-      />
-
-      {/* Editor Dialog */}
-      <JournalEditorDialog
-        open={editorOpen}
-        onOpenChange={handleCloseDialog}
-        journal={editingJournal}
-        onSuccess={handleCloseDialog}
       />
     </>
   );

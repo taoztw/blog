@@ -35,15 +35,6 @@ export function JournalTable() {
     limit: 100
   });
 
-  const createJournal = api.journal.create.useMutation({
-    onSuccess: (result) => {
-      router.push(`/dashboard/journals/${result.journal.id}`);
-    },
-    onError: (error) => {
-      toast.error("创建失败: " + error.message);
-    },
-  });
-
   const deleteMutation = api.journal.delete.useMutation({
     onSuccess: () => {
       void utils.journal.getByPage.invalidate();
@@ -85,15 +76,8 @@ export function JournalTable() {
       <div className="p-6 space-y-4">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">日志列表</h1>
-          <Button
-            onClick={() => createJournal.mutate({ content: JSON.stringify([{ type: "p", children: [{ text: "" }] }]) })}
-            disabled={createJournal.isPending}
-          >
-            {createJournal.isPending ? (
-              <Spinner className="size-4 mr-2" />
-            ) : (
-              <PlusCircle className="size-4 mr-2" />
-            )}
+          <Button onClick={() => router.push("/dashboard/journals/new")}>
+            <PlusCircle className="size-4 mr-2" />
             新建日志
           </Button>
         </div>

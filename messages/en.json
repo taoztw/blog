@@ -124,7 +124,19 @@
     "projectsLabel": "Projects",
     "noContent": "No content yet",
     "essayCategory": "Essay",
-    "minutesRead": "{minutes} min read"
+    "minutesRead": "{minutes} min read",
+    "activityLabel": "Activity",
+    "pastYear": "past year",
+    "streak": "Streak",
+    "streakDays": "days",
+    "legendLess": "less",
+    "legendMore": "more",
+    "topicsLabel": "Topics",
+    "allTags": "All tags",
+    "mostReadRank": "#1 Most Read",
+    "byHeat": "by reads",
+    "monthSuffix": "",
+    "noActivity": "no entries"
   },
   "Footer": {
     "description": "A personal blog about technology, development, and creative exploration.",

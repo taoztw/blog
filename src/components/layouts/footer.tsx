@@ -1,12 +1,14 @@
 "use client";
 
 import { Separator } from "@/components/ui/separator";
-import { ExternalLink, GithubIcon, Mail, Rss } from "lucide-react";
+import { GithubIcon, Mail, Rss } from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 export function Footer() {
   const t = useTranslations("Footer");
+  const locale = useLocale();
+  const rssHref = `/${locale}/rss.xml`;
 
   const socialLinks = [
     {
@@ -22,22 +24,15 @@ export function Footer() {
     {
       name: "RSS",
       icon: Rss,
-      href: "/rss.xml",
+      href: rssHref,
     },
-  ];
-
-  const friendLinks = [
-    { name: "Cloudflare", href: "https://www.cloudflare.com/" },
-    { name: "Next.js", href: "https://nextjs.org" },
-    { name: "Tailwind CSS", href: "https://tailwindcss.com" },
-    { name: "shadcn/ui", href: "https://ui.shadcn.com" },
   ];
 
   return (
     <footer className="border-t border-border bg-ink-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Main footer content */}
-        <div className="grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-3">
           {/* Brand column */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link
@@ -78,7 +73,6 @@ export function Footer() {
             <ul className="mt-4 space-y-2.5">
               {[
                 { label: t("nav.blog"), href: "/blog" },
-                { label: t("nav.archives"), href: "/archives" },
                 { label: t("nav.about"), href: "/about" },
                 { label: t("nav.projects"), href: "/projects" },
               ].map((item) => (
@@ -119,27 +113,6 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Friends column */}
-          <div>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-              {t("friends")}
-            </h3>
-            <ul className="mt-4 space-y-2.5">
-              {friendLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-1.5 text-sm text-ink-600 transition-colors hover:text-foreground"
-                  >
-                    {link.name}
-                    <ExternalLink className="size-3 opacity-0 transition-opacity group-hover:opacity-100" />
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
 
         <Separator />
@@ -166,7 +139,7 @@ export function Footer() {
             </Link>
             <Separator orientation="vertical" className="h-3" />
             <Link
-              href="/rss.xml"
+              href={rssHref}
               className="inline-flex items-center gap-1 transition-colors hover:text-foreground"
             >
               <Rss className="size-3" />
