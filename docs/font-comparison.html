@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Font Lookbook · 墨色字体方案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..700,0..100&family=Source+Serif+4:opsz,wght@8..60,300..700&family=Noto+Serif+SC:wght@300;400;500;600&family=Noto+Sans+SC:wght@300;400;500&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<style>
+  :root {
+    --ink-50: #FEFDFB;
+    --ink-100: #FAF9F6;
+    --ink-200: #F4F2ED;
+    --ink-300: #E2DDD4;
+    --ink-400: #C4BDB0;
+    --ink-500: #887B6C;
+    --ink-600: #6B5F52;
+    --ink-700: #453B32;
+    --ink-800: #2C2520;
+    --ink-900: #1D1C19;
+    --seal: #C23B22;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--ink-200);
+    color: var(--ink-700);
+    line-height: 1.6;
+    padding: 32px 0 96px;
+  }
+  .container { max-width: 1380px; margin: 0 auto; padding: 0 24px; }
+
+  /* header */
+  .lookbook-header { text-align: center; margin-bottom: 56px; padding: 32px 0; }
+  .lookbook-header h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 48px; font-weight: 400; font-style: italic;
+    color: var(--ink-900); letter-spacing: -0.01em;
+  }
+  .lookbook-header p { color: var(--ink-500); margin-top: 8px; font-size: 14px; }
+
+  /* === SYSTEM CARD === */
+  .system { margin-bottom: 64px; }
+  .system-head {
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+    margin-bottom: 16px; padding: 0 8px;
+  }
+  .system-num {
+    font-family: 'Fraunces', serif;
+    font-size: 48px; line-height: 1; color: var(--ink-300); font-weight: 300; font-style: italic;
+  }
+  .system-name {
+    font-family: 'Fraunces', serif;
+    font-size: 26px; color: var(--ink-800); font-weight: 500;
+  }
+  .system-note {
+    flex: 1; min-width: 280px; text-align: right;
+    font-size: 12px; color: var(--ink-500);
+    border-left: 1px solid var(--ink-300); padding-left: 16px;
+  }
+  .recommend-tag {
+    display: inline-block; font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--seal);
+    background: rgba(194,59,34,0.08); padding: 3px 10px; border-radius: 4px;
+    margin-left: 8px; vertical-align: middle;
+  }
+
+  .stack-row {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+
+  .panel {
+    background: var(--ink-50);
+    border: 1px solid var(--ink-300);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .panel-tag {
+    padding: 10px 20px; border-bottom: 1px solid var(--ink-200);
+    background: var(--ink-100);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.15em; color: var(--ink-500);
+    text-transform: uppercase;
+    display: flex; justify-content: space-between;
+  }
+  .panel-tag .font-spec {
+    color: var(--ink-700);
+  }
+
+  .panel-body { padding: 28px; min-height: 320px; }
+
+  /* ============== LIST MOCKUP (Zen Notes) ============== */
+  .mock-list-header { text-align: center; margin-bottom: 28px; }
+  .mock-list-header .ch { font-size: 9px; letter-spacing: 0.5em; }
+  .mock-list-header .en { font-style: italic; margin-top: 4px; }
+  .mock-list-header .ct {
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.15em; color: var(--ink-400);
+  }
+
+  .mock-entry {
+    display: grid; grid-template-columns: 60px 1fr 110px; gap: 16px;
+    padding: 16px 0; border-top: 1px dotted var(--ink-300);
+    align-items: start;
+  }
+  .mock-entry:last-child { border-bottom: 1px dotted var(--ink-300); }
+  .mock-thumb {
+    width: 60px; height: 60px; border-radius: 3px;
+    background:
+      radial-gradient(ellipse at 30% 60%, rgba(75,63,52,0.4), transparent 50%),
+      linear-gradient(135deg, #d8d0c0, #8a7a66);
+    filter: sepia(0.15) saturate(0.85);
+  }
+  .mock-thumb.t2 {
+    background:
+      radial-gradient(ellipse at 60% 30%, rgba(194,59,34,0.22), transparent 55%),
+      linear-gradient(135deg, #d4ccc0, #5c5751);
+  }
+  .mock-date {
+    font-size: 10px; font-style: italic;
+    margin-bottom: 2px;
+  }
+  .mock-title-list {
+    line-height: 1.25;
+    margin-bottom: 4px;
+  }
+  .mock-sub {
+    font-size: 12px; line-height: 1.55;
+  }
+  .mock-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; line-height: 1.7;
+    border-left: 1px solid var(--ink-200); padding-left: 10px;
+  }
+  .mock-meta .row { display: flex; justify-content: space-between; }
+  .mock-meta .k { color: var(--ink-400); }
+  .mock-meta .v { color: var(--ink-600); }
+  .mock-meta .tagrow { margin-top: 6px; color: var(--ink-500); }
+
+  /* ============== ARTICLE MOCKUP ============== */
+  .mock-article {
+    max-width: 100%;
+  }
+  .mock-art-cat {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--seal); margin-bottom: 10px;
+  }
+  .mock-art-title {
+    line-height: 1.1; margin-bottom: 8px;
+  }
+  .mock-art-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; color: var(--ink-500);
+    border-bottom: 1px solid var(--ink-200); padding-bottom: 16px; margin-bottom: 20px;
+    letter-spacing: 0.1em;
+  }
+  .mock-art-lead {
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  .mock-art-body p { margin-bottom: 12px; }
+  .mock-art-body p:last-child { margin-bottom: 0; }
+  .mock-art-body em { font-style: italic; }
+  .mock-art-body strong { font-weight: 600; }
+  .mock-art-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; padding: 12px 16px;
+    background: var(--ink-100); border-radius: 4px;
+    margin: 14px 0; color: var(--ink-700);
+  }
+
+  /* ============== SYSTEM-SPECIFIC FONTS ============== */
+  /* All sections share these defaults, individual systems override */
+
+  /* ----- SYSTEM A: Fraunces + Source Serif 4 ----- */
+  .sys-a .mock-list-header .ch { color: var(--ink-500); font-family: 'Noto Sans SC', sans-serif; }
+  .sys-a .mock-list-header .en { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 300; color: var(--ink-800); }
+  .sys-a .mock-date { font-family: 'Fraunces', serif; color: var(--ink-400); }
+  .sys-a .mock-title-list { font-family: 'Noto Sans SC', sans-serif; font-size: 17px; font-weight: 500; color: var(--ink-800); }
+  .sys-a .mock-sub { font-family: 'Noto Sans SC', sans-serif; color: var(--ink-500); }
+
+  .sys-a .mock-art-title {
+    font-family: 'Fraunces', serif;
+    font-size: 38px; font-weight: 400; color: var(--ink-900);
+    font-variation-settings: "opsz" 80, "SOFT" 30;
+  }
+  .sys-a .mock-art-lead {
+    font-family: 'Source Serif 4', 'Noto Serif SC', serif;
+    font-size: 18px; color: var(--ink-700); font-weight: 400;
+  }
+  .sys-a .mock-art-body {
+    font-family: 'Source Serif 4', 'Noto Serif SC', serif;
+    font-size: 15px; line-height: 1.75; color: var(--ink-700);
+  }
+
+  /* ----- SYSTEM B: All Serif (Source Serif 4 + Noto Serif SC) ----- */
+  .sys-b .mock-list-header .ch { color: var(--ink-500); font-family: 'Noto Serif SC', serif; }
+  .sys-b .mock-list-header .en { font-family: 'Source Serif 4', serif; font-size: 28px; font-weight: 300; color: var(--ink-800); font-style: italic; }
+  .sys-b .mock-date { font-family: 'Source Serif 4', serif; color: var(--ink-400); }
+  .sys-b .mock-title-list { font-family: 'Source Serif 4', 'Noto Serif SC', serif; font-size: 19px; font-weight: 500; color: var(--ink-800); }
+  .sys-b .mock-sub { font-family: 'Source Serif 4', 'Noto Serif SC', serif; color: var(--ink-500); }
+
+  .sys-b .mock-art-title {
+    font-family: 'Source Serif 4', 'Noto Serif SC', serif;
+    font-size: 38px; font-weight: 600; color: var(--ink-900);
+  }
+  .sys-b .mock-art-lead {
+    font-family: 'Source Serif 4', 'Noto Serif SC', serif;
+    font-size: 18px; color: var(--ink-700); font-weight: 400;
+  }
+  .sys-b .mock-art-body {
+    font-family: 'Source Serif 4', 'Noto Serif SC', serif;
+    font-size: 15px; line-height: 1.75; color: var(--ink-700);
+  }
+
+  /* ----- SYSTEM C: LXGW WenKai display + Serif body ----- */
+  .sys-c .mock-list-header .ch { color: var(--ink-500); font-family: 'LXGW WenKai', serif; }
+  .sys-c .mock-list-header .en { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 300; font-style: italic; color: var(--ink-800); }
+  .sys-c .mock-date { font-family: 'Fraunces', serif; color: var(--ink-400); }
+  .sys-c .mock-title-list { font-family: 'LXGW WenKai', serif; font-size: 19px; font-weight: 400; color: var(--ink-800); }
+  .sys-c .mock-sub { font-family: 'Noto Serif SC', serif; color: var(--ink-500); }
+
+  .sys-c .mock-art-title {
+    font-family: 'LXGW WenKai', serif;
+    font-size: 40px; font-weight: 400; color: var(--ink-900);
+    line-height: 1.2;
+  }
+  .sys-c .mock-art-lead {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px; color: var(--ink-700); font-weight: 400; font-style: normal;
+  }
+  .sys-c .mock-art-body {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 15px; line-height: 1.85; color: var(--ink-700);
+  }
+
+  /* ----- SYSTEM D: CURRENT (Geist Sans only) ----- */
+  .sys-d .mock-list-header .ch { color: var(--ink-500); font-family: 'Inter', sans-serif; }
+  .sys-d .mock-list-header .en { font-family: 'Inter', sans-serif; font-size: 26px; font-weight: 300; font-style: italic; color: var(--ink-800); }
+  .sys-d .mock-date { font-family: 'Inter', sans-serif; color: var(--ink-400); }
+  .sys-d .mock-title-list { font-family: 'Inter', sans-serif; font-size: 17px; font-weight: 500; color: var(--ink-800); }
+  .sys-d .mock-sub { font-family: 'Inter', sans-serif; color: var(--ink-500); }
+
+  .sys-d .mock-art-title { font-family: 'Inter', sans-serif; font-size: 32px; font-weight: 600; color: var(--ink-900); }
+  .sys-d .mock-art-lead { font-family: 'Inter', sans-serif; font-size: 18px; color: var(--ink-700); }
+  .sys-d .mock-art-body { font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.7; color: var(--ink-700); }
+
+  @media (max-width: 1000px) { .stack-row { grid-template-columns: 1fr; } }
+
+  /* === SUMMARY === */
+  .summary {
+    background: var(--ink-50); border-radius: 10px;
+    border: 1px solid var(--ink-300); padding: 32px; margin-top: 24px;
+  }
+  .summary h2 {
+    font-family: 'Fraunces', serif; font-style: italic;
+    font-size: 24px; color: var(--ink-800); margin-bottom: 20px;
+    padding-bottom: 12px; border-bottom: 1px solid var(--ink-200);
+  }
+  .summary table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .summary th, .summary td {
+    text-align: left; padding: 8px 12px;
+    border-bottom: 1px solid var(--ink-200);
+  }
+  .summary th {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-500);
+    background: var(--ink-100);
+  }
+  .summary code {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    background: var(--ink-100); padding: 1px 6px; border-radius: 3px;
+    color: var(--seal);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header class="lookbook-header">
+    <h1>Font Lookbook</h1>
+    <p>墨色 UI 字体方案对比 · 含列表页 + 文章页表现</p>
+  </header>
+
+  <!-- ============== SYSTEM A ============== -->
+  <section class="system sys-a">
+    <div class="system-head">
+      <span class="system-num">A</span>
+      <div>
+        <span class="system-name">Layered Editorial · 分层典雅<span class="recommend-tag">Recommended</span></span>
+      </div>
+      <span class="system-note">列表/UI 保留 Geist 干净感; 文章正文换 Source Serif 4 + 思源宋体 实现"印刷品"阅读体验; Display 用 Fraunces 可变字体。三段分明,职责清晰。</span>
+    </div>
+    <div class="stack-row">
+      <div class="panel">
+        <div class="panel-tag">
+          <span>List page</span>
+          <span class="font-spec">Noto Sans SC / Fraunces (display)</span>
+        </div>
+        <div class="panel-body">
+          <div class="mock-list-header">
+            <div class="ch">墨 · 文 · 字</div>
+            <div class="en">Writings</div>
+            <div class="ct">18 ENTRIES</div>
+          </div>
+          <div class="mock-entry">
+            <div class="mock-thumb"></div>
+            <div>
+              <div class="mock-date">— 2025·03·08</div>
+              <div class="mock-title-list">在墨色系统里思考界面的呼吸感</div>
+              <div class="mock-sub">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。</div>
+            </div>
+            <div class="mock-meta">
+              <div class="row"><span class="k">cat</span><span class="v">design</span></div>
+              <div class="row"><span class="k">views</span><span class="v">67</span></div>
+              <div class="tagrow">#ink #ui</div>
+            </div>
+          </div>
+          <div class="mock-entry">
+            <div class="mock-thumb t2"></div>
+            <div>
+              <div class="mock-date">— 2025·02·21</div>
+              <div class="mock-title-list">Docker 学习笔记 · 从镜像分层到 BuildKit</div>
+              <div class="mock-sub">按"为什么这样设计"的角度组织, 不只是命令清单。</div>
+            </div>
+            <div class="mock-meta">
+              <div class="row"><span class="k">cat</span><span class="v">devops</span></div>
+              <div class="row"><span class="k">views</span><span class="v">42</span></div>
+              <div class="tagrow">#docker</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-tag">
+          <span>Article page</span>
+          <span class="font-spec">Fraunces (display) / Source Serif 4 + Noto Serif SC (body)</span>
+        </div>
+        <div class="panel-body mock-article">
+          <div class="mock-art-cat">DESIGN · 设计</div>
+          <h1 class="mock-art-title">在墨色系统里<br>思考界面的呼吸感</h1>
+          <div class="mock-art-meta">2025·03·08 · 12 MIN READ · 67 VIEWS</div>
+          <p class="mock-art-lead">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。这周重新走了一遍设计系统的色阶定义,发现自己之前把"留白"理解错了。</p>
+          <div class="mock-art-body">
+            <p>为什么禅意的设计往往会失败?因为我们误把"留白"理解为<em>什么都不放</em>。但禅师们的庭院从不是空的 — 一块石头, 一棵松, 一道沟纹砂的弧线。<strong>留白是节奏的一部分</strong>, 不是节奏的中断。</p>
+            <p>The same principle applies to typography: an em of breathing room above a heading isn't absence — it's <em>presence</em> framing the words that follow.</p>
+            <div class="mock-art-code">const lineHeight = fontSize * 1.75; // for serif body</div>
+            <p>真正的极简不是没有元素, 而是每个元素都有理由存在。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== SYSTEM B ============== -->
+  <section class="system sys-b">
+    <div class="system-head">
+      <span class="system-num">B</span>
+      <div>
+        <span class="system-name">All Serif Monastic · 全程衬线</span>
+      </div>
+      <span class="system-note">列表 + 文章都用 Source Serif 4 / 思源宋体 衬线。最有"出版物"感,最克制最一致。但视觉密度大,列表浏览不如方案 A 轻快。</span>
+    </div>
+    <div class="stack-row">
+      <div class="panel">
+        <div class="panel-tag">
+          <span>List page</span>
+          <span class="font-spec">Source Serif 4 / Noto Serif SC</span>
+        </div>
+        <div class="panel-body">
+          <div class="mock-list-header">
+            <div class="ch">墨 · 文 · 字</div>
+            <div class="en">Writings</div>
+            <div class="ct">18 ENTRIES</div>
+          </div>
+          <div class="mock-entry">
+            <div class="mock-thumb"></div>
+            <div>
+              <div class="mock-date">— 2025·03·08</div>
+              <div class="mock-title-list">在墨色系统里思考界面的呼吸感</div>
+              <div class="mock-sub">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。</div>
+            </div>
+            <div class="mock-meta">
+              <div class="row"><span class="k">cat</span><span class="v">design</span></div>
+              <div class="row"><span class="k">views</span><span class="v">67</span></div>
+              <div class="tagrow">#ink #ui</div>
+            </div>
+          </div>
+          <div class="mock-entry">
+            <div class="mock-thumb t2"></div>
+            <div>
+              <div class="mock-date">— 2025·02·21</div>
+              <div class="mock-title-list">Docker 学习笔记 · 从镜像分层到 BuildKit</div>
+              <div class="mock-sub">按"为什么这样设计"的角度组织, 不只是命令清单。</div>
+            </div>
+            <div class="mock-meta">
+              <div class="row"><span class="k">cat</span><span class="v">devops</span></div>
+              <div class="row"><span class="k">views</span><span class="v">42</span></div>
+              <div class="tagrow">#docker</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-tag">
+          <span>Article page</span>
+          <span class="font-spec">Source Serif 4 / Noto Serif SC (all)</span>
+        </div>
+        <div class="panel-body mock-article">
+          <div class="mock-art-cat">DESIGN · 设计</div>
+          <h1 class="mock-art-title">在墨色系统里<br>思考界面的呼吸感</h1>
+          <div class="mock-art-meta">2025·03·08 · 12 MIN READ · 67 VIEWS</div>
+          <p class="mock-art-lead">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。这周重新走了一遍设计系统的色阶定义,发现自己之前把"留白"理解错了。</p>
+          <div class="mock-art-body">
+            <p>为什么禅意的设计往往会失败?因为我们误把"留白"理解为<em>什么都不放</em>。但禅师们的庭院从不是空的 — 一块石头, 一棵松, 一道沟纹砂的弧线。<strong>留白是节奏的一部分</strong>, 不是节奏的中断。</p>
+            <p>The same principle applies to typography: an em of breathing room above a heading isn't absence — it's <em>presence</em> framing the words that follow.</p>
+            <div class="mock-art-code">const lineHeight = fontSize * 1.75; // for serif body</div>
+            <p>真正的极简不是没有元素, 而是每个元素都有理由存在。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== SYSTEM C ============== -->
+  <section class="system sys-c">
+    <div class="system-head">
+      <span class="system-num">C</span>
+      <div>
+        <span class="system-name">Calligraphic · 中式书法</span>
+      </div>
+      <span class="system-note">大标题用 LXGW 霞鹜文楷 (开源手写体), 正文仍走 Noto Serif SC 衬线 (手写体不适合长文)。最有"墨色"主题感,但稍重,挑文章。适合写作型/文学型博客。</span>
+    </div>
+    <div class="stack-row">
+      <div class="panel">
+        <div class="panel-tag">
+          <span>List page</span>
+          <span class="font-spec">LXGW WenKai (title) / Noto Serif SC (sub)</span>
+        </div>
+        <div class="panel-body">
+          <div class="mock-list-header">
+            <div class="ch">墨 · 文 · 字</div>
+            <div class="en">Writings</div>
+            <div class="ct">18 ENTRIES</div>
+          </div>
+          <div class="mock-entry">
+            <div class="mock-thumb"></div>
+            <div>
+              <div class="mock-date">— 2025·03·08</div>
+              <div class="mock-title-list">在墨色系统里思考界面的呼吸感</div>
+              <div class="mock-sub">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。</div>
+            </div>
+            <div class="mock-meta">
+              <div class="row"><span class="k">cat</span><span class="v">design</span></div>
+              <div class="row"><span class="k">views</span><span class="v">67</span></div>
+              <div class="tagrow">#ink #ui</div>
+            </div>
+          </div>
+          <div class="mock-entry">
+            <div class="mock-thumb t2"></div>
+            <div>
+              <div class="mock-date">— 2025·02·21</div>
+              <div class="mock-title-list">Docker 学习笔记 · 从镜像分层到 BuildKit</div>
+              <div class="mock-sub">按"为什么这样设计"的角度组织, 不只是命令清单。</div>
+            </div>
+            <div class="mock-meta">
+              <div class="row"><span class="k">cat</span><span class="v">devops</span></div>
+              <div class="row"><span class="k">views</span><span class="v">42</span></div>
+              <div class="tagrow">#docker</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-tag">
+          <span>Article page</span>
+          <span class="font-spec">LXGW WenKai (title) / Noto Serif SC (body)</span>
+        </div>
+        <div class="panel-body mock-article">
+          <div class="mock-art-cat">DESIGN · 设计</div>
+          <h1 class="mock-art-title">在墨色系统里<br>思考界面的呼吸感</h1>
+          <div class="mock-art-meta">2025·03·08 · 12 MIN READ · 67 VIEWS</div>
+          <p class="mock-art-lead">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。这周重新走了一遍设计系统的色阶定义,发现自己之前把"留白"理解错了。</p>
+          <div class="mock-art-body">
+            <p>为什么禅意的设计往往会失败?因为我们误把"留白"理解为<em>什么都不放</em>。但禅师们的庭院从不是空的 — 一块石头, 一棵松, 一道沟纹砂的弧线。<strong>留白是节奏的一部分</strong>, 不是节奏的中断。</p>
+            <p>The same principle applies to typography: an em of breathing room above a heading isn't absence — it's <em>presence</em> framing the words that follow.</p>
+            <div class="mock-art-code">const lineHeight = fontSize * 1.85; // for serif body</div>
+            <p>真正的极简不是没有元素, 而是每个元素都有理由存在。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== SYSTEM D (CURRENT) ============== -->
+  <section class="system sys-d">
+    <div class="system-head">
+      <span class="system-num">D</span>
+      <div>
+        <span class="system-name">Current · 当前状态</span>
+      </div>
+      <span class="system-note">仅 Geist Sans (中文走系统 fallback,通常是 PingFang SC / Microsoft YaHei)。最快,最通用,但平淡无个性,与墨色 UI 不匹配。这里用 Inter 模拟。</span>
+    </div>
+    <div class="stack-row">
+      <div class="panel">
+        <div class="panel-tag">
+          <span>List page</span>
+          <span class="font-spec">Geist Sans only</span>
+        </div>
+        <div class="panel-body">
+          <div class="mock-list-header">
+            <div class="ch">墨 · 文 · 字</div>
+            <div class="en">Writings</div>
+            <div class="ct">18 ENTRIES</div>
+          </div>
+          <div class="mock-entry">
+            <div class="mock-thumb"></div>
+            <div>
+              <div class="mock-date">— 2025·03·08</div>
+              <div class="mock-title-list">在墨色系统里思考界面的呼吸感</div>
+              <div class="mock-sub">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。</div>
+            </div>
+            <div class="mock-meta">
+              <div class="row"><span class="k">cat</span><span class="v">design</span></div>
+              <div class="row"><span class="k">views</span><span class="v">67</span></div>
+              <div class="tagrow">#ink #ui</div>
+            </div>
+          </div>
+          <div class="mock-entry">
+            <div class="mock-thumb t2"></div>
+            <div>
+              <div class="mock-date">— 2025·02·21</div>
+              <div class="mock-title-list">Docker 学习笔记 · 从镜像分层到 BuildKit</div>
+              <div class="mock-sub">按"为什么这样设计"的角度组织, 不只是命令清单。</div>
+            </div>
+            <div class="mock-meta">
+              <div class="row"><span class="k">cat</span><span class="v">devops</span></div>
+              <div class="row"><span class="k">views</span><span class="v">42</span></div>
+              <div class="tagrow">#docker</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-tag">
+          <span>Article page</span>
+          <span class="font-spec">Geist Sans (all)</span>
+        </div>
+        <div class="panel-body mock-article">
+          <div class="mock-art-cat">DESIGN · 设计</div>
+          <h1 class="mock-art-title">在墨色系统里<br>思考界面的呼吸感</h1>
+          <div class="mock-art-meta">2025·03·08 · 12 MIN READ · 67 VIEWS</div>
+          <p class="mock-art-lead">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。这周重新走了一遍设计系统的色阶定义,发现自己之前把"留白"理解错了。</p>
+          <div class="mock-art-body">
+            <p>为什么禅意的设计往往会失败?因为我们误把"留白"理解为<em>什么都不放</em>。但禅师们的庭院从不是空的 — 一块石头, 一棵松, 一道沟纹砂的弧线。<strong>留白是节奏的一部分</strong>, 不是节奏的中断。</p>
+            <p>The same principle applies to typography: an em of breathing room above a heading isn't absence — it's <em>presence</em> framing the words that follow.</p>
+            <div class="mock-art-code">const lineHeight = fontSize * 1.7;</div>
+            <p>真正的极简不是没有元素, 而是每个元素都有理由存在。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============== SUMMARY TABLE ============== -->
+  <div class="summary">
+    <h2>Implementation Spec · 落地参数</h2>
+    <p style="margin-bottom: 16px; font-size: 13px; color: var(--ink-600);">
+      Next.js <code>next/font/google</code> 自动 self-host + subset, 不会有 FOIT。CJK 字体按需 subset, 仅加载实际用到的字符。
+    </p>
+    <table>
+      <thead>
+        <tr>
+          <th>用途</th>
+          <th>方案 A (推荐)</th>
+          <th>加载方式</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Display 大标题</td>
+          <td><code>Fraunces</code> + <code>Noto Serif SC</code></td>
+          <td>next/font/google · weight 300-600 · variable</td>
+        </tr>
+        <tr>
+          <td>文章正文 (prose)</td>
+          <td><code>Source Serif 4</code> + <code>Noto Serif SC</code></td>
+          <td>next/font/google · weight 400/500/600</td>
+        </tr>
+        <tr>
+          <td>UI / 列表 / 导航</td>
+          <td><code>Geist Sans</code> + <code>Noto Sans SC</code></td>
+          <td>Geist 已加载, Noto Sans SC 通过 next/font/google 补</td>
+        </tr>
+        <tr>
+          <td>代码 / Marginalia</td>
+          <td><code>JetBrains Mono</code></td>
+          <td>next/font/google · weight 400/500</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top: 20px; font-size: 12px; color: var(--ink-500);">
+      文章页 prose 容器加 <code>font-serif</code> 类即可切换;列表/UI 保持现状不动。<br>
+      预估总字体下载: ~120KB (Latin) + 按需加载 CJK (使用频率高的字符首屏加载)。
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

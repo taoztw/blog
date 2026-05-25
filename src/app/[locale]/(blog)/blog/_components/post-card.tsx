@@ -1,12 +1,9 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ImageService } from "@/lib/image-service";
-import { getTimeStamp } from "@/lib/utils";
 import type { PostListItem } from "@/server/api/types";
 import type { tags } from "@/server/db/schema";
-import { Calendar, ChevronRightIcon, Eye, MessageCircleIcon } from "lucide-react";
+import { format } from "date-fns";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -17,123 +14,115 @@ interface BlogCardProps {
   };
 }
 
+function MiniThumb({ post, href }: { post: PostListItem; href: string }) {
+  if (post.imageUrl) {
+    return (
+      <Link
+        href={href}
+        className="relative block size-[84px] overflow-hidden rounded-sm"
+        aria-label={post.title}
+      >
+        <Image
+          alt={post.title}
+          src={ImageService.getImageUrl(post.imageUrl)}
+          fill
+          sizes="84px"
+          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.05]"
+          loading="lazy"
+        />
+      </Link>
+    );
+  }
+
+  // 无图: 极简日期戳保持对齐
+  const day = format(post.createdAt, "dd");
+  const month = format(post.createdAt, "MMM");
+  return (
+    <Link
+      href={href}
+      className="flex size-[84px] flex-col items-center justify-center rounded-sm border border-ink-200 bg-ink-100 transition-colors group-hover:border-ink-300"
+      aria-label={post.title}
+    >
+      <span className="font-cormorant text-2xl leading-none font-light text-ink-700">{day}</span>
+      <span className="mt-1 text-[9px] tracking-[0.2em] text-ink-500 uppercase">{month}</span>
+    </Link>
+  );
+}
+
 export function BlogCard({ post }: BlogCardProps) {
   const pathname = usePathname();
   const blogUrl = `${pathname}/${post.slug}`;
+
   return (
     <article
-      key={post.id}
-      className="group flex flex-col gap-4 py-6 sm:flex-row border-b border-border/40 last:border-b-0 transition-all duration-200 hover:bg-accent/5 px-4 -mx-4 rounded-lg cursor-pointer"
-      onClick={() => window.location.href = blogUrl}
+      className="group grid grid-cols-[60px_1fr] gap-x-5 gap-y-3 border-b border-dotted border-ink-300 py-7 last:border-b-0 sm:grid-cols-[84px_1fr] lg:grid-cols-[84px_1fr_180px] lg:gap-x-8"
     >
-      {/* 图片区域 */}
-      <div className="flex-none sm:w-1/4">
-        <div className="relative aspect-[4/3] overflow-hidden rounded-lg shadow-sm group-hover:shadow-md transition-shadow duration-200">
-          <Image
-            alt={post.title}
-            loading="lazy"
-            decoding="async"
-            data-nimg="fill"
-            className="object-cover transition-transform duration-300 ease-out group-hover:scale-105"
-            style={{
-              position: "absolute",
-              height: "100%",
-              width: "100%",
-              inset: "0px",
-              color: "transparent",
-            }}
-            sizes="(max-width: 640px) 100vw, 25vw"
-            src={post.imageUrl ? ImageService.getImageUrl(post.imageUrl) : "/placeholder.svg"}
-            fill
-          />
-        </div>
-      </div>
+      <MiniThumb post={post} href={blogUrl} />
 
-      {/* 内容区域 */}
-      <div className="flex flex-col sm:w-3/4">
-        {/* 分类和标签 */}
-        <div className="mb-2 flex items-center gap-2 flex-wrap">
-          <Badge
-            variant="outline"
-            className="text-xs text-muted-foreground font-medium border-muted-foreground/20"
-          >
-            {post.category!.name}
-          </Badge>
-          {post.tags && post.tags.length > 0 && (
-            <>
-              {post.tags.slice(0, 3).map((tag: typeof tags.$inferSelect) => (
-                <Badge
-                  key={tag.id}
-                  variant="secondary"
-                  className="text-xs font-normal transition-colors hover:opacity-80"
-                  style={{
-                    backgroundColor: tag.color ? `${tag.color}20` : undefined,
-                    borderColor: tag.color ? `${tag.color}40` : undefined
-                  }}
-                >
-                  {tag.name}
-                </Badge>
-              ))}
-              {post.tags.length > 3 && (
-                <Badge
-                  variant="outline"
-                  className="text-xs text-muted-foreground font-normal border-muted-foreground/20"
-                >
-                  +{post.tags.length - 3}
-                </Badge>
-              )}
-            </>
-          )}
+      <div className="min-w-0">
+        <div className="mb-1 font-cormorant text-xs tracking-[0.05em] text-ink-400 italic">
+          — {format(post.createdAt, "yyyy·MM·dd")}
         </div>
-
-        {/* 标题 */}
-        <h3 className="mb-2 text-lg font-semibold leading-tight transition-colors group-hover:text-primary">
-          <Link
-            href={blogUrl}
-            className="hover:underline decoration-primary/30 underline-offset-2"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {post.title}
-          </Link>
+        <h3 className="font-cormorant text-xl leading-snug font-normal text-ink-800 transition-colors group-hover:text-seal">
+          <Link href={blogUrl}>{post.title}</Link>
         </h3>
+        {post.excerpt && (
+          <p className="mt-2 line-clamp-2 max-w-xl text-sm leading-relaxed text-ink-500">{post.excerpt}</p>
+        )}
 
-        {/* 摘要 */}
-        <p className="text-muted-foreground mb-3 line-clamp-2 text-sm leading-relaxed">
-          {post.excerpt}
-        </p>
-
-        {/* 底部元数据 */}
-        <div className="text-muted-foreground mt-auto flex items-center justify-between text-xs">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5" title="发布时间">
-              <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
-              <time dateTime={post.createdAt.toISOString()}>{getTimeStamp(post.createdAt)}</time>
-            </div>
-            <div className="flex items-center gap-1.5" title="浏览次数">
-              <Eye className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>{post.viewCount}</span>
-            </div>
-            <div className="flex items-center gap-1.5" title="评论数量">
-              <MessageCircleIcon className="w-3.5 h-3.5" aria-hidden="true" />
-              <span>{post.commentCount}</span>
-            </div>
-          </div>
-          <Link
-            href={blogUrl}
-            onClick={(e) => e.stopPropagation()}
-            aria-label={`阅读文章: ${post.title}`}
-          >
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto text-xs group/btn font-normal -mr-2 hover:text-foreground transition-colors"
+        {/* 小屏 inline meta */}
+        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] tracking-wide text-ink-500 lg:hidden">
+          {post.category && (
+            <span>
+              <span className="text-ink-400">cat</span> {post.category.name}
+            </span>
+          )}
+          <span>
+            <span className="text-ink-400">views</span> {post.viewCount}
+          </span>
+          <span>
+            <span className="text-ink-400">comments</span> {post.commentCount}
+          </span>
+          {post.tags?.slice(0, 3).map((t) => (
+            <span
+              key={t.id}
+              style={{ color: t.color ?? undefined }}
             >
-              阅读
-              <ChevronRightIcon className="w-3.5 h-3.5 transition-transform duration-200 group-hover/btn:translate-x-0.5" aria-hidden="true" />
-            </Button>
-          </Link>
+              #{t.name}
+            </span>
+          ))}
         </div>
       </div>
+
+      {/* 大屏右栏 marginalia */}
+      <aside className="hidden border-l border-ink-200 pl-4 font-mono text-[11px] leading-relaxed text-ink-400 lg:block">
+        {post.category && (
+          <div className="flex justify-between">
+            <span>cat</span>
+            <span className="text-ink-600">{post.category.name}</span>
+          </div>
+        )}
+        <div className="flex justify-between">
+          <span>views</span>
+          <span className="text-ink-600">{post.viewCount}</span>
+        </div>
+        <div className="flex justify-between">
+          <span>comments</span>
+          <span className="text-ink-600">{post.commentCount}</span>
+        </div>
+        {post.tags && post.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-x-2 gap-y-1">
+            {post.tags.slice(0, 4).map((t) => (
+              <span
+                key={t.id}
+                style={{ color: t.color ?? undefined }}
+              >
+                #{t.name}
+              </span>
+            ))}
+          </div>
+        )}
+      </aside>
     </article>
   );
 }

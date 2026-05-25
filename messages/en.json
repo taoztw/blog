@@ -116,7 +116,15 @@
     "views": "views",
     "recentPosts": "Recent Posts",
     "viewAll": "View all",
-    "listening": "Listening"
+    "listening": "Listening",
+    "featuredLabel": "Featured",
+    "continueReading": "Continue Reading",
+    "readFullArticle": "Read full article",
+    "journalStreamLabel": "Journals",
+    "projectsLabel": "Projects",
+    "noContent": "No content yet",
+    "essayCategory": "Essay",
+    "minutesRead": "{minutes} min read"
   },
   "Footer": {
     "description": "A personal blog about technology, development, and creative exploration.",

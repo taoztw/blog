@@ -90,6 +90,22 @@ export function TagTable() {
     },
   });
 
+  const recolorAll = api.tag.recolorAll.useMutation({
+    onSuccess: (result) => {
+      utils.tag.getMany.invalidate();
+      toast.success(`成功重置 ${result.count} 个标签的颜色`);
+    },
+    onError: (error) => {
+      toast.error(`重置颜色失败: ${error.message}`);
+    },
+  });
+
+  const handleRecolorAll = () => {
+    if (window.confirm("确定要重新随机所有标签的颜色?现有颜色会被覆盖。")) {
+      recolorAll.mutate();
+    }
+  };
+
   const handleCreateTag = async (data: CreateTagData) => {
     createTag.mutate(data);
   };
@@ -133,6 +149,13 @@ export function TagTable() {
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">标签列表</h1>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={handleRecolorAll}
+            disabled={recolorAll.isPending}
+          >
+            {recolorAll.isPending ? "重置中..." : "重新随机配色"}
+          </Button>
           <Button
             variant="outline"
             onClick={() => initializeDefaults.mutate()}

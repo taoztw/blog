@@ -10,6 +10,7 @@
   --font-sans:
     var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
     "Segoe UI Symbol", "Noto Color Emoji";
+  --font-cormorant: var(--font-cormorant-raw), "Cormorant Garamond", Garamond, "Times New Roman", serif;
 }
 
 html body[data-scroll-locked] {
@@ -163,18 +164,24 @@ html body[data-scroll-locked] {
  *  暗色模式 — Dark Mode (夜墨)
  * ═══════════════════════════════════════════
  *  策略：暖对暖（不用纯黑纯白，保留褐调温度）
+ *
+ *  色阶语义（与亮色模式一致）：
+ *    ink-50 = 当前主题中"最浅"色（背景层）
+ *    ink-900 = 当前主题中"最深"色（前景层）
+ *  → 暗色模式下数值反转，使 `text-ink-700`、`bg-ink-100` 等
+ *    在两种模式下都保持"body text / page bg"的语义不变。
  */
 .dark {
-  --ink-50: #fefdfb;
-  --ink-100: #faf9f6;
-  --ink-200: #f4f2ed;
-  --ink-300: #e2ddd4;
-  --ink-400: #c4bdb0;
-  --ink-500: #887b6c;
-  --ink-600: #6b5f52;
-  --ink-700: #453b32;
-  --ink-800: #2c2520;
-  --ink-900: #1d1c19;
+  --ink-50: #1d1c19; /* 最浅层 — page/card bg */
+  --ink-100: #2c2520; /* 次浅 — secondary bg */
+  --ink-200: #453b32; /* 浅 — muted bg */
+  --ink-300: #6b5f52; /* 边框/分割线 */
+  --ink-400: #887b6c; /* 禁用/placeholder（中性带） */
+  --ink-500: #c4bdb0; /* 辅助文字 ≥14px */
+  --ink-600: #e2ddd4; /* muted-foreground */
+  --ink-700: #f4f2ed; /* body text */
+  --ink-800: #faf9f6; /* headings / foreground */
+  --ink-900: #fefdfb; /* 最深层（高对比强调） */
 
   --seal: #d4493a;
 

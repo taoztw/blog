@@ -34,7 +34,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t border-border bg-ink-50 dark:bg-ink-900/50">
+    <footer className="border-t border-border bg-ink-50">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Main footer content */}
         <div className="grid grid-cols-1 gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
@@ -61,7 +61,7 @@ export function Footer() {
                       ? "noopener noreferrer"
                       : undefined
                   }
-                  className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-ink-200 hover:text-foreground dark:hover:bg-ink-700"
+                  className="flex size-8 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-ink-200 hover:text-foreground"
                   aria-label={link.name}
                 >
                   <link.icon className="size-4" />
@@ -85,7 +85,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-ink-600 transition-colors hover:text-foreground dark:text-ink-400 dark:hover:text-ink-300"
+                    className="text-sm text-ink-600 transition-colors hover:text-foreground"
                   >
                     {item.label}
                   </Link>
@@ -103,7 +103,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/privacy"
-                  className="text-sm text-ink-600 transition-colors hover:text-foreground dark:text-ink-400 dark:hover:text-ink-300"
+                  className="text-sm text-ink-600 transition-colors hover:text-foreground"
                 >
                   {t("privacy")}
                 </Link>
@@ -111,7 +111,7 @@ export function Footer() {
               <li>
                 <Link
                   href="/terms"
-                  className="text-sm text-ink-600 transition-colors hover:text-foreground dark:text-ink-400 dark:hover:text-ink-300"
+                  className="text-sm text-ink-600 transition-colors hover:text-foreground"
                 >
                   {t("terms")}
                 </Link>
@@ -131,7 +131,7 @@ export function Footer() {
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group inline-flex items-center gap-1.5 text-sm text-ink-600 transition-colors hover:text-foreground dark:text-ink-400 dark:hover:text-ink-300"
+                    className="group inline-flex items-center gap-1.5 text-sm text-ink-600 transition-colors hover:text-foreground"
                   >
                     {link.name}
                     <ExternalLink className="size-3 opacity-0 transition-opacity group-hover:opacity-100" />

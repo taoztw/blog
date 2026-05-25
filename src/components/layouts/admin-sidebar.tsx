@@ -1,5 +1,6 @@
 "use client";
 
+import { Logo } from "@/components/logo";
 import {
   Sidebar,
   SidebarContent,
@@ -14,7 +15,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { DASHBOARD_MENU_ITEMS } from "@/constants/menu-items";
-import { LayoutDashboard, Moon, Sun, User } from "lucide-react";
+import { Moon, Sun, User } from "lucide-react";
 import { useTheme } from "next-themes";
 import Link from "next/link";
 import { memo } from "react";
@@ -28,13 +29,13 @@ export const AdminSidebar = memo(() => {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="#dashboard">
-                <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <LayoutDashboard className="h-5 w-5" />
+              <Link href="/">
+                <div className="flex aspect-square size-8 items-center justify-center">
+                  <Logo size="md" alt="Blog Home" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">TechCorp</span>
-                  <span className="truncate text-xs">Admin Panel</span>
+                  <span className="truncate font-semibold">TZ Blog</span>
+                  <span className="truncate text-xs text-muted-foreground">Admin</span>
                 </div>
               </Link>
             </SidebarMenuButton>

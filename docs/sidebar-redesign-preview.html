@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Blog Redesign Lookbook · 墨色方案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-50: #FEFDFB;
+    --ink-100: #FAF9F6;
+    --ink-200: #F4F2ED;
+    --ink-300: #E2DDD4;
+    --ink-400: #C4BDB0;
+    --ink-500: #887B6C;
+    --ink-600: #6B5F52;
+    --ink-700: #453B32;
+    --ink-800: #2C2520;
+    --ink-900: #1D1C19;
+    --seal: #C23B22;
+    --moss: #5B7A5E;
+    --ochre: #B8863E;
+    --azure: #5C7A8A;
+    --plum: #7A6B8A;
+    --tea: #8B6F47;
+    --mist: #6B7B7A;
+    --aloe: #A0826D;
+    --sumi: #5C5751;
+    --crimson: #8B4040;
+    --pine: #4A6741;
+    --rust: #A0522D;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--ink-200);
+    color: var(--ink-700);
+    line-height: 1.6;
+    padding: 32px 0 96px;
+  }
+  .container { max-width: 1380px; margin: 0 auto; padding: 0 24px; }
+
+  /* === GLOBAL HEADER === */
+  .lookbook-header { text-align: center; margin-bottom: 48px; padding: 32px 0; }
+  .lookbook-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 400;
+    color: var(--ink-900);
+    letter-spacing: 0.01em;
+  }
+  .lookbook-header .sub {
+    font-family: 'Noto Serif SC', serif;
+    color: var(--ink-500); margin-top: 8px; font-size: 15px;
+  }
+
+  /* === STYLE PAGE WRAPPER === */
+  .style-block { margin-bottom: 80px; }
+  .style-meta {
+    max-width: 1380px; margin: 0 auto 16px; padding: 0 24px;
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  }
+  .style-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; line-height: 1; color: var(--ink-300); font-weight: 300;
+  }
+  .style-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; color: var(--ink-800); font-weight: 500;
+  }
+  .style-cn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 18px; color: var(--ink-600);
+  }
+  .style-desc {
+    font-size: 13px; color: var(--ink-500);
+    flex: 1; min-width: 280px; text-align: right;
+    border-left: 1px solid var(--ink-300); padding-left: 16px;
+  }
+
+  .page-frame {
+    background: var(--ink-50);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 32px rgba(45,37,32,0.08), 0 0 0 1px var(--ink-300);
+    margin: 0 24px;
+  }
+
+  /* === FAKE NAVBAR (shared) === */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--ink-200);
+    background: var(--ink-50);
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; font-weight: 600; color: var(--ink-900);
+    letter-spacing: 0.05em;
+  }
+  .nav-links {
+    display: flex; gap: 28px; font-size: 14px; color: var(--ink-600);
+    font-family: 'Noto Serif SC', serif;
+  }
+  .nav-links .active { color: var(--ink-900); font-weight: 500; }
+  .nav-right { display: flex; gap: 16px; align-items: center; color: var(--ink-500); }
+  .nav-icon {
+    width: 32px; height: 32px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--ink-100);
+  }
+  .nav-icon.avatar { background: var(--ink-800); color: var(--ink-50); font-size: 12px; font-weight: 600; }
+
+  /* ==================================================================
+     TAG PALETTE SECTION
+  ================================================================== */
+  .palette-section {
+    background: var(--ink-50); border-radius: 12px;
+    box-shadow: 0 4px 32px rgba(45,37,32,0.06), 0 0 0 1px var(--ink-300);
+    padding: 40px; margin: 0 24px 80px;
+  }
+  .palette-section h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; color: var(--ink-800); font-weight: 500;
+    padding-bottom: 12px; border-bottom: 1px solid var(--ink-200);
+    margin-bottom: 24px;
+  }
+  .palette-section h2 .badge {
+    display: inline-block; font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--seal);
+    background: rgba(194,59,34,0.08); padding: 3px 10px; border-radius: 4px;
+    margin-left: 12px; vertical-align: middle; font-family: 'Inter', sans-serif;
+  }
+  .palette-grid12 {
+    display: grid; grid-template-columns: repeat(12, 1fr); gap: 6px;
+    margin-bottom: 24px;
+  }
+  .palette-grid12 .sw {
+    aspect-ratio: 1.4 / 1;
+    border-radius: 6px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 8px;
+    color: rgba(255,255,255,0.95);
+    font-size: 10px; line-height: 1.2;
+    font-family: 'Menlo', monospace;
+  }
+  .palette-grid12 .sw .nm {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 11px; margin-bottom: 2px; font-weight: 500;
+  }
+  .palette-row {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    padding: 20px; background: var(--ink-100); border-radius: 8px;
+    margin-bottom: 16px;
+  }
+  .chip {
+    font-size: 12px; padding: 4px 12px; border-radius: 999px; font-weight: 500;
+  }
+  .palette-note {
+    font-size: 13px; color: var(--ink-600); line-height: 1.7;
+    padding: 16px 20px; background: var(--ink-100);
+    border-left: 3px solid var(--ochre); border-radius: 0 6px 6px 0;
+  }
+  .palette-note code {
+    background: var(--ink-50); padding: 1px 6px; border-radius: 3px;
+    font-family: 'Menlo', monospace; font-size: 11px; color: var(--seal);
+  }
+
+  /* ==================================================================
+     STYLE 1: EDITORIAL INK
+  ================================================================== */
+  .s1-body { display: grid; grid-template-columns: 1fr 280px; gap: 56px; padding: 48px 40px; }
+  .s1-filters { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; }
+  .s1-filter {
+    font-size: 12px; padding: 5px 12px; border-radius: 999px;
+    color: var(--ink-600); border: 1px solid var(--ink-300);
+    font-family: 'Noto Serif SC', serif;
+  }
+  .s1-filter.on { background: var(--ink-800); color: var(--ink-50); border-color: var(--ink-800); }
+
+  .s1-post {
+    display: grid; grid-template-columns: 220px 1fr; gap: 24px;
+    padding: 28px 0; border-top: 1px solid var(--ink-200);
+  }
+  .s1-post:last-child { border-bottom: 1px solid var(--ink-200); }
+  .s1-cover {
+    aspect-ratio: 4/3; border-radius: 6px;
+    background: linear-gradient(135deg, #d4ccc0 0%, #b8a890 50%, #8b7763 100%);
+    position: relative; overflow: hidden;
+  }
+  .s1-cover::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.2), transparent 60%);
+  }
+  .s1-cover.c2 { background: linear-gradient(135deg, #2c2520, #6b5f52, #c4bdb0); }
+  .s1-cover.c3 { background: linear-gradient(160deg, #887b6c, #c23b22 70%, #8b4040); }
+  .s1-meta-row {
+    display: flex; gap: 8px; align-items: center;
+    font-family: 'Noto Serif SC', serif; font-size: 12px; color: var(--ink-500);
+    margin-bottom: 10px;
+  }
+  .s1-cat {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--ochre); font-weight: 600;
+  }
+  .s1-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; line-height: 1.25; color: var(--ink-900); font-weight: 500;
+    margin-bottom: 12px;
+  }
+  .s1-excerpt {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px; color: var(--ink-600); line-height: 1.7;
+    margin-bottom: 16px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .s1-footer { display: flex; gap: 16px; align-items: center; font-size: 12px; color: var(--ink-500); }
+  .s1-tag { color: var(--azure); }
+
+  /* === Editorial Ink · no-cover variants === */
+  .s1-post.no-cover-plain { grid-template-columns: 1fr; }
+
+  .s1-typo-date {
+    aspect-ratio: 4/3; border-radius: 6px;
+    background: var(--ink-100);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    color: var(--ink-500); position: relative;
+    border: 1px solid var(--ink-200);
+  }
+  .s1-typo-date .day {
+    font-size: 64px; line-height: 1; color: var(--ink-700); font-weight: 400;
+  }
+  .s1-typo-date .mon {
+    font-size: 14px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--ink-500); margin-top: 8px;
+  }
+  .s1-typo-date .yr {
+    position: absolute; bottom: 12px; right: 14px;
+    font-size: 10px; color: var(--ink-400); letter-spacing: 0.15em;
+  }
+
+  .s1-dropcap {
+    aspect-ratio: 4/3; border-radius: 6px;
+    background: var(--ink-100);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    border: 1px solid var(--ink-200);
+  }
+  .s1-dropcap .ch {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 120px; line-height: 1; color: var(--ink-700);
+    font-weight: 300;
+  }
+  .s1-dropcap .corner {
+    position: absolute; top: 10px; left: 12px;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--seal); font-weight: 600;
+  }
+
+  .s1-texture {
+    aspect-ratio: 4/3; border-radius: 6px;
+    background:
+      radial-gradient(ellipse at 30% 40%, rgba(194,59,34,0.06), transparent 60%),
+      radial-gradient(ellipse at 70% 70%, rgba(75,63,52,0.10), transparent 55%),
+      linear-gradient(135deg, var(--ink-200), var(--ink-100));
+    display: flex; align-items: flex-end; padding: 14px;
+    border: 1px solid var(--ink-200);
+  }
+  .s1-texture .lbl {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; letter-spacing: 0.35em; text-transform: uppercase;
+    color: var(--ink-600);
+  }
+
+  /* variant label tag */
+  .variant-row {
+    padding: 16px 24px; background: var(--ink-100);
+    border-bottom: 1px solid var(--ink-200);
+    display: flex; align-items: center; gap: 12px;
+  }
+  .variant-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ink-500); padding: 3px 10px;
+    background: var(--ink-50); border-radius: 4px; border: 1px solid var(--ink-300);
+  }
+  .variant-tag.recommend { color: var(--seal); border-color: rgba(194,59,34,0.3); }
+  .variant-name { font-family: 'Noto Serif SC', serif; font-size: 14px; color: var(--ink-700); }
+  .variant-note { font-size: 12px; color: var(--ink-500); margin-left: auto; }
+
+  /* sidebar v1 */
+  .sb1 .label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 11px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: var(--ink-500); margin-bottom: 4px;
+  }
+  .sb1 h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500; font-size: 22px; color: var(--ink-800);
+    margin-bottom: 16px;
+  }
+  .sb1 section + section { margin-top: 40px; }
+  .hot-item {
+    display: grid; grid-template-columns: 40px 1fr; gap: 14px;
+    padding: 12px 0; border-top: 1px solid var(--ink-200);
+  }
+  .hot-item:last-child { border-bottom: 1px solid var(--ink-200); }
+  .hot-numeral {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; color: var(--ink-300); font-weight: 300; line-height: 1;
+  }
+  .hot-title { font-size: 13px; color: var(--ink-700); line-height: 1.45; font-family: 'Noto Serif SC', serif; }
+  .hot-meta { font-size: 10px; color: var(--ink-400); margin-top: 4px; letter-spacing: 0.05em; }
+  .cat-item { padding: 8px 0; border-bottom: 1px solid var(--ink-200); }
+  .cat-row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .cat-name { font-size: 13px; color: var(--ink-700); font-family: 'Noto Serif SC', serif; }
+  .cat-count { font-family: 'Cormorant Garamond', serif; font-size: 13px; color: var(--ink-500); }
+  .cat-bar { height: 1px; background: var(--ink-200); position: relative; }
+  .cat-bar::after { content: ''; position: absolute; left: 0; top: 0; height: 1px; background: var(--ink-600); width: var(--w, 50%); }
+  .cloud { line-height: 2.1; }
+  .cloud a { color: var(--ink-600); margin-right: 12px; text-decoration: none; display: inline-block; }
+  .cloud .t1 { font-size: 11px; color: var(--ink-400); }
+  .cloud .t2 { font-size: 13px; color: var(--ink-500); }
+  .cloud .t3 { font-size: 15px; color: var(--ink-600); font-weight: 500; }
+  .cloud .t4 { font-size: 18px; color: var(--ink-700); font-weight: 500; }
+  .cloud .t5 { font-size: 22px; color: var(--ink-800); font-weight: 600; }
+
+  /* ==================================================================
+     STYLE 2: TIMELINE JOURNAL
+  ================================================================== */
+  .s2-body { padding: 48px 40px; max-width: 880px; margin: 0 auto; }
+  .s2-intro { margin-bottom: 48px; }
+  .s2-intro h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 42px; font-weight: 400; color: var(--ink-900);
+    margin-bottom: 8px;
+  }
+  .s2-intro p {
+    font-family: 'Noto Serif SC', serif;
+    color: var(--ink-500); font-size: 14px;
+  }
+  .s2-filter-strip {
+    display: flex; gap: 6px; margin-top: 16px; flex-wrap: wrap;
+  }
+  .s2-filter-strip .pill {
+    font-size: 11px; padding: 3px 10px; border-radius: 3px;
+    background: var(--ink-100); color: var(--ink-600);
+    font-family: 'Menlo', monospace;
+  }
+  .s2-month {
+    display: grid; grid-template-columns: 120px 1fr;
+    gap: 32px; margin-bottom: 56px;
+  }
+  .s2-month-label {
+    position: sticky; top: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; color: var(--ink-500); font-style: italic;
+    line-height: 1.4;
+  }
+  .s2-month-label .year {
+    display: block; font-size: 48px; color: var(--ink-300);
+    font-weight: 300; line-height: 1; margin-bottom: 4px; font-style: normal;
+  }
+  .s2-rail { position: relative; padding-left: 28px; border-left: 1px solid var(--ink-300); }
+  .s2-entry { padding: 0 0 36px; position: relative; }
+  .s2-entry::before {
+    content: ''; position: absolute; left: -33px; top: 8px;
+    width: 9px; height: 9px; border-radius: 999px;
+    background: var(--ink-50); border: 1px solid var(--ink-400);
+  }
+  .s2-entry:hover::before { background: var(--seal); border-color: var(--seal); }
+  .s2-date {
+    font-family: 'Cormorant Garamond', serif; font-size: 13px;
+    color: var(--ink-500); margin-bottom: 6px; letter-spacing: 0.05em;
+  }
+  .s2-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; color: var(--ink-900); font-weight: 500;
+    margin-bottom: 10px; cursor: pointer;
+  }
+  .s2-title:hover { color: var(--seal); }
+  .s2-excerpt {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px; color: var(--ink-600); line-height: 1.75;
+    margin-bottom: 12px;
+  }
+  .s2-tags { display: flex; gap: 10px; font-size: 12px; color: var(--ink-500); font-family: 'Menlo', monospace; }
+  .s2-tags .t { color: var(--ink-600); }
+
+  /* ==================================================================
+     STYLE 3: MAGAZINE GRID
+  ================================================================== */
+  .s3-body { padding: 0; }
+  .s3-hero {
+    position: relative; height: 380px; overflow: hidden;
+    background: linear-gradient(135deg, #1d1c19 0%, #453b32 40%, #6b5f52 100%);
+    display: flex; align-items: flex-end;
+  }
+  .s3-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.08), transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.15'/%3E%3C/svg%3E");
+  }
+  .s3-hero-content { position: relative; padding: 48px; max-width: 720px; color: var(--ink-50); z-index: 1; }
+  .s3-hero-tag {
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: rgba(255,255,255,0.6); margin-bottom: 16px;
+  }
+  .s3-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px; line-height: 1.05; font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .s3-hero-meta { font-size: 13px; color: rgba(255,255,255,0.7); font-family: 'Noto Serif SC', serif; }
+
+  .s3-toolbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 40px; border-bottom: 1px solid var(--ink-200);
+    background: var(--ink-100);
+  }
+  .s3-cats { display: flex; gap: 6px; }
+  .s3-cat {
+    font-size: 12px; padding: 5px 14px; border-radius: 999px;
+    background: var(--ink-50); color: var(--ink-600); border: 1px solid var(--ink-300);
+    font-family: 'Noto Serif SC', serif;
+  }
+  .s3-cat.on { background: var(--ink-800); color: var(--ink-50); border-color: var(--ink-800); }
+  .s3-sort { font-size: 12px; color: var(--ink-500); font-family: 'Menlo', monospace; }
+
+  .s3-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 32px; padding: 40px;
+  }
+  .s3-card { cursor: pointer; }
+  .s3-card-cover {
+    aspect-ratio: 4/3; border-radius: 6px; margin-bottom: 16px;
+    background: linear-gradient(135deg, #c4bdb0, #887b6c); overflow: hidden;
+  }
+  .s3-card-cover.c2 { background: linear-gradient(160deg, #5C7A8A, #2C2520); }
+  .s3-card-cover.c3 { background: linear-gradient(135deg, #B8863E, #8B4040 80%); }
+  .s3-card-cover.c4 { background: linear-gradient(180deg, #5B7A5E, #2C2520); }
+  .s3-card-cover.c5 { background: linear-gradient(135deg, #7A6B8A, #453B32); }
+  .s3-card-cover.c6 { background: linear-gradient(135deg, #A0826D, #5C5751); }
+  .s3-card-tag {
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--seal); margin-bottom: 8px; font-weight: 600;
+  }
+  .s3-card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; line-height: 1.25; color: var(--ink-900); font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .s3-card-meta { font-size: 12px; color: var(--ink-500); }
+
+  .s3-tags-footer {
+    padding: 32px 40px; background: var(--ink-100);
+    border-top: 1px solid var(--ink-200);
+  }
+  .s3-tags-footer .lbl {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; letter-spacing: 0.3em; text-transform: uppercase;
+    color: var(--ink-500); margin-bottom: 12px;
+  }
+
+  /* ==================================================================
+     STYLE 4: ZEN NOTES (marginalia)
+  ================================================================== */
+  .s4-body { padding: 64px 40px; max-width: 1080px; margin: 0 auto; }
+  .s4-intro {
+    text-align: center; margin-bottom: 64px;
+    font-family: 'Cormorant Garamond', serif;
+  }
+  .s4-intro .ch { font-family: 'Noto Serif SC', serif; font-size: 12px; color: var(--ink-500); letter-spacing: 0.5em; }
+  .s4-intro .en {
+    font-size: 36px; color: var(--ink-800); font-weight: 400; font-style: italic;
+    margin-top: 8px;
+  }
+  .s4-stats {
+    margin-top: 24px; font-size: 12px; color: var(--ink-400);
+    font-family: 'Menlo', monospace; letter-spacing: 0.1em;
+  }
+  .s4-entry {
+    display: grid; grid-template-columns: 1fr 200px;
+    gap: 40px; padding: 32px 0;
+    border-bottom: 1px dotted var(--ink-300);
+    align-items: baseline;
+  }
+  .s4-entry:hover .s4-title { color: var(--seal); }
+  .s4-main { }
+  .s4-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; color: var(--ink-400); font-style: italic;
+    margin-bottom: 4px; letter-spacing: 0.08em;
+  }
+  .s4-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; line-height: 1.2; color: var(--ink-800); font-weight: 400;
+    cursor: pointer;
+  }
+  .s4-sub {
+    font-family: 'Noto Serif SC', serif;
+    margin-top: 8px; font-size: 13px; color: var(--ink-500); line-height: 1.65;
+    max-width: 540px;
+  }
+  .s4-margin {
+    font-size: 11px; color: var(--ink-400); line-height: 1.8;
+    border-left: 1px solid var(--ink-200); padding-left: 16px;
+    font-family: 'Menlo', monospace;
+  }
+  .s4-margin .row { display: flex; justify-content: space-between; margin-bottom: 2px; }
+  .s4-margin .row .k { color: var(--ink-400); }
+  .s4-margin .row .v { color: var(--ink-600); }
+  .s4-margin .tagrow { margin-top: 8px; }
+  .s4-margin .mtag { color: var(--ink-600); margin-right: 6px; }
+
+  /* ==================================================================
+     STYLE 4b: ZEN NOTES + IMAGES (3 variants)
+  ================================================================== */
+  /* shared zen-image treatment: warm sepia + low contrast */
+  .zen-img {
+    background-size: cover; background-position: center;
+    filter: sepia(0.18) saturate(0.85) contrast(0.95);
+    position: relative;
+  }
+  .zen-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(45,37,32,0.10), rgba(254,253,251,0.10));
+    pointer-events: none;
+  }
+
+  /* Variant A: Occasional Hero — featured posts get a wide image */
+  .s4b-hero {
+    margin: 24px 0 8px;
+    aspect-ratio: 21/9;
+    border-radius: 4px;
+    background-color: var(--ink-200);
+    /* sample painted-mountain feel */
+    background-image:
+      radial-gradient(ellipse at 20% 60%, rgba(44,37,32,0.45), transparent 40%),
+      radial-gradient(ellipse at 55% 70%, rgba(75,63,52,0.55), transparent 50%),
+      radial-gradient(ellipse at 80% 55%, rgba(136,123,108,0.45), transparent 45%),
+      linear-gradient(180deg, #e8e2d5 0%, #c8bcaa 40%, #8a7a66 100%);
+  }
+  .s4b-hero-cap {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 11px; color: var(--ink-400);
+    text-align: right; margin-top: 4px; letter-spacing: 0.05em;
+  }
+
+  /* Variant B: Margin Thumbnail — replaces marginalia top */
+  .s4b-mthumb {
+    width: 100%; aspect-ratio: 1 / 1;
+    border-radius: 3px;
+    background-color: var(--ink-200);
+    background-image:
+      radial-gradient(ellipse at 30% 40%, rgba(91,122,94,0.30), transparent 55%),
+      radial-gradient(ellipse at 70% 70%, rgba(45,37,32,0.40), transparent 50%),
+      linear-gradient(160deg, #d8d0c0, #8a7a66);
+    margin-bottom: 12px;
+    filter: sepia(0.15) saturate(0.85);
+  }
+  .s4b-mthumb.t2 {
+    background-image:
+      radial-gradient(ellipse at 60% 30%, rgba(194,59,34,0.25), transparent 50%),
+      radial-gradient(ellipse at 30% 75%, rgba(45,37,32,0.45), transparent 55%),
+      linear-gradient(135deg, #d4ccc0, #6b5f52);
+  }
+  .s4b-mthumb.t3 {
+    background-image:
+      radial-gradient(ellipse at 50% 50%, rgba(92,122,138,0.30), transparent 60%),
+      linear-gradient(180deg, #cfc7b6, #5c5751);
+  }
+
+  /* Variant C: Inline Side Thumb (small left panel, like Substack/Linear) */
+  .s4b-c-entry {
+    display: grid; grid-template-columns: 84px 1fr 160px;
+    gap: 24px; padding: 28px 0;
+    border-bottom: 1px dotted var(--ink-300);
+    align-items: start;
+  }
+  .s4b-c-thumb {
+    width: 84px; height: 84px;
+    border-radius: 3px;
+    background-color: var(--ink-200);
+    background-image:
+      radial-gradient(ellipse at 30% 60%, rgba(75,63,52,0.40), transparent 50%),
+      radial-gradient(ellipse at 75% 35%, rgba(136,123,108,0.35), transparent 50%),
+      linear-gradient(135deg, #d8d0c0, #8a7a66);
+    filter: sepia(0.15) saturate(0.85);
+  }
+  .s4b-c-thumb.t2 {
+    background-image:
+      radial-gradient(ellipse at 40% 40%, rgba(194,59,34,0.22), transparent 55%),
+      linear-gradient(160deg, #d4ccc0, #5c5751);
+  }
+  .s4b-c-thumb.t3 {
+    background-image:
+      radial-gradient(ellipse at 50% 60%, rgba(91,122,94,0.30), transparent 50%),
+      linear-gradient(180deg, #cfc7b6, #6b5f52);
+  }
+  .s4b-c-thumb.t4 {
+    background-image:
+      radial-gradient(ellipse at 60% 50%, rgba(92,122,138,0.28), transparent 55%),
+      linear-gradient(135deg, #d8d2c2, #5c5751);
+  }
+
+  /* ==================================================================
+     DECISION / SUMMARY
+  ================================================================== */
+  .summary {
+    background: var(--ink-50); border-radius: 12px;
+    box-shadow: 0 4px 32px rgba(45,37,32,0.06), 0 0 0 1px var(--ink-300);
+    padding: 40px; margin: 0 24px;
+  }
+  .summary h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; color: var(--ink-800); font-weight: 500;
+    padding-bottom: 12px; border-bottom: 1px solid var(--ink-200);
+    margin-bottom: 24px;
+  }
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  }
+  .summary-card {
+    padding: 20px; background: var(--ink-100); border-radius: 8px;
+    border-left: 3px solid var(--ink-400);
+  }
+  .summary-card.recommend { border-left-color: var(--seal); }
+  .summary-card h4 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; color: var(--ink-800); margin-bottom: 8px;
+  }
+  .summary-card p {
+    font-size: 13px; color: var(--ink-600); line-height: 1.6;
+  }
+  .summary-card .tag {
+    display: inline-block; font-size: 10px; letter-spacing: 0.15em;
+    color: var(--seal); margin-left: 6px; vertical-align: middle;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 1024px) {
+    .s1-body, .s2-month { grid-template-columns: 1fr; }
+    .s3-grid { grid-template-columns: repeat(2, 1fr); }
+    .s4-entry { grid-template-columns: 1fr; }
+    .s4-margin { border-left: none; border-top: 1px dotted var(--ink-300); padding: 12px 0 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <header class="lookbook-header">
+    <h1>Blog Redesign · Lookbook</h1>
+    <p class="sub">墨色系统下的 4 种博客列表整体方案 + 标签随机配色</p>
+  </header>
+</div>
+
+<!-- ============== TAG PALETTE (random-from-ink-palette) ============== -->
+<section class="palette-section">
+  <h2>标签配色 · 随机墨色 <span class="badge">Initialize</span></h2>
+
+  <p style="margin-bottom: 20px; font-size: 14px; color: var(--ink-600);">
+    保留你随机分配的策略 — 但候选池从"任意 hex"改为这 12 个墨色。
+    后台"初始化默认标签"按钮跑这个池子,产生的颜色永远协调。
+  </p>
+
+  <div class="palette-grid12">
+    <div class="sw" style="background:#C23B22"><span class="nm">朱砂</span>#C23B22</div>
+    <div class="sw" style="background:#B8863E"><span class="nm">赭石</span>#B8863E</div>
+    <div class="sw" style="background:#5B7A5E"><span class="nm">苔绿</span>#5B7A5E</div>
+    <div class="sw" style="background:#5C7A8A"><span class="nm">青墨</span>#5C7A8A</div>
+    <div class="sw" style="background:#7A6B8A"><span class="nm">黛紫</span>#7A6B8A</div>
+    <div class="sw" style="background:#8B6F47"><span class="nm">茶褐</span>#8B6F47</div>
+    <div class="sw" style="background:#6B7B7A"><span class="nm">远山</span>#6B7B7A</div>
+    <div class="sw" style="background:#A0826D"><span class="nm">沉香</span>#A0826D</div>
+    <div class="sw" style="background:#5C5751"><span class="nm">墨灰</span>#5C5751</div>
+    <div class="sw" style="background:#8B4040"><span class="nm">暗红</span>#8B4040</div>
+    <div class="sw" style="background:#4A6741"><span class="nm">松针</span>#4A6741</div>
+    <div class="sw" style="background:#A0522D"><span class="nm">栗壳</span>#A0522D</div>
+  </div>
+
+  <div class="palette-row">
+    <span class="chip" style="background:#5C7A8A15;color:#5C7A8A">React</span>
+    <span class="chip" style="background:#B8863E15;color:#B8863E">TypeScript</span>
+    <span class="chip" style="background:#5B7A5E15;color:#5B7A5E">Next.js</span>
+    <span class="chip" style="background:#7A6B8A15;color:#7A6B8A">Python</span>
+    <span class="chip" style="background:#8B6F4715;color:#8B6F47">Docker</span>
+    <span class="chip" style="background:#A0522D15;color:#A0522D">Node.js</span>
+    <span class="chip" style="background:#C23B2215;color:#C23B22">大语言模型</span>
+    <span class="chip" style="background:#6B7B7A15;color:#6B7B7A">Linux</span>
+    <span class="chip" style="background:#4A674115;color:#4A6741">JavaScript</span>
+    <span class="chip" style="background:#A0826D15;color:#A0826D">Git</span>
+    <span class="chip" style="background:#5C575115;color:#5C5751">数据库</span>
+    <span class="chip" style="background:#8B404015;color:#8B4040">云计算</span>
+  </div>
+
+  <div class="palette-note">
+    <strong style="color: var(--ink-800);">实现:</strong> 在 <code>src/server/api/routers/tags.ts</code> 顶部加 <code>const INK_PALETTE = [...]</code> 数组,把每个 default tag 的 <code>color: "#XXX"</code> 删掉,创建时 <code>color: INK_PALETTE[Math.floor(Math.random() * INK_PALETTE.length)]</code>。也可以加一个新 mutation <code>recolorAll</code>,把"重新初始化配色"按钮接上 — 一键洗牌所有现有标签的颜色。
+  </div>
+</section>
+
+<!-- ============== STYLE 1: EDITORIAL INK ============== -->
+<div class="style-block">
+  <div class="style-meta">
+    <span class="style-num">01</span>
+    <div>
+      <div class="style-title">Editorial Ink</div>
+      <div class="style-cn">编辑部气质</div>
+    </div>
+    <div class="style-desc">两栏布局 · 大封面 · 衬线大标题 · 侧栏含 Cormorant 序号 + 直方分类 + 真·标签云。最贴近《The Atlantic》/《New Yorker》数字版气质。</div>
+  </div>
+
+  <div class="page-frame">
+    <nav class="nav">
+      <div class="nav-logo">TZ</div>
+      <div class="nav-links">
+        <span class="active">博客</span><span>日志</span><span>项目</span><span>归档</span><span>关于</span>
+      </div>
+      <div class="nav-right">
+        <div class="nav-icon">⌕</div><div class="nav-icon">☾</div><div class="nav-icon avatar">TZ</div>
+      </div>
+    </nav>
+
+    <div class="s1-body">
+      <div>
+        <div class="s1-filters">
+          <span class="s1-filter on">全部</span>
+          <span class="s1-filter">AI</span>
+          <span class="s1-filter">前端</span>
+          <span class="s1-filter">后端</span>
+          <span class="s1-filter">系统</span>
+          <span class="s1-filter">随笔</span>
+        </div>
+
+        <article class="s1-post">
+          <div class="s1-cover"></div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">AI · LLM</span><span>·</span><span>2025/03/08</span></div>
+            <h3 class="s1-title">在墨色系统里思考界面的呼吸感</h3>
+            <p class="s1-excerpt">为什么禅意的设计往往会失败?因为我们误把"留白"理解为"什么都不放"。真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬, 字体的对比, 颜色的进退……</p>
+            <div class="s1-footer">
+              <span>67 阅读</span><span>·</span><span>2 评论</span><span>·</span>
+              <span class="s1-tag">#design</span><span class="s1-tag">#ink</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="s1-post">
+          <div class="s1-cover c2"></div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">FRONTEND</span><span>·</span><span>2025/02/21</span></div>
+            <h3 class="s1-title">Docker 学习笔记 — 从镜像分层到 BuildKit</h3>
+            <p class="s1-excerpt">最近重新走了一遍 Docker 的内部模型,把过去模糊的概念厘清。这篇笔记按"为什么这样设计"的角度,而不是命令清单的角度组织……</p>
+            <div class="s1-footer">
+              <span>42 阅读</span><span>·</span><span>5 评论</span><span>·</span>
+              <span class="s1-tag">#docker</span><span class="s1-tag">#devops</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="s1-post">
+          <div class="s1-cover c3"></div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">FRAMEWORK</span><span>·</span><span>2025/02/10</span></div>
+            <h3 class="s1-title">Next.js 15 App Router 实践 · 那些 RSC 教程不告诉你的事</h3>
+            <p class="s1-excerpt">Server Component 听起来很美 — 直到你开始在生产里用它。从 streaming 的边界、tRPC 的 prefetch 时机、到 client 状态的彻底重构……</p>
+            <div class="s1-footer">
+              <span>38 阅读</span><span>·</span><span>8 评论</span><span>·</span>
+              <span class="s1-tag">#nextjs</span><span class="s1-tag">#react</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <aside class="sb1">
+        <section>
+          <div class="label">Popular</div>
+          <h3>热门文章</h3>
+          <div class="hot-item"><span class="hot-numeral">01</span><div><div class="hot-title">在墨色系统里思考界面的呼吸感</div><div class="hot-meta">03·08 · 67 阅</div></div></div>
+          <div class="hot-item"><span class="hot-numeral">02</span><div><div class="hot-title">Docker 学习笔记</div><div class="hot-meta">02·21 · 42 阅</div></div></div>
+          <div class="hot-item"><span class="hot-numeral">03</span><div><div class="hot-title">Next.js 15 App Router 实践</div><div class="hot-meta">02·10 · 38 阅</div></div></div>
+        </section>
+        <section>
+          <div class="label">Categories</div>
+          <h3>分类</h3>
+          <div class="cat-item"><div class="cat-row"><span class="cat-name">前端</span><span class="cat-count">08</span></div><div class="cat-bar" style="--w:100%"></div></div>
+          <div class="cat-item"><div class="cat-row"><span class="cat-name">后端</span><span class="cat-count">03</span></div><div class="cat-bar" style="--w:38%"></div></div>
+          <div class="cat-item"><div class="cat-row"><span class="cat-name">AI</span><span class="cat-count">01</span></div><div class="cat-bar" style="--w:12%"></div></div>
+        </section>
+        <section>
+          <div class="label">Tag Cloud</div>
+          <h3>标签云</h3>
+          <div class="cloud">
+            <a class="t5" href="#">CSS</a>
+            <a class="t4" href="#">React</a>
+            <a class="t3" href="#">TypeScript</a>
+            <a class="t3" href="#">Python</a>
+            <a class="t2" href="#">Docker</a>
+            <a class="t2" href="#">Vue</a>
+            <a class="t1" href="#">Node.js</a>
+            <a class="t4" href="#">Next.js</a>
+            <a class="t2" href="#">Tailwind</a>
+            <a class="t3" href="#">tRPC</a>
+            <a class="t1" href="#">Drizzle</a>
+            <a class="t1" href="#">Git</a>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- ============== STYLE 1b: EDITORIAL INK · NO COVER VARIANTS ============== -->
+<div class="style-block">
+  <div class="style-meta">
+    <span class="style-num">01<span style="font-size:32px;color:var(--ink-400);">b</span></span>
+    <div>
+      <div class="style-title">Editorial Ink · No-Cover Variants</div>
+      <div class="style-cn">无封面文章的四种处理</div>
+    </div>
+    <div class="style-desc">很多文章不会有封面图。这里展示四种填充方式 — 同一页可以混搭(根据 post.coverImage 是否存在切换)。推荐 B (排版式日期) 和 C (首字母大字),它们最贴合编辑部气质。</div>
+  </div>
+
+  <div class="page-frame">
+
+    <!-- VARIANT A: PLAIN -->
+    <div class="variant-row">
+      <span class="variant-tag">Variant A</span>
+      <span class="variant-name">无封面 · 纯文本</span>
+      <span class="variant-note">最朴素 — 完全去掉封面列,标题更突出</span>
+    </div>
+    <div class="s1-body" style="padding: 32px 40px;">
+      <div>
+        <article class="s1-post no-cover-plain">
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">ESSAY · 随笔</span><span>·</span><span>2025/01/08</span></div>
+            <h3 class="s1-title">为什么我重新开始写博客 — 一封写给四年前自己的信</h3>
+            <p class="s1-excerpt">关掉所有数据面板, 关掉所有推送, 关掉那个总在问"这篇能火吗"的内心声音。重新只为一件事写作 — 把昨天还没想清楚的, 今天写到能读懂。</p>
+            <div class="s1-footer"><span>91 阅读</span><span>·</span><span>3 评论</span><span>·</span><span class="s1-tag">#essay</span></div>
+          </div>
+        </article>
+        <article class="s1-post no-cover-plain">
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">NOTES · 笔记</span><span>·</span><span>2025/02/02</span></div>
+            <h3 class="s1-title">为什么我换掉了 Notion</h3>
+            <p class="s1-excerpt">用了 5 年的工具, 最近终于换走了。原因不在功能, 而在"它把所有事都做成了一件事"。</p>
+            <div class="s1-footer"><span>21 阅读</span><span>·</span><span class="s1-tag">#tools</span></div>
+          </div>
+        </article>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- VARIANT B: TYPOGRAPHIC DATE -->
+    <div class="variant-row">
+      <span class="variant-tag recommend">Variant B · Recommended</span>
+      <span class="variant-name">排版式日期</span>
+      <span class="variant-note">封面位置改为大号衬线日期 — 信息有用,且强化"出版物"质感</span>
+    </div>
+    <div class="s1-body" style="padding: 32px 40px;">
+      <div>
+        <article class="s1-post">
+          <div class="s1-typo-date">
+            <div class="day">08</div>
+            <div class="mon">Mar</div>
+            <div class="yr">2025</div>
+          </div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">ESSAY · 随笔</span></div>
+            <h3 class="s1-title">为什么我重新开始写博客 — 一封写给四年前自己的信</h3>
+            <p class="s1-excerpt">关掉所有数据面板, 关掉所有推送, 关掉那个总在问"这篇能火吗"的内心声音。重新只为一件事写作 — 把昨天还没想清楚的, 今天写到能读懂。</p>
+            <div class="s1-footer"><span>91 阅读</span><span>·</span><span>3 评论</span><span>·</span><span class="s1-tag">#essay</span></div>
+          </div>
+        </article>
+        <article class="s1-post">
+          <div class="s1-typo-date">
+            <div class="day">02</div>
+            <div class="mon">Feb</div>
+            <div class="yr">2025</div>
+          </div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">NOTES · 笔记</span></div>
+            <h3 class="s1-title">为什么我换掉了 Notion</h3>
+            <p class="s1-excerpt">用了 5 年的工具, 最近终于换走了。原因不在功能, 而在"它把所有事都做成了一件事"。</p>
+            <div class="s1-footer"><span>21 阅读</span><span>·</span><span class="s1-tag">#tools</span></div>
+          </div>
+        </article>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- VARIANT C: DROP CAP -->
+    <div class="variant-row">
+      <span class="variant-tag recommend">Variant C · Recommended</span>
+      <span class="variant-name">首字大字 · Drop Cap</span>
+      <span class="variant-note">封面位置放标题首字 (汉字或英文) — 古籍/装饰艺术气质,有个性</span>
+    </div>
+    <div class="s1-body" style="padding: 32px 40px;">
+      <div>
+        <article class="s1-post">
+          <div class="s1-dropcap">
+            <span class="corner">ESSAY</span>
+            <span class="ch">为</span>
+          </div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">ESSAY · 随笔</span><span>·</span><span>2025/01/08</span></div>
+            <h3 class="s1-title">为什么我重新开始写博客 — 一封写给四年前自己的信</h3>
+            <p class="s1-excerpt">关掉所有数据面板, 关掉所有推送, 关掉那个总在问"这篇能火吗"的内心声音。重新只为一件事写作 — 把昨天还没想清楚的, 今天写到能读懂。</p>
+            <div class="s1-footer"><span>91 阅读</span><span>·</span><span>3 评论</span><span>·</span><span class="s1-tag">#essay</span></div>
+          </div>
+        </article>
+        <article class="s1-post">
+          <div class="s1-dropcap">
+            <span class="corner">NOTES</span>
+            <span class="ch">N</span>
+          </div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">NOTES · 笔记</span><span>·</span><span>2025/02/02</span></div>
+            <h3 class="s1-title">Notion 不再适合我了</h3>
+            <p class="s1-excerpt">用了 5 年的工具, 最近终于换走了。原因不在功能, 而在"它把所有事都做成了一件事"。</p>
+            <div class="s1-footer"><span>21 阅读</span><span>·</span><span class="s1-tag">#tools</span></div>
+          </div>
+        </article>
+      </div>
+      <div></div>
+    </div>
+
+    <!-- VARIANT D: TEXTURE BLOCK -->
+    <div class="variant-row">
+      <span class="variant-tag">Variant D</span>
+      <span class="variant-name">墨晕色块</span>
+      <span class="variant-note">柔和的墨色径向渐变 + 分类标签 — 最像"假装有封面",安全但略平淡</span>
+    </div>
+    <div class="s1-body" style="padding: 32px 40px;">
+      <div>
+        <article class="s1-post">
+          <div class="s1-texture">
+            <span class="lbl">Essay</span>
+          </div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">ESSAY · 随笔</span><span>·</span><span>2025/01/08</span></div>
+            <h3 class="s1-title">为什么我重新开始写博客 — 一封写给四年前自己的信</h3>
+            <p class="s1-excerpt">关掉所有数据面板, 关掉所有推送, 关掉那个总在问"这篇能火吗"的内心声音。重新只为一件事写作 — 把昨天还没想清楚的, 今天写到能读懂。</p>
+            <div class="s1-footer"><span>91 阅读</span><span>·</span><span>3 评论</span><span>·</span><span class="s1-tag">#essay</span></div>
+          </div>
+        </article>
+        <article class="s1-post">
+          <div class="s1-texture" style="background:
+              radial-gradient(ellipse at 70% 30%, rgba(91,122,94,0.10), transparent 55%),
+              radial-gradient(ellipse at 20% 80%, rgba(75,63,52,0.08), transparent 60%),
+              linear-gradient(135deg, var(--ink-200), var(--ink-100));">
+            <span class="lbl">Notes</span>
+          </div>
+          <div>
+            <div class="s1-meta-row"><span class="s1-cat">NOTES · 笔记</span><span>·</span><span>2025/02/02</span></div>
+            <h3 class="s1-title">为什么我换掉了 Notion</h3>
+            <p class="s1-excerpt">用了 5 年的工具, 最近终于换走了。原因不在功能, 而在"它把所有事都做成了一件事"。</p>
+            <div class="s1-footer"><span>21 阅读</span><span>·</span><span class="s1-tag">#tools</span></div>
+          </div>
+        </article>
+      </div>
+      <div></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============== STYLE 2: TIMELINE JOURNAL ============== -->
+<div class="style-block">
+  <div class="style-meta">
+    <span class="style-num">02</span>
+    <div>
+      <div class="style-title">Timeline Journal</div>
+      <div class="style-cn">时间轴日志</div>
+    </div>
+    <div class="style-desc">无侧栏 · 按月份折叠 · 左侧大年份 + 时间轴针 · 内容居中。最适合写得"密"的博客 — 强调持续输出的节奏感。Notion / Substack 归档风格。</div>
+  </div>
+
+  <div class="page-frame">
+    <nav class="nav">
+      <div class="nav-logo">TZ</div>
+      <div class="nav-links"><span class="active">博客</span><span>日志</span><span>项目</span><span>归档</span><span>关于</span></div>
+      <div class="nav-right"><div class="nav-icon">⌕</div><div class="nav-icon">☾</div><div class="nav-icon avatar">TZ</div></div>
+    </nav>
+
+    <div class="s2-body">
+      <div class="s2-intro">
+        <h2><em>Notes</em> 笔记</h2>
+        <p>关于设计、工程、和介于两者之间的思考。共 24 篇 · 持续更新中。</p>
+        <div class="s2-filter-strip">
+          <span class="pill"># all</span><span class="pill"># design</span><span class="pill"># engineering</span>
+          <span class="pill"># reading</span><span class="pill"># misc</span>
+        </div>
+      </div>
+
+      <div class="s2-month">
+        <div class="s2-month-label">March<span class="year">'25</span><em>三月</em></div>
+        <div class="s2-rail">
+          <div class="s2-entry">
+            <div class="s2-date">March 08</div>
+            <h3 class="s2-title">在墨色系统里思考界面的呼吸感</h3>
+            <p class="s2-excerpt">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。这周重新走了一遍设计系统的色阶定义, 发现自己之前把"留白"理解错了……</p>
+            <div class="s2-tags"><span class="t"># design</span><span class="t"># ink</span><span class="t"># 67 阅</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="s2-month">
+        <div class="s2-month-label">February<span class="year">'25</span><em>二月</em></div>
+        <div class="s2-rail">
+          <div class="s2-entry">
+            <div class="s2-date">February 21</div>
+            <h3 class="s2-title">Docker 学习笔记 — 从镜像分层到 BuildKit</h3>
+            <p class="s2-excerpt">最近重新走了一遍 Docker 的内部模型, 把过去模糊的概念厘清。按"为什么这样设计"的角度组织, 而不是命令清单。</p>
+            <div class="s2-tags"><span class="t"># docker</span><span class="t"># devops</span><span class="t"># 42 阅</span></div>
+          </div>
+          <div class="s2-entry">
+            <div class="s2-date">February 10</div>
+            <h3 class="s2-title">Next.js 15 App Router 实践 · 那些 RSC 教程不告诉你的事</h3>
+            <p class="s2-excerpt">Server Component 听起来很美 — 直到你开始在生产里用它。从 streaming 的边界, 到 client 状态的彻底重构, 都是教程里跳过的坑。</p>
+            <div class="s2-tags"><span class="t"># nextjs</span><span class="t"># react</span><span class="t"># 38 阅</span></div>
+          </div>
+          <div class="s2-entry">
+            <div class="s2-date">February 02</div>
+            <h3 class="s2-title">为什么我换掉了 Notion</h3>
+            <p class="s2-excerpt">用了 5 年的工具,最近终于换走了。原因不在功能,而在"它把所有事都做成了一件事"。</p>
+            <div class="s2-tags"><span class="t"># tools</span><span class="t"># 21 阅</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============== STYLE 3: MAGAZINE GRID ============== -->
+<div class="style-block">
+  <div class="style-meta">
+    <span class="style-num">03</span>
+    <div>
+      <div class="style-title">Magazine Grid</div>
+      <div class="style-cn">杂志网格</div>
+    </div>
+    <div class="style-desc">顶部 Hero 大图压标题 · 横向分类条 · 三列卡片网格 · 底部标签云。最适合视觉强、想强调"品牌感"的博客 — Medium 出版物 / Bauhaus 印刷美学。</div>
+  </div>
+
+  <div class="page-frame">
+    <nav class="nav">
+      <div class="nav-logo">TZ</div>
+      <div class="nav-links"><span class="active">博客</span><span>日志</span><span>项目</span><span>归档</span><span>关于</span></div>
+      <div class="nav-right"><div class="nav-icon">⌕</div><div class="nav-icon">☾</div><div class="nav-icon avatar">TZ</div></div>
+    </nav>
+
+    <div class="s3-body">
+      <div class="s3-hero">
+        <div class="s3-hero-content">
+          <div class="s3-hero-tag">FEATURED · 推荐阅读</div>
+          <h2 class="s3-hero-title">在墨色系统里<br/>思考界面的呼吸感</h2>
+          <div class="s3-hero-meta">设计 · 2025年3月8日 · 12 分钟阅读</div>
+        </div>
+      </div>
+
+      <div class="s3-toolbar">
+        <div class="s3-cats">
+          <span class="s3-cat on">全部 18</span>
+          <span class="s3-cat">前端 8</span>
+          <span class="s3-cat">后端 3</span>
+          <span class="s3-cat">AI 1</span>
+          <span class="s3-cat">设计 4</span>
+          <span class="s3-cat">随笔 2</span>
+        </div>
+        <div class="s3-sort">↓ 最新</div>
+      </div>
+
+      <div class="s3-grid">
+        <article class="s3-card">
+          <div class="s3-card-cover c2"></div>
+          <div class="s3-card-tag">FRONTEND</div>
+          <h4 class="s3-card-title">Docker 学习笔记 — 从镜像分层到 BuildKit</h4>
+          <div class="s3-card-meta">02·21 · 42 阅 · 8 分钟</div>
+        </article>
+        <article class="s3-card">
+          <div class="s3-card-cover c3"></div>
+          <div class="s3-card-tag">FRAMEWORK</div>
+          <h4 class="s3-card-title">Next.js 15 App Router 实践</h4>
+          <div class="s3-card-meta">02·10 · 38 阅 · 15 分钟</div>
+        </article>
+        <article class="s3-card">
+          <div class="s3-card-cover c4"></div>
+          <div class="s3-card-tag">TOOLS</div>
+          <h4 class="s3-card-title">为什么我换掉了 Notion</h4>
+          <div class="s3-card-meta">02·02 · 21 阅 · 6 分钟</div>
+        </article>
+        <article class="s3-card">
+          <div class="s3-card-cover c5"></div>
+          <div class="s3-card-tag">AI</div>
+          <h4 class="s3-card-title">LLM 上下文工程 · 我是如何组织 Claude 的 prompt 的</h4>
+          <div class="s3-card-meta">01·28 · 53 阅 · 10 分钟</div>
+        </article>
+        <article class="s3-card">
+          <div class="s3-card-cover c6"></div>
+          <div class="s3-card-tag">DESIGN</div>
+          <h4 class="s3-card-title">从印刷术到屏幕 · 一份排版的渐近线</h4>
+          <div class="s3-card-meta">01·15 · 29 阅 · 7 分钟</div>
+        </article>
+        <article class="s3-card">
+          <div class="s3-card-cover"></div>
+          <div class="s3-card-tag">ESSAY</div>
+          <h4 class="s3-card-title">为什么我重新开始写博客</h4>
+          <div class="s3-card-meta">01·08 · 91 阅 · 4 分钟</div>
+        </article>
+      </div>
+
+      <div class="s3-tags-footer">
+        <div class="lbl">Tags · 标签</div>
+        <div class="palette-row" style="background:transparent;padding:0;margin:0">
+          <span class="chip" style="background:#5C7A8A15;color:#5C7A8A">React 12</span>
+          <span class="chip" style="background:#B8863E15;color:#B8863E">TypeScript 8</span>
+          <span class="chip" style="background:#5B7A5E15;color:#5B7A5E">Next.js 6</span>
+          <span class="chip" style="background:#7A6B8A15;color:#7A6B8A">Python 5</span>
+          <span class="chip" style="background:#8B6F4715;color:#8B6F47">Docker 4</span>
+          <span class="chip" style="background:#A0522D15;color:#A0522D">Node.js 3</span>
+          <span class="chip" style="background:#C23B2215;color:#C23B22">设计 3</span>
+          <span class="chip" style="background:#6B7B7A15;color:#6B7B7A">Linux 2</span>
+          <span class="chip" style="background:#4A674115;color:#4A6741">JavaScript 2</span>
+          <span class="chip" style="background:#A0826D15;color:#A0826D">Git 2</span>
+          <span class="chip" style="background:#5C575115;color:#5C5751">tRPC 1</span>
+          <span class="chip" style="background:#8B404015;color:#8B4040">Drizzle 1</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============== STYLE 4: ZEN NOTES ============== -->
+<div class="style-block">
+  <div class="style-meta">
+    <span class="style-num">04</span>
+    <div>
+      <div class="style-title">Zen Notes</div>
+      <div class="style-cn">禅意笔记</div>
+    </div>
+    <div class="style-desc">无封面图 · 无侧栏 · 仅标题 + 短描述 + 右侧元信息小注。Tufte / Jonathan Ive 极简主义。最适合"内容即一切"的写作型博客。</div>
+  </div>
+
+  <div class="page-frame">
+    <nav class="nav">
+      <div class="nav-logo">TZ</div>
+      <div class="nav-links"><span class="active">博客</span><span>日志</span><span>项目</span><span>归档</span><span>关于</span></div>
+      <div class="nav-right"><div class="nav-icon">⌕</div><div class="nav-icon">☾</div><div class="nav-icon avatar">TZ</div></div>
+    </nav>
+
+    <div class="s4-body">
+      <div class="s4-intro">
+        <div class="ch">墨 · 文 · 字</div>
+        <div class="en">Writings</div>
+        <div class="s4-stats">18 ENTRIES · UPDATED 2025·03·08</div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— March 8, 2025</div>
+          <h3 class="s4-title">在墨色系统里思考界面的呼吸感</h3>
+          <p class="s4-sub">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。这周重新走了一遍设计系统的色阶定义。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">design</span></div>
+          <div class="row"><span class="k">read</span><span class="v">12 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">67</span></div>
+          <div class="tagrow"><span class="mtag">#ink</span><span class="mtag">#ui</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— February 21, 2025</div>
+          <h3 class="s4-title">Docker 学习笔记 · 从镜像分层到 BuildKit</h3>
+          <p class="s4-sub">按"为什么这样设计"的角度而不是命令清单的角度组织。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">devops</span></div>
+          <div class="row"><span class="k">read</span><span class="v">8 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">42</span></div>
+          <div class="tagrow"><span class="mtag">#docker</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— February 10, 2025</div>
+          <h3 class="s4-title">Next.js 15 App Router 实践 · 那些 RSC 教程不告诉你的事</h3>
+          <p class="s4-sub">Server Component 听起来很美 — 直到你开始在生产里用它。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">frontend</span></div>
+          <div class="row"><span class="k">read</span><span class="v">15 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">38</span></div>
+          <div class="tagrow"><span class="mtag">#nextjs</span><span class="mtag">#react</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— February 02, 2025</div>
+          <h3 class="s4-title">为什么我换掉了 Notion</h3>
+          <p class="s4-sub">用了 5 年的工具,最近终于换走了。原因不在功能,而在"它把所有事都做成了一件事"。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">tools</span></div>
+          <div class="row"><span class="k">read</span><span class="v">6 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">21</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— January 28, 2025</div>
+          <h3 class="s4-title">LLM 上下文工程 · 我是如何组织 Claude 的 prompt 的</h3>
+          <p class="s4-sub">从 system prompt 的结构,到工具调用的描述,到示例的选择。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">ai</span></div>
+          <div class="row"><span class="k">read</span><span class="v">10 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">53</span></div>
+          <div class="tagrow"><span class="mtag">#llm</span><span class="mtag">#prompt</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============== STYLE 4b: ZEN NOTES + IMAGES ============== -->
+<div class="style-block">
+  <div class="style-meta">
+    <span class="style-num">04<span style="font-size:32px;color:var(--ink-400);">b</span></span>
+    <div>
+      <div class="style-title">Zen Notes · With Imagery</div>
+      <div class="style-cn">禅意笔记 · 加图变体</div>
+    </div>
+    <div class="style-desc">在不破坏极简的前提下加入图片。关键: 图片都做 sepia + 低饱和处理, 看起来像水墨/古籍插图而不是数字照片。三种节奏 — 选你最喜欢的。</div>
+  </div>
+
+  <div class="page-frame">
+
+    <!-- ====== VARIANT A: OCCASIONAL HERO ====== -->
+    <div class="variant-row">
+      <span class="variant-tag recommend">Variant A · Recommended</span>
+      <span class="variant-name">间隔式封面 · Occasional Hero</span>
+      <span class="variant-note">大部分文章保持纯文本,只有"精选"文章才有一张 21:9 宽幅图 — 节奏感最强</span>
+    </div>
+    <div class="s4-body" style="padding: 40px;">
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— March 8, 2025</div>
+          <h3 class="s4-title">在墨色系统里思考界面的呼吸感</h3>
+          <div class="s4b-hero"></div>
+          <div class="s4b-hero-cap">封面 · 远山图 (国画 · 黄宾虹风)</div>
+          <p class="s4-sub" style="margin-top:14px;">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。这周重新走了一遍设计系统的色阶定义。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">design</span></div>
+          <div class="row"><span class="k">read</span><span class="v">12 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">67</span></div>
+          <div class="tagrow"><span class="mtag">#ink</span><span class="mtag">#ui</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— February 21, 2025</div>
+          <h3 class="s4-title">Docker 学习笔记 · 从镜像分层到 BuildKit</h3>
+          <p class="s4-sub">按"为什么这样设计"的角度而不是命令清单的角度组织。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">devops</span></div>
+          <div class="row"><span class="k">read</span><span class="v">8 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">42</span></div>
+          <div class="tagrow"><span class="mtag">#docker</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— February 10, 2025</div>
+          <h3 class="s4-title">Next.js 15 App Router 实践 · 那些 RSC 教程不告诉你的事</h3>
+          <p class="s4-sub">Server Component 听起来很美 — 直到你开始在生产里用它。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">frontend</span></div>
+          <div class="row"><span class="k">read</span><span class="v">15 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">38</span></div>
+          <div class="tagrow"><span class="mtag">#nextjs</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— January 28, 2025</div>
+          <h3 class="s4-title">LLM 上下文工程 · 我是如何组织 Claude 的 prompt 的</h3>
+          <div class="s4b-hero" style="background-image:
+              radial-gradient(ellipse at 30% 70%, rgba(194,59,34,0.30), transparent 50%),
+              radial-gradient(ellipse at 70% 30%, rgba(91,122,94,0.20), transparent 60%),
+              linear-gradient(135deg, #d8d0c0 0%, #6b5f52 100%);"></div>
+          <div class="s4b-hero-cap">插图 · 朱印与松烟</div>
+          <p class="s4-sub" style="margin-top:14px;">从 system prompt 的结构, 到工具调用的描述, 到示例的选择。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">ai</span></div>
+          <div class="row"><span class="k">read</span><span class="v">10 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">53</span></div>
+          <div class="tagrow"><span class="mtag">#llm</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ====== VARIANT B: MARGIN THUMBNAIL ====== -->
+    <div class="variant-row">
+      <span class="variant-tag">Variant B</span>
+      <span class="variant-name">右栏方寸缩图 · Margin Thumbnail</span>
+      <span class="variant-note">把右侧 marginalia 顶部加一张方形缩图 — 每篇都有,但低调地藏在边栏</span>
+    </div>
+    <div class="s4-body" style="padding: 40px;">
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— March 8, 2025</div>
+          <h3 class="s4-title">在墨色系统里思考界面的呼吸感</h3>
+          <p class="s4-sub">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="s4b-mthumb"></div>
+          <div class="row"><span class="k">cat</span><span class="v">design</span></div>
+          <div class="row"><span class="k">read</span><span class="v">12 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">67</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— February 21, 2025</div>
+          <h3 class="s4-title">Docker 学习笔记 · 从镜像分层到 BuildKit</h3>
+          <p class="s4-sub">按"为什么这样设计"的角度而不是命令清单的角度组织。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="s4b-mthumb t2"></div>
+          <div class="row"><span class="k">cat</span><span class="v">devops</span></div>
+          <div class="row"><span class="k">read</span><span class="v">8 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">42</span></div>
+        </div>
+      </div>
+
+      <div class="s4-entry">
+        <div class="s4-main">
+          <div class="s4-date">— February 10, 2025</div>
+          <h3 class="s4-title">Next.js 15 App Router 实践</h3>
+          <p class="s4-sub">Server Component 听起来很美 — 直到你开始在生产里用它。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="s4b-mthumb t3"></div>
+          <div class="row"><span class="k">cat</span><span class="v">frontend</span></div>
+          <div class="row"><span class="k">read</span><span class="v">15 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">38</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ====== VARIANT C: INLINE SIDE THUMB ====== -->
+    <div class="variant-row">
+      <span class="variant-tag recommend">Variant C · Recommended</span>
+      <span class="variant-name">左侧小方图 · Inline Side Thumb</span>
+      <span class="variant-note">标题左边一个 84×84 小方图 — Substack / Linear blog 的处理,信息密度更高</span>
+    </div>
+    <div class="s4-body" style="padding: 40px;">
+
+      <div class="s4b-c-entry">
+        <div class="s4b-c-thumb"></div>
+        <div>
+          <div class="s4-date">— March 8, 2025</div>
+          <h3 class="s4-title">在墨色系统里思考界面的呼吸感</h3>
+          <p class="s4-sub">真正的呼吸感来自节奏 — 密与疏交替, 重与轻互衬。这周重新走了一遍设计系统的色阶定义。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">design</span></div>
+          <div class="row"><span class="k">read</span><span class="v">12 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">67</span></div>
+        </div>
+      </div>
+
+      <div class="s4b-c-entry">
+        <div class="s4b-c-thumb t2"></div>
+        <div>
+          <div class="s4-date">— February 21, 2025</div>
+          <h3 class="s4-title">Docker 学习笔记 · 从镜像分层到 BuildKit</h3>
+          <p class="s4-sub">按"为什么这样设计"的角度而不是命令清单的角度组织。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">devops</span></div>
+          <div class="row"><span class="k">read</span><span class="v">8 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">42</span></div>
+        </div>
+      </div>
+
+      <div class="s4b-c-entry">
+        <div class="s4b-c-thumb t3"></div>
+        <div>
+          <div class="s4-date">— February 10, 2025</div>
+          <h3 class="s4-title">Next.js 15 App Router 实践 · 那些 RSC 教程不告诉你的事</h3>
+          <p class="s4-sub">Server Component 听起来很美 — 直到你开始在生产里用它。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">frontend</span></div>
+          <div class="row"><span class="k">read</span><span class="v">15 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">38</span></div>
+        </div>
+      </div>
+
+      <div class="s4b-c-entry">
+        <div class="s4b-c-thumb t4"></div>
+        <div>
+          <div class="s4-date">— January 28, 2025</div>
+          <h3 class="s4-title">LLM 上下文工程 · 我是如何组织 Claude 的 prompt 的</h3>
+          <p class="s4-sub">从 system prompt 的结构, 到工具调用的描述, 到示例的选择。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">ai</span></div>
+          <div class="row"><span class="k">read</span><span class="v">10 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">53</span></div>
+        </div>
+      </div>
+
+      <div class="s4b-c-entry">
+        <div class="s4b-c-thumb"></div>
+        <div>
+          <div class="s4-date">— January 08, 2025</div>
+          <h3 class="s4-title">为什么我重新开始写博客</h3>
+          <p class="s4-sub">关掉所有数据面板, 关掉所有推送。重新只为一件事写作 — 把昨天还没想清楚的, 今天写到能读懂。</p>
+        </div>
+        <div class="s4-margin">
+          <div class="row"><span class="k">cat</span><span class="v">essay</span></div>
+          <div class="row"><span class="k">read</span><span class="v">4 min</span></div>
+          <div class="row"><span class="k">views</span><span class="v">91</span></div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ============== SUMMARY ============== -->
+<section class="summary">
+  <h2>选择建议</h2>
+  <div class="summary-grid">
+    <div class="summary-card recommend">
+      <h4>01 · Editorial Ink<span class="tag">Recommended</span></h4>
+      <p>改动量最小 (保留两栏结构),视觉提升最大。适合现在文章不多但想"看起来像出版物"的阶段。</p>
+    </div>
+    <div class="summary-card">
+      <h4>02 · Timeline Journal</h4>
+      <p>无侧栏,布局更窄。适合更新频繁、按时间检索更自然的博客。代价:失去"热门文章"的曝光。</p>
+    </div>
+    <div class="summary-card">
+      <h4>03 · Magazine Grid</h4>
+      <p>视觉冲击最强 — Hero + 三列卡片。但需要每篇文章都有像样的封面图,维护成本高。</p>
+    </div>
+    <div class="summary-card">
+      <h4>04 · Zen Notes</h4>
+      <p>最极简,内容为王。适合写得很认真但不想"卖相"的博客。挑战:对标题写作要求很高。</p>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

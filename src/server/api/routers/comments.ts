@@ -1,4 +1,4 @@
-import { commentReactions, comments, user } from "@/server/db/schema";
+import { commentReactions, comments, posts, user } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
 import { and, count, desc, eq, getTableColumns, inArray, isNotNull, isNull, lt, or } from "drizzle-orm";
 import z from "zod";
@@ -142,5 +142,33 @@ export const commentsRouter = createTRPCRouter({
         totalCount: totalData[0]?.count ?? 0,
         nextCursor,
       };
+    }),
+
+  getRecent: publicProcedure
+    .input(z.object({ limit: z.number().min(1).max(20).default(5) }))
+    .query(async ({ ctx, input }) => {
+      const { limit } = input;
+
+      const recentComments = await ctx.db
+        .select({
+          id: comments.id,
+          content: comments.content,
+          createdAt: comments.createdAt,
+          postId: comments.postId,
+          postTitle: posts.title,
+          postSlug: posts.slug,
+          user: {
+            id: user.id,
+            name: user.name,
+            image: user.image,
+          },
+        })
+        .from(comments)
+        .innerJoin(user, eq(comments.userId, user.id))
+        .innerJoin(posts, eq(comments.postId, posts.id))
+        .orderBy(desc(comments.createdAt))
+        .limit(limit);
+
+      return recentComments;
     }),
 });

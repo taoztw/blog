@@ -66,14 +66,14 @@ function ReplyItem({ reply, currentUserId, onDelete }: {
       </Avatar>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
-          <span className="font-medium text-xs text-ink-800 dark:text-ink-200">
+          <span className="font-medium text-xs text-ink-800">
             {reply.user?.name ?? "匿名用户"}
           </span>
           <span className="text-xs text-muted-foreground">
             {formatDistanceToNow(new Date(reply.createdAt), { addSuffix: true, locale: zhCN })}
           </span>
         </div>
-        <p className="text-sm text-ink-700 dark:text-ink-300 leading-relaxed">{reply.content}</p>
+        <p className="text-sm text-ink-700 leading-relaxed">{reply.content}</p>
       </div>
       {reply.userId === currentUserId && (
         <DropdownMenu modal={false}>
@@ -189,14 +189,14 @@ function CommentItem({ comment, currentUserId }: {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-sm text-ink-800 dark:text-ink-200">
+            <span className="font-medium text-sm text-ink-800">
               {comment.user?.name ?? "匿名用户"}
             </span>
             <span className="text-xs text-muted-foreground">
               {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true, locale: zhCN })}
             </span>
           </div>
-          <p className="text-sm text-ink-700 dark:text-ink-300 leading-relaxed">{comment.content}</p>
+          <p className="text-sm text-ink-700 leading-relaxed">{comment.content}</p>
 
           {/* Actions */}
           <div className="flex items-center gap-1 mt-1.5">
@@ -425,7 +425,7 @@ export function JournalCommentPanel({ open, onOpenChange, journal }: JournalComm
         className="w-[380px] sm:w-[420px] p-0 flex flex-col gap-0"
       >
         <SheetHeader className="px-4 py-4 border-b border-border shrink-0">
-          <SheetTitle className="text-base font-medium text-ink-800 dark:text-ink-200">
+          <SheetTitle className="text-base font-medium text-ink-800">
             评论
           </SheetTitle>
           {dateLabel && (

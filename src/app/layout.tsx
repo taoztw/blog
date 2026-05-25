@@ -20,6 +20,23 @@ const geistSans = localFont({
   display: "swap",
 });
 
+const cormorant = localFont({
+  src: [
+    {
+      path: "./fonts/CormorantGaramond-VariableFont_wght.ttf",
+      weight: "300 700",
+      style: "normal",
+    },
+    {
+      path: "./fonts/CormorantGaramond-Italic-VariableFont_wght.ttf",
+      weight: "300 700",
+      style: "italic",
+    },
+  ],
+  variable: "--font-cormorant-raw",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: SITE_NAME,
   description: SITE_DESCRIPTION,
@@ -40,7 +57,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html
       lang="en"
-      className={geistSans.variable}
+      className={`${geistSans.variable} ${cormorant.variable}`}
       suppressHydrationWarning
     >
       {/* <html lang="en" suppressHydrationWarning> */}

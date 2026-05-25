@@ -11,14 +11,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { useDataTable } from "@/hooks/use-data-table";
 import { authClient } from "@/lib/auth/authClient";
-import { Shield, Trash2, User as UserIcon, Users } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { createUserColumns } from "./columns";
 import { UserDetailsModal } from "./user-details-modal";
@@ -200,52 +198,11 @@ export function UserTable() {
       <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
         <div>
           <h1 className="text-2xl font-bold">用户管理</h1>
-          <p className="text-muted-foreground">管理系统中的所有用户账户和权限</p>
+          <p className="text-muted-foreground">
+            共 {userStats.total} 位用户 · {userStats.admins} 管理员 · {userStats.users} 普通用户
+          </p>
         </div>
       </div>
-
-      {/* Stats Cards */}
-      {userStats && (
-        <div className="grid gap-4 md:grid-cols-3">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">总用户数</CardTitle>
-              <Users className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{userStats.total}</div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">管理员</CardTitle>
-              <Shield className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{userStats.admins}</div>
-              <div className="flex items-center">
-                <Badge variant="default" className="text-xs">
-                  {userStats.total > 0 ? Math.round((userStats.admins / userStats.total) * 100) : 0}%
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">普通用户</CardTitle>
-              <UserIcon className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{userStats.users}</div>
-              <div className="flex items-center">
-                <Badge variant="secondary" className="text-xs">
-                  {userStats.total > 0 ? Math.round((userStats.users / userStats.total) * 100) : 0}%
-                </Badge>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
 
       {/* Data Table */}
       {isLoading && users.length === 0 ? (

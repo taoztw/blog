@@ -17,7 +17,7 @@ export default function TermsPage() {
 
       <Separator className="mb-10" />
 
-      <div className="space-y-8 text-[15px] leading-relaxed text-ink-700 dark:text-ink-300">
+      <div className="space-y-8 text-[15px] leading-relaxed text-ink-700">
         {/* Acceptance */}
         <section>
           <h2 className="mb-3 text-lg font-medium text-foreground">1. Acceptance of Terms</h2>

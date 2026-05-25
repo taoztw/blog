@@ -858,7 +858,7 @@ export default function DesignSystemPage() {
 
             {/* Blog post card example */}
             <Card className="overflow-hidden">
-              <div className="h-32 bg-gradient-to-br from-ink-200 to-ink-300 dark:from-ink-800 dark:to-ink-900 flex items-center justify-center">
+              <div className="h-32 bg-gradient-to-br from-ink-200 to-ink-300 flex items-center justify-center">
                 <Logo
                   size="lg"
                   className="opacity-30"

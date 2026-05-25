@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Journal Redesign Preview · 日志重设计</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700&family=Noto+Serif+SC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-50: #FEFDFB;
+    --ink-100: #FAF9F6;
+    --ink-200: #F4F2ED;
+    --ink-300: #E2DDD4;
+    --ink-400: #C4BDB0;
+    --ink-500: #887B6C;
+    --ink-600: #6B5F52;
+    --ink-700: #453B32;
+    --ink-800: #2C2520;
+    --ink-900: #1D1C19;
+    --seal: #C23B22;
+    --moss: #5B7A5E;
+    --ochre: #B8863E;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--ink-200);
+    color: var(--ink-700);
+    line-height: 1.65;
+    padding: 32px 0 120px;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* === LOOKBOOK HEADER === */
+  .lookbook-header { text-align: center; margin-bottom: 48px; padding: 32px 24px; }
+  .lookbook-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px; font-weight: 400;
+    color: var(--ink-900);
+    letter-spacing: 0.01em;
+  }
+  .lookbook-header .sub {
+    font-family: 'Noto Serif SC', serif;
+    color: var(--ink-500); margin-top: 10px; font-size: 15px;
+  }
+  .toc {
+    display: inline-flex; gap: 8px; margin-top: 24px;
+    background: var(--ink-50); padding: 6px; border-radius: 999px;
+    border: 1px solid var(--ink-300);
+  }
+  .toc a {
+    padding: 8px 16px; border-radius: 999px;
+    font-size: 13px; color: var(--ink-600); transition: all 0.2s;
+  }
+  .toc a:hover { background: var(--ink-200); color: var(--ink-800); }
+
+  /* === SECTION === */
+  .section { margin-bottom: 96px; }
+  .section-meta {
+    max-width: 1320px; margin: 0 auto 20px; padding: 0 24px;
+    display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  }
+  .section-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px; line-height: 1; color: var(--ink-300); font-weight: 300;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px; color: var(--ink-800); font-weight: 500;
+  }
+  .section-cn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 17px; color: var(--ink-600);
+  }
+  .section-desc {
+    font-size: 13px; color: var(--ink-500);
+    flex: 1; min-width: 280px; text-align: right;
+    border-left: 1px solid var(--ink-300); padding-left: 16px;
+  }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.04em;
+    margin-left: 8px;
+  }
+  .badge-old { background: var(--ink-200); color: var(--ink-600); }
+  .badge-new { background: var(--seal); color: white; }
+
+  .page-frame {
+    background: var(--ink-50);
+    border-radius: 12px;
+    box-shadow: 0 4px 32px rgba(45,37,32,0.08), 0 0 0 1px var(--ink-300);
+    margin: 0 24px;
+    position: relative;
+    max-width: 1320px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 720px;
+  }
+
+  /* === FAKE NAVBAR === */
+  .nav {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 40px;
+    border-bottom: 1px solid var(--ink-200);
+    background: var(--ink-50);
+    border-radius: 12px 12px 0 0;
+  }
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600; color: var(--ink-900);
+    letter-spacing: 0.05em;
+  }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { font-size: 14px; color: var(--ink-600); transition: color 0.2s; }
+  .nav-links a.active { color: var(--seal); font-weight: 500; }
+
+  /* === ADMIN STICKY BAR (OLD) === */
+  .admin-bar {
+    display: flex; justify-content: flex-end;
+    padding: 12px 40px;
+    border-bottom: 1px solid var(--ink-200);
+    background: rgba(254, 253, 251, 0.95);
+  }
+  .btn-primary {
+    background: var(--ink-800);
+    color: var(--ink-50);
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+  }
+  .btn-primary:hover { background: var(--ink-900); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink-500);
+    border: none;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { background: var(--ink-200); color: var(--ink-800); }
+  .btn-ghost.active { color: var(--seal); }
+
+  /* === CONTENT WRAPPER === */
+  .content {
+    max-width: 760px; margin: 0 auto; padding: 48px 40px 80px;
+  }
+
+  /* === OLD: CARD STYLE === */
+  .date-header {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 24px; margin-top: 48px;
+  }
+  .date-header:first-child { margin-top: 0; }
+  .date-header h2 {
+    font-size: 17px; color: var(--ink-800); font-weight: 500;
+    font-family: 'Noto Serif SC', serif;
+  }
+  .date-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--ink-300), transparent);
+  }
+
+  .journal-card {
+    background: var(--ink-50);
+    border: 1px solid var(--ink-300);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 2px rgba(45,37,32,0.04);
+    transition: all 0.3s;
+  }
+  .journal-card:hover {
+    box-shadow: 0 4px 12px rgba(45,37,32,0.06);
+    border-color: rgba(194, 59, 34, 0.2);
+  }
+  .journal-card-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .meta {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--ink-500);
+  }
+  .meta svg { width: 14px; height: 14px; }
+  .journal-content {
+    color: var(--ink-700);
+    font-size: 15px;
+    line-height: 1.75;
+  }
+  .journal-content p { margin-bottom: 12px; }
+  .journal-content p:last-child { margin-bottom: 0; }
+  .journal-content blockquote {
+    border-left: 3px solid var(--ink-300);
+    padding-left: 16px; color: var(--ink-600);
+    font-style: italic; margin: 12px 0;
+  }
+  .journal-content code {
+    background: var(--ink-200); padding: 2px 6px;
+    border-radius: 3px; font-size: 13px;
+    color: var(--seal);
+    font-family: ui-monospace, Menlo, monospace;
+  }
+  .journal-card-footer {
+    margin-top: 16px; padding-top: 16px;
+    border-top: 1px solid var(--ink-200);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .author {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; color: var(--ink-500);
+  }
+  .avatar {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--ink-400), var(--ink-600));
+    display: inline-flex; align-items: center; justify-content: center;
+    color: white; font-size: 10px; font-weight: 600;
+  }
+
+  /* === NEW: TIMELINE + 宣纸 === */
+  .timeline-day {
+    margin-bottom: 56px;
+    position: relative;
+  }
+  .timeline-day:last-child { margin-bottom: 0; }
+
+  .timeline-day-header {
+    display: flex; align-items: baseline; gap: 14px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .timeline-day-header::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 14px; bottom: -28px;
+    width: 1px;
+    background: var(--ink-300);
+  }
+  .timeline-dot {
+    width: 15px; height: 15px; border-radius: 50%;
+    background: var(--ink-50);
+    border: 2px solid var(--seal);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+    margin-top: 4px;
+  }
+  .timeline-date {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; color: var(--ink-800); font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .timeline-date-cn {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 13px; color: var(--ink-500);
+    margin-left: 4px;
+  }
+
+  .timeline-entry {
+    position: relative;
+    padding-left: 30px;
+    padding-bottom: 28px;
+    margin-left: 7px;
+    border-left: 1px solid var(--ink-300);
+  }
+  .timeline-entry:last-child {
+    border-left: 1px solid transparent;
+    padding-bottom: 0;
+  }
+  .timeline-entry::before {
+    content: '';
+    position: absolute;
+    left: -4px; top: 8px;
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--ink-400);
+    transition: background 0.2s;
+  }
+  .timeline-entry:hover::before {
+    background: var(--seal);
+  }
+  .timeline-entry-inner {
+    padding: 4px 16px 16px;
+    margin: -4px -16px -16px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    position: relative;
+  }
+  .timeline-entry:hover .timeline-entry-inner {
+    background: var(--ink-100);
+  }
+  .timeline-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; color: var(--ink-500);
+    letter-spacing: 0.06em;
+    margin-bottom: 8px;
+    display: inline-block;
+  }
+  .timeline-content {
+    color: var(--ink-700);
+    font-size: 15px;
+    line-height: 1.8;
+  }
+  .timeline-content p { margin-bottom: 10px; }
+  .timeline-content p:last-child { margin-bottom: 0; }
+  .timeline-content blockquote {
+    border-left: 3px solid var(--ochre);
+    padding-left: 14px; color: var(--ink-600);
+    font-style: italic; margin: 10px 0;
+  }
+  .timeline-content code {
+    background: var(--ink-200); padding: 2px 6px;
+    border-radius: 3px; font-size: 13px;
+    color: var(--seal);
+    font-family: ui-monospace, Menlo, monospace;
+  }
+  .timeline-content img {
+    max-width: 100%;
+    border-radius: 6px;
+    margin: 8px 0;
+    border: 1px solid var(--ink-200);
+  }
+  .timeline-entry-actions {
+    margin-top: 10px;
+    display: flex; align-items: center; gap: 4px;
+    opacity: 0.6; transition: opacity 0.2s;
+  }
+  .timeline-entry:hover .timeline-entry-actions { opacity: 1; }
+  .timeline-entry-actions .btn-ghost {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+  .admin-actions {
+    position: absolute;
+    top: 8px; right: 8px;
+    display: flex; gap: 2px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .timeline-entry:hover .admin-actions { opacity: 1; }
+  .admin-actions button {
+    background: transparent;
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    color: var(--ink-500);
+    cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+  }
+  .admin-actions button:hover {
+    background: var(--ink-200);
+    color: var(--ink-800);
+  }
+  .admin-actions button.danger:hover {
+    background: rgba(194, 59, 34, 0.1);
+    color: var(--seal);
+  }
+
+  /* === FAB === */
+  .fab {
+    position: absolute;
+    bottom: 32px; right: 32px;
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--ink-800);
+    color: var(--ink-50);
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 16px rgba(45,37,32,0.18), 0 2px 4px rgba(45,37,32,0.12);
+    transition: all 0.2s;
+    z-index: 10;
+  }
+  .fab:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45,37,32,0.25), 0 3px 6px rgba(45,37,32,0.15);
+    background: var(--ink-900);
+  }
+  .fab svg { width: 22px; height: 22px; }
+  .fab-label {
+    position: absolute;
+    right: 100%;
+    margin-right: 12px;
+    background: var(--ink-800);
+    color: var(--ink-50);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(8px);
+    transition: all 0.2s;
+    pointer-events: none;
+  }
+  .fab:hover .fab-label {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .fab-label::after {
+    content: '';
+    position: absolute;
+    left: 100%; top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
+    border-left-color: var(--ink-800);
+  }
+
+  /* === FAB VARIANT - SEAL COLOR === */
+  .fab.fab-seal { background: var(--seal); }
+  .fab.fab-seal:hover { background: #A33019; }
+  .fab.fab-seal .fab-label { background: var(--seal); }
+  .fab.fab-seal .fab-label::after { border-left-color: var(--seal); }
+
+  /* === COMPACT ALTERNATIVE === */
+  .compact-entry {
+    display: grid;
+    grid-template-columns: 80px 1fr auto;
+    gap: 20px;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--ink-200);
+    transition: background 0.15s;
+    align-items: start;
+  }
+  .compact-entry:hover { background: var(--ink-100); }
+  .compact-time {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; color: var(--ink-500);
+    padding-top: 2px;
+    letter-spacing: 0.04em;
+  }
+  .compact-content {
+    color: var(--ink-700);
+    font-size: 14.5px;
+    line-height: 1.7;
+  }
+  .compact-meta {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--ink-400);
+    font-size: 12px;
+    padding-top: 4px;
+  }
+  .compact-meta-item {
+    display: flex; align-items: center; gap: 3px;
+  }
+
+  /* === NOTES === */
+  .notes {
+    max-width: 760px; margin: 0 auto;
+    background: var(--ink-50);
+    border: 1px dashed var(--ink-300);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-top: 24px;
+  }
+  .notes h4 {
+    font-family: 'Noto Serif SC', serif;
+    font-size: 14px; color: var(--ink-800); margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .notes ul { list-style: none; padding: 0; }
+  .notes li {
+    font-size: 13px; color: var(--ink-600);
+    padding: 4px 0 4px 18px;
+    position: relative;
+  }
+  .notes li::before {
+    content: '·';
+    position: absolute;
+    left: 6px; top: 4px;
+    color: var(--seal);
+    font-weight: bold;
+  }
+  .notes code {
+    background: var(--ink-200); padding: 1px 5px;
+    border-radius: 3px; font-size: 12px;
+    color: var(--seal);
+    font-family: ui-monospace, Menlo, monospace;
+  }
+</style>
+</head>
+<body>
+
+<header class="lookbook-header">
+  <h1>Journal Redesign</h1>
+  <p class="sub">日志页面重设计 · 三种方案对比</p>
+  <nav class="toc">
+    <a href="#current">当前方案</a>
+    <a href="#timeline">方案 A · 时间线</a>
+    <a href="#compact">方案 B · 紧凑列表</a>
+    <a href="#fab">FAB 细节</a>
+  </nav>
+</header>
+
+<!-- ============================================ -->
+<!-- 当前方案 -->
+<!-- ============================================ -->
+<section class="section" id="current">
+  <div class="section-meta">
+    <span class="section-num">00</span>
+    <span class="section-title">Current<span class="badge badge-old">现状</span></span>
+    <span class="section-cn">Card 卡片式</span>
+    <span class="section-desc">每条日志独立卡片 · 顶部 sticky 操作栏 · 日期重复出现</span>
+  </div>
+  <div class="page-frame">
+    <div class="nav">
+      <div class="nav-logo">墨痕</div>
+      <div class="nav-links">
+        <a>首页</a><a>文章</a><a class="active">日志</a><a>项目</a><a>关于</a>
+      </div>
+    </div>
+    <div class="admin-bar">
+      <button class="btn-primary">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        新建日志
+      </button>
+    </div>
+    <div class="content">
+      <div class="date-header">
+        <h2>2026年5月25日</h2>
+        <div class="date-line"></div>
+      </div>
+
+      <article class="journal-card">
+        <div class="journal-card-header">
+          <div class="meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <time>2026年5月25日 14:32</time>
+          </div>
+        </div>
+        <div class="journal-content">
+          <p>今天重读了一遍《Refactoring》第二版的前三章。Martin Fowler 把"代码异味"分类得很细，但实际写代码时往往是几种气味交织在一起 —— 一个长函数里塞了过多的临时变量，参数列表又冗长，再加上几处重复逻辑。</p>
+          <p>最大的启发：<code>Extract Function</code> 不是为了"短"，而是为了让函数名变成<em>注释</em>本身。</p>
+        </div>
+        <div class="journal-card-footer">
+          <div class="author">
+            <span class="avatar">T</span>
+            <span>taoz</span>
+          </div>
+          <button class="btn-ghost">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            3 条评论
+          </button>
+        </div>
+      </article>
+
+      <article class="journal-card">
+        <div class="journal-card-header">
+          <div class="meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <time>2026年5月25日 09:15</time>
+          </div>
+        </div>
+        <div class="journal-content">
+          <p>清晨煮咖啡时想到 —— 软件设计里"职责分明"和现实里"分工明确"完全不是一回事。代码里我们追求 SRP，但人际协作里完全清晰的边界反而让人寸步难行。</p>
+        </div>
+        <div class="journal-card-footer">
+          <div class="author">
+            <span class="avatar">T</span>
+            <span>taoz</span>
+          </div>
+          <button class="btn-ghost">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            评论
+          </button>
+        </div>
+      </article>
+
+      <div class="date-header">
+        <h2>2026年5月24日</h2>
+        <div class="date-line"></div>
+      </div>
+
+      <article class="journal-card">
+        <div class="journal-card-header">
+          <div class="meta">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <time>2026年5月24日 22:08</time>
+          </div>
+        </div>
+        <div class="journal-content">
+          <blockquote>"All models are wrong, but some are useful." — George Box</blockquote>
+          <p>这句话适用于任何抽象。我们写的每个类、每个接口、每条状态机的边，都是对世界的近似。</p>
+        </div>
+        <div class="journal-card-footer">
+          <div class="author">
+            <span class="avatar">T</span>
+            <span>taoz</span>
+          </div>
+          <button class="btn-ghost">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            1 条评论
+          </button>
+        </div>
+      </article>
+    </div>
+  </div>
+  <div class="notes">
+    <h4>问题</h4>
+    <ul>
+      <li>日期出现两次（分组 header + 卡片 header）—— 信息冗余</li>
+      <li>每条 author 都显示自己头像 —— 单作者博客无意义</li>
+      <li>顶部 sticky 操作栏占空间，阅读时持续可见</li>
+      <li>card 边框 + 阴影把内容切碎，缺少"日志"的线性叙事感</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- 方案 A 时间线 -->
+<!-- ============================================ -->
+<section class="section" id="timeline">
+  <div class="section-meta">
+    <span class="section-num">01</span>
+    <span class="section-title">Timeline<span class="badge badge-new">推荐</span></span>
+    <span class="section-cn">时间线 · 宣纸风</span>
+    <span class="section-desc">左侧时间线节点 · 无 card 边框 · 内容流式排版 · FAB 浮动按钮</span>
+  </div>
+  <div class="page-frame">
+    <div class="nav">
+      <div class="nav-logo">墨痕</div>
+      <div class="nav-links">
+        <a>首页</a><a>文章</a><a class="active">日志</a><a>项目</a><a>关于</a>
+      </div>
+    </div>
+    <div class="content">
+
+      <div class="timeline-day">
+        <div class="timeline-day-header">
+          <span class="timeline-dot"></span>
+          <div>
+            <span class="timeline-date">May 25</span>
+            <span class="timeline-date-cn">· 周一</span>
+          </div>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-entry-inner">
+            <div class="admin-actions">
+              <button title="编辑">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </button>
+              <button title="删除" class="danger">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+              </button>
+            </div>
+            <span class="timeline-time">14:32</span>
+            <div class="timeline-content">
+              <p>今天重读了一遍《Refactoring》第二版的前三章。Martin Fowler 把"代码异味"分类得很细，但实际写代码时往往是几种气味交织在一起 —— 一个长函数里塞了过多的临时变量，参数列表又冗长，再加上几处重复逻辑。</p>
+              <p>最大的启发：<code>Extract Function</code> 不是为了"短"，而是为了让函数名变成<em>注释</em>本身。</p>
+            </div>
+            <div class="timeline-entry-actions">
+              <button class="btn-ghost">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                3 条评论
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-entry-inner">
+            <div class="admin-actions">
+              <button title="编辑">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              </button>
+              <button title="删除" class="danger">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+              </button>
+            </div>
+            <span class="timeline-time">09:15</span>
+            <div class="timeline-content">
+              <p>清晨煮咖啡时想到 —— 软件设计里"职责分明"和现实里"分工明确"完全不是一回事。代码里我们追求 SRP，但人际协作里完全清晰的边界反而让人寸步难行。</p>
+            </div>
+            <div class="timeline-entry-actions">
+              <button class="btn-ghost">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                评论
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-day">
+        <div class="timeline-day-header">
+          <span class="timeline-dot"></span>
+          <div>
+            <span class="timeline-date">May 24</span>
+            <span class="timeline-date-cn">· 周日</span>
+          </div>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-entry-inner">
+            <span class="timeline-time">22:08</span>
+            <div class="timeline-content">
+              <blockquote>"All models are wrong, but some are useful." — George Box</blockquote>
+              <p>这句话适用于任何抽象。我们写的每个类、每个接口、每条状态机的边，都是对世界的近似。<br>关键不是"对不对"，而是"在当前 context 下够不够用"。</p>
+            </div>
+            <div class="timeline-entry-actions">
+              <button class="btn-ghost active">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                1 条评论
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-entry-inner">
+            <span class="timeline-time">11:40</span>
+            <div class="timeline-content">
+              <p>修了好几天的 hydration mismatch 终于定位到原因 —— 是某个第三方组件在 SSR 时生成了随机 ID。下次遇到 hydration 问题，第一步要查的就是 <code>Math.random()</code>、<code>Date.now()</code> 和 <code>crypto.randomUUID()</code>。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="timeline-day">
+        <div class="timeline-day-header">
+          <span class="timeline-dot"></span>
+          <div>
+            <span class="timeline-date">May 22</span>
+            <span class="timeline-date-cn">· 周五</span>
+          </div>
+        </div>
+
+        <div class="timeline-entry">
+          <div class="timeline-entry-inner">
+            <span class="timeline-time">18:55</span>
+            <div class="timeline-content">
+              <p>把博客的 sidebar 重做了一遍，从原来的"功能列表"改成"信息流卡片"，加上了实时阅读进度和站点统计。直觉告诉我 —— 工具感强的产品都该让用户感到自己<em>在</em>系统里。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FAB -->
+    <button class="fab" title="新建日志">
+      <span class="fab-label">新建日志</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+  <div class="notes">
+    <h4>变化要点</h4>
+    <ul>
+      <li>顶部 sticky 操作栏移除 —— 改为右下角 <code>fixed</code> FAB</li>
+      <li>日期 header 改为时间线节点 + 英文日期（"May 25 · 周一"），有节奏感</li>
+      <li>每条只保留"时间" + 内容 + 评论，去掉 author 区域和 Calendar 图标</li>
+      <li>无 card 边框 —— hover 时整块淡淡变成 <code>bg-ink-100</code></li>
+      <li>编辑/删除按钮在 hover 时显示在右上角（图标按钮组）</li>
+      <li>左侧细竖线 + 节点 = "日记本"的线性叙事感</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- 方案 B 紧凑列表 -->
+<!-- ============================================ -->
+<section class="section" id="compact">
+  <div class="section-meta">
+    <span class="section-num">02</span>
+    <span class="section-title">Compact<span class="badge badge-old">备选</span></span>
+    <span class="section-cn">紧凑列表</span>
+    <span class="section-desc">高密度浏览 · 适合日志条目多 · 时间戳左对齐</span>
+  </div>
+  <div class="page-frame">
+    <div class="nav">
+      <div class="nav-logo">墨痕</div>
+      <div class="nav-links">
+        <a>首页</a><a>文章</a><a class="active">日志</a><a>项目</a><a>关于</a>
+      </div>
+    </div>
+    <div class="content" style="padding: 32px 40px 80px;">
+
+      <div class="date-header" style="margin-top: 0; margin-bottom: 8px;">
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500;">May 25 <span style="font-size: 14px; color: var(--ink-500); font-family: 'Noto Serif SC', serif;">· 周一</span></h2>
+        <div class="date-line"></div>
+      </div>
+
+      <div class="compact-entry">
+        <span class="compact-time">14:32</span>
+        <div class="compact-content">
+          重读《Refactoring》前三章。<code>Extract Function</code> 不是为了"短"，而是为了让函数名变成<em>注释</em>本身。
+        </div>
+        <div class="compact-meta">
+          <span class="compact-meta-item">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            3
+          </span>
+        </div>
+      </div>
+
+      <div class="compact-entry">
+        <span class="compact-time">09:15</span>
+        <div class="compact-content">
+          清晨煮咖啡时想到 —— 软件设计里"职责分明"和现实里"分工明确"完全不是一回事。代码里我们追求 SRP，人际协作里完全清晰的边界反而让人寸步难行。
+        </div>
+        <div class="compact-meta">
+          <span class="compact-meta-item">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            —
+          </span>
+        </div>
+      </div>
+
+      <div class="date-header" style="margin-top: 32px; margin-bottom: 8px;">
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500;">May 24 <span style="font-size: 14px; color: var(--ink-500); font-family: 'Noto Serif SC', serif;">· 周日</span></h2>
+        <div class="date-line"></div>
+      </div>
+
+      <div class="compact-entry">
+        <span class="compact-time">22:08</span>
+        <div class="compact-content">
+          <blockquote style="border-left: 3px solid var(--ochre); padding-left: 12px; color: var(--ink-600); font-style: italic; margin: 4px 0;">"All models are wrong, but some are useful." — George Box</blockquote>
+          这句话适用于任何抽象。
+        </div>
+        <div class="compact-meta">
+          <span class="compact-meta-item">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            1
+          </span>
+        </div>
+      </div>
+
+      <div class="compact-entry">
+        <span class="compact-time">11:40</span>
+        <div class="compact-content">
+          修了好几天的 hydration mismatch 定位到 —— 第三方组件在 SSR 时生成了随机 ID。下次第一步查 <code>Math.random()</code>、<code>Date.now()</code>、<code>crypto.randomUUID()</code>。
+        </div>
+        <div class="compact-meta">
+          <span class="compact-meta-item">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            —
+          </span>
+        </div>
+      </div>
+
+      <div class="date-header" style="margin-top: 32px; margin-bottom: 8px;">
+        <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 500;">May 22 <span style="font-size: 14px; color: var(--ink-500); font-family: 'Noto Serif SC', serif;">· 周五</span></h2>
+        <div class="date-line"></div>
+      </div>
+
+      <div class="compact-entry">
+        <span class="compact-time">18:55</span>
+        <div class="compact-content">
+          把博客的 sidebar 重做了一遍。直觉告诉我 —— 工具感强的产品都该让用户感到自己<em>在</em>系统里。
+        </div>
+        <div class="compact-meta">
+          <span class="compact-meta-item">
+            <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            —
+          </span>
+        </div>
+      </div>
+
+    </div>
+
+    <button class="fab" title="新建日志">
+      <span class="fab-label">新建日志</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+  </div>
+  <div class="notes">
+    <h4>适用场景</h4>
+    <ul>
+      <li>日志写得勤、单条偏短时更高效</li>
+      <li>失去呼吸感，长内容会显得拥挤</li>
+      <li>评论数和操作收到最右侧，更像「列表」而非「叙事」</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================ -->
+<!-- FAB 细节 -->
+<!-- ============================================ -->
+<section class="section" id="fab">
+  <div class="section-meta">
+    <span class="section-num">03</span>
+    <span class="section-title">FAB Details</span>
+    <span class="section-cn">浮动按钮 · 颜色与状态</span>
+    <span class="section-desc">两种配色 · hover 显示文字气泡</span>
+  </div>
+  <div class="page-frame" style="min-height: 320px;">
+    <div style="padding: 60px 40px; display: flex; gap: 80px; justify-content: center; align-items: center; flex-wrap: wrap;">
+
+      <div style="text-align: center;">
+        <div style="position: relative; width: 200px; height: 120px; background: var(--ink-100); border-radius: 8px; border: 1px solid var(--ink-200); margin-bottom: 16px;">
+          <button class="fab" style="position: absolute; bottom: 16px; right: 16px;">
+            <span class="fab-label">新建日志</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <p style="font-family: 'Noto Serif SC', serif; font-size: 14px; color: var(--ink-700); font-weight: 500;">墨色 ink-800</p>
+        <p style="font-size: 12px; color: var(--ink-500); margin-top: 4px;">沉稳，与正文同色调</p>
+      </div>
+
+      <div style="text-align: center;">
+        <div style="position: relative; width: 200px; height: 120px; background: var(--ink-100); border-radius: 8px; border: 1px solid var(--ink-200); margin-bottom: 16px;">
+          <button class="fab fab-seal" style="position: absolute; bottom: 16px; right: 16px;">
+            <span class="fab-label">新建日志</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </button>
+        </div>
+        <p style="font-family: 'Noto Serif SC', serif; font-size: 14px; color: var(--ink-700); font-weight: 500;">印章朱红 seal</p>
+        <p style="font-size: 12px; color: var(--ink-500); margin-top: 4px;">醒目，呼应墨色品牌色</p>
+      </div>
+
+    </div>
+  </div>
+  <div class="notes">
+    <h4>FAB 规格</h4>
+    <ul>
+      <li>尺寸：<code>56 × 56</code>，圆形，<code>border-radius: 50%</code></li>
+      <li>位置：<code>fixed bottom: 24px; right: 24px</code>（移动端 <code>bottom: 16px; right: 16px</code>）</li>
+      <li>阴影：<code>0 4px 16px rgba(45,37,32,0.18)</code>，hover 时上浮 2px 加深阴影</li>
+      <li>仅 admin 显示，未登录或普通用户不渲染</li>
+      <li>hover 时左侧弹出文字气泡，桌面端可保留无文字</li>
+      <li>z-index 高于内容但低于 Dialog/Sheet（建议 <code>40</code>）</li>
+    </ul>
+  </div>
+</section>
+
+</body>
+</html>

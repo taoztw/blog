@@ -6,12 +6,6 @@ import { BaseEditorKit } from "@/components/editor/editor-base-kit";
 import { EditorStatic } from "@/components/ui/editor-static";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -25,7 +19,7 @@ import { api } from "@/trpc/react";
 import { cn } from "@/lib/utils";
 import { createSlateEditor } from "platejs";
 import type { Value } from "platejs";
-import { Calendar, MessageSquare, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { MessageSquare, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
 
@@ -44,9 +38,16 @@ interface JournalCardProps {
   onEdit?: (journal: { id: string; content: string }) => void;
   onOpenComments?: (journal: { id: string; createdAt: Date }) => void;
   isCommentsActive?: boolean;
+  isLast?: boolean;
 }
 
-export function JournalCard({ journal, onEdit, onOpenComments, isCommentsActive }: JournalCardProps) {
+export function JournalCard({
+  journal,
+  onEdit,
+  onOpenComments,
+  isCommentsActive,
+  isLast,
+}: JournalCardProps) {
   const { data: session } = authClient.useSession();
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
   const utils = api.useUtils();
@@ -86,101 +87,94 @@ export function JournalCard({ journal, onEdit, onOpenComments, isCommentsActive 
     deleteMutation.mutate({ id: journal.id });
   };
 
+  const timeLabel = new Date(journal.createdAt).toLocaleTimeString("zh-CN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
   return (
     <>
-      <article className={cn(
-        "group relative bg-card border rounded-lg p-6 transition-all duration-300 shadow-sm hover:shadow-md",
-        isCommentsActive
-          ? "border-seal/50 shadow-seal/10"
-          : "border-border hover:border-seal/30"
-      )}>
-        {/* Header */}
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <Calendar className="size-4" />
-            <time dateTime={journal.createdAt.toISOString()}>
-              {new Date(journal.createdAt).toLocaleDateString("zh-CN", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
-            </time>
+      <article
+        className={cn(
+          "group relative pl-[30px] ml-[7px] pb-7",
+          !isLast && "border-l border-ink-300"
+        )}
+      >
+        {/* Timeline dot */}
+        <span
+          className={cn(
+            "absolute -left-[4px] top-2 size-[7px] rounded-full transition-colors",
+            isCommentsActive ? "bg-seal" : "bg-ink-400 group-hover:bg-seal"
+          )}
+        />
+
+        {/* Entry inner with hover bg */}
+        <div
+          className={cn(
+            "relative rounded-lg px-4 py-1 pb-4 -mx-4 -my-1 transition-colors",
+            "group-hover:bg-ink-100",
+            isCommentsActive && "bg-ink-100"
+          )}
+        >
+          {/* Admin actions (top-right, hover reveal) */}
+          {isAdmin && (
+            <div className="absolute right-2 top-2 flex gap-0.5 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-7"
+                onClick={() => onEdit?.({ id: journal.id, content: journal.content })}
+                aria-label="编辑日志"
+              >
+                <Pencil className="size-3.5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-7 hover:bg-seal/10 hover:text-seal"
+                onClick={() => setShowDeleteDialog(true)}
+                aria-label="删除日志"
+              >
+                <Trash2 className="size-3.5" />
+              </Button>
+            </div>
+          )}
+
+          {/* Time */}
+          <time
+            dateTime={journal.createdAt.toISOString()}
+            className="font-cormorant text-[13px] tracking-wider text-ink-500 inline-block mb-2"
+          >
+            {timeLabel}
+          </time>
+
+          {/* Content */}
+          <div className="prose prose-sm max-w-none dark:prose-invert text-ink-700">
+            {editor ? (
+              <EditorStatic editor={editor} variant="none" />
+            ) : (
+              <p className="text-muted-foreground italic">无法加载内容</p>
+            )}
           </div>
 
-          {isAdmin && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="size-8 opacity-0 group-hover:opacity-100 transition-opacity"
-                >
-                  <MoreVertical className="size-4" />
-                  <span className="sr-only">更多操作</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => onEdit?.({ id: journal.id, content: journal.content })}
-                  className="cursor-pointer"
-                >
-                  <Pencil className="size-4 mr-2" />
-                  编辑
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setShowDeleteDialog(true)}
-                  className="cursor-pointer text-destructive focus:text-destructive"
-                >
-                  <Trash2 className="size-4 mr-2" />
-                  删除
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="prose prose-sm max-w-none dark:prose-invert">
-          {editor ? (
-            <EditorStatic editor={editor} variant="none" />
-          ) : (
-            <p className="text-muted-foreground italic">无法加载内容</p>
-          )}
-        </div>
-
-        {/* Footer: author + comment button */}
-        <div className="mt-4 pt-4 border-t border-border flex items-center justify-between">
-          {journal.author ? (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              {journal.author.image && (
-                <img
-                  src={journal.author.image}
-                  alt={journal.author.name || "作者"}
-                  className="size-6 rounded-full"
-                />
+          {/* Comment action */}
+          <div className="mt-2.5 flex items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={cn(
+                "h-7 px-2 gap-1.5 text-xs",
+                isCommentsActive
+                  ? "text-seal hover:text-seal"
+                  : "text-muted-foreground hover:text-foreground"
               )}
-              <span>{journal.author.name || "匿名用户"}</span>
-            </div>
-          ) : (
-            <span />
-          )}
-
-          <Button
-            variant="ghost"
-            size="sm"
-            className={cn(
-              "h-7 px-2 gap-1.5 text-xs",
-              isCommentsActive
-                ? "text-seal hover:text-seal"
-                : "text-muted-foreground hover:text-foreground"
-            )}
-            onClick={() => onOpenComments?.({ id: journal.id, createdAt: journal.createdAt })}
-          >
-            <MessageSquare className="size-3.5" />
-            {journal.commentCount ? `${journal.commentCount} 条评论` : "评论"}
-          </Button>
+              onClick={() => onOpenComments?.({ id: journal.id, createdAt: journal.createdAt })}
+            >
+              <MessageSquare className="size-3.5" />
+              {journal.commentCount ? `${journal.commentCount} 条评论` : "评论"}
+            </Button>
+          </div>
         </div>
       </article>
 

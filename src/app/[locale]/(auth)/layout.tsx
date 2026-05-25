@@ -8,11 +8,11 @@ const AuthLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
       {/* ═══ Left Panel — Decorative Image ═══ */}
       <div className="relative hidden w-1/2 overflow-hidden lg:block">
         {/* Image carousel + overlays */}
-        <div className="absolute inset-0 bg-ink-800 dark:bg-ink-900">
+        <div className="absolute inset-0 bg-[#1d1c19]">
           <SeasonCarousel />
 
           {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 z-10 bg-ink-900/40" />
+          <div className="absolute inset-0 z-10 bg-black/40" />
 
           <div
             className="absolute inset-0 z-10"
@@ -58,7 +58,7 @@ const AuthLayout = ({ children }: Readonly<{ children: React.ReactNode }>) => {
 
           {/* Decorative seal stamp */}
           <div className="flex items-end justify-between">
-            <p className="text-xs text-ink-600">&copy; {new Date().getFullYear()} Tz Blog</p>
+            <p className="text-xs text-white/40">&copy; {new Date().getFullYear()} Tz Blog</p>
             {/* <div className="flex size-14 items-center justify-center rounded-sm border border-seal/50 border-2 text-seal/60 xl:size-16">
               <span className="font-serif text-2xl xl:text-3xl">陶</span>
             </div> */}

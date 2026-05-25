@@ -116,7 +116,15 @@
     "views": "次阅读",
     "recentPosts": "最近文章",
     "viewAll": "查看全部",
-    "listening": "正在听"
+    "listening": "正在听",
+    "featuredLabel": "精选",
+    "continueReading": "继续阅读",
+    "readFullArticle": "阅读全文",
+    "journalStreamLabel": "日志流",
+    "projectsLabel": "项目",
+    "noContent": "暂无内容",
+    "essayCategory": "随笔",
+    "minutesRead": "{minutes} 分钟阅读"
   },
   "Footer": {
     "description": "一个关于技术、开发与创意探索的个人博客。",

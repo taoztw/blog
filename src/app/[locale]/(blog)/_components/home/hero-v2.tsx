@@ -1,18 +1,16 @@
 "use client";
 
 import { AnimatedNumber, AnimatedNumberK } from "@/components/animated-number";
-import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import { api, type RouterOutputs } from "@/trpc/react";
+import { api } from "@/trpc/react";
 import { motion } from "framer-motion";
 import { ArrowRight, BookOpen, Eye } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
+import { HomeFeatured } from "./home-featured";
+import { HomeStreams } from "./home-streams";
 
-type RecentPost = RouterOutputs["post"]["getRecent"][number];
-
-/* ── animation helpers ── */
 const fade = {
   hidden: { opacity: 0, y: 24 },
   show: (i: number) => ({
@@ -49,24 +47,15 @@ function useGreeting() {
   return { greeting, time };
 }
 
-function formatDate(date: Date | string) {
-  return new Date(date).toLocaleDateString("zh-CN", {
-    month: "short",
-    day: "numeric",
-  });
-}
-
 export function HeroV2() {
   const t = useTranslations("Home");
   const { greeting, time } = useGreeting();
   const { data: stats, isLoading: statsLoading } = api.post.getStatistics.useQuery();
-  const { data: recentPosts } = api.post.getRecent.useQuery({ limit: 5 });
 
   return (
-    <section className="relative pb-20 pt-12 lg:pt-20">
-      {/* ── Hero ── */}
+    <section className="relative pb-24 pt-12 lg:pt-20">
+      {/* ── Identity Hero ── */}
       <div className="mx-auto max-w-3xl">
-        {/* Greeting line */}
         <motion.p
           custom={0}
           variants={fade}
@@ -77,7 +66,6 @@ export function HeroV2() {
           {greeting}，{time}
         </motion.p>
 
-        {/* Name — display font */}
         <motion.h1
           custom={1}
           variants={fade}
@@ -89,7 +77,6 @@ export function HeroV2() {
           <span className="text-seal">.</span>
         </motion.h1>
 
-        {/* Subtitle */}
         <motion.p
           custom={2}
           variants={fade}
@@ -100,7 +87,6 @@ export function HeroV2() {
           {t("subtitle")}
         </motion.p>
 
-        {/* Stats + CTA row */}
         <motion.div
           custom={3}
           variants={fade}
@@ -108,7 +94,6 @@ export function HeroV2() {
           animate="show"
           className="mt-8 flex flex-wrap items-center gap-6"
         >
-          {/* CTAs */}
           <Link
             href="/blog"
             className="group inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-sm font-medium text-background transition-opacity hover:opacity-90"
@@ -118,12 +103,11 @@ export function HeroV2() {
           </Link>
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-ink-200 dark:hover:bg-ink-700"
+            className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-ink-200"
           >
             {t("viewProjects")}
           </Link>
 
-          {/* Inline stats */}
           <div className="flex items-center gap-5 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-1.5">
               <BookOpen className="size-3.5" />
@@ -151,52 +135,11 @@ export function HeroV2() {
         </motion.div>
       </div>
 
-      <Separator className="mx-auto mt-16 max-w-3xl" />
+      {/* ── Featured + Continue Reading ── */}
+      <HomeFeatured />
 
-      {/* ── Recent Posts ── */}
-      <motion.div
-        custom={4}
-        variants={fade}
-        initial="hidden"
-        animate="show"
-        className="mx-auto mt-12 max-w-3xl"
-      >
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg font-medium text-foreground">{t("recentPosts")}</h2>
-          <Link
-            href="/blog"
-            className="group inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t("viewAll")}
-            <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-          </Link>
-        </div>
-
-        <ul className="divide-y divide-border">
-          {recentPosts?.map((post: RecentPost, i: number) => (
-            <motion.li
-              key={post.id}
-              custom={5 + i}
-              variants={fade}
-              initial="hidden"
-              animate="show"
-            >
-              <Link
-                href={`/blog/${post.slug}`}
-                className="group flex items-center justify-between gap-4 py-4 transition-colors"
-              >
-                <span className="line-clamp-1 text-[15px] text-ink-700 transition-colors group-hover:text-foreground dark:text-ink-400 dark:group-hover:text-ink-200">
-                  {post.title}
-                </span>
-                <span className="shrink-0 text-xs tabular-nums text-muted-foreground">
-                  {formatDate(post.createdAt)}
-                </span>
-              </Link>
-            </motion.li>
-          ))}
-        </ul>
-      </motion.div>
-
+      {/* ── Journal Stream + Projects ── */}
+      <HomeStreams />
     </section>
   );
 }

@@ -699,9 +699,14 @@ export const postRouter = createTRPCRouter({
           id: posts.id,
           title: posts.title,
           slug: posts.slug,
+          excerpt: posts.excerpt,
+          imageUrl: posts.imageUrl,
           createdAt: posts.createdAt,
+          viewCount: ctx.db.$count(postViews, eq(postViews.postId, posts.id)),
+          category: categorys,
         })
         .from(posts)
+        .leftJoin(categorys, eq(posts.categoryId, categorys.id))
         .where(eq(posts.status, "published"))
         .orderBy(desc(posts.createdAt))
         .limit(limit);

@@ -1,3 +1,4 @@
+import { pickRandomInkColor } from "@/lib/ink-palette";
 import { createTRPCRouter, protectedProcedure, publicProcedure } from "@/server/api/trpc";
 import { posts, postTags, tagInsertSchema, tags } from "@/server/db/schema";
 import { TRPCError } from "@trpc/server";
@@ -315,8 +316,11 @@ export const tagRouter = createTRPCRouter({
           continue;
         }
 
-        // 创建标签
-        const [insertedTag] = await ctx.db.insert(tags).values(tagData).returning();
+        // 创建标签 — 颜色从墨色调色板随机分配,与品牌色解耦
+        const [insertedTag] = await ctx.db
+          .insert(tags)
+          .values({ ...tagData, color: pickRandomInkColor() })
+          .returning();
 
         if (insertedTag) {
           results.successful.push(insertedTag);
@@ -340,5 +344,14 @@ export const tagRouter = createTRPCRouter({
       failedTags: results.failed,
       errors: results.errors,
     };
+  }),
+
+  // 重新随机所有标签的颜色 (从墨色调色板抽取)
+  recolorAll: protectedProcedure.mutation(async ({ ctx }) => {
+    const allTags = await ctx.db.select({ id: tags.id }).from(tags);
+    for (const t of allTags) {
+      await ctx.db.update(tags).set({ color: pickRandomInkColor() }).where(eq(tags.id, t.id));
+    }
+    return { count: allTags.length };
   }),
 });
