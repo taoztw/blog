@@ -23,14 +23,14 @@ const VariableNodeView = ({ node, updateAttributes }: any) => {
       {/* 编辑按钮 */}
       <button
         type="button"
-        className="group/variable translate-y-[4px] ml-1 -mt-1.5 rounded transition border border-gray-300 text-sm text-gray-500 overflow-hidden whitespace-nowrap max-w-[200px] min-w-[24px] inline-flex items-center"
+        className="group/variable translate-y-[4px] ml-1 -mt-1.5 rounded transition border border-border text-sm text-muted-foreground overflow-hidden whitespace-nowrap max-w-[200px] min-w-[24px] inline-flex items-center"
         onClick={() => setIsEditing(true)}
         title="Add value"
         contentEditable={false}
       >
-        <div className="transition relative overflow-hidden whitespace-nowrap group-hover/variable:bg-gray-100">
+        <div className="transition relative overflow-hidden whitespace-nowrap group-hover/variable:bg-accent">
           <span className="px-1">{value || ""}</span>
-          <div className="opacity-90 group-hover/variable:bg-gray-200 flex items-center m-0.5 rounded-sm px-0.5 pointer-events-none absolute inset-y-0 right-0">
+          <div className="opacity-90 group-hover/variable:bg-accent flex items-center m-0.5 rounded-sm px-0.5 pointer-events-none absolute inset-y-0 right-0">
             <Pencil size={14} />
           </div>
         </div>
@@ -42,7 +42,7 @@ const VariableNodeView = ({ node, updateAttributes }: any) => {
       {/* 编辑弹窗 */}
       {isEditing && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-4 rounded-lg shadow-lg">
+          <div className="bg-background p-4 rounded-lg shadow-lg">
             <input
               type="text"
               value={inputValue}

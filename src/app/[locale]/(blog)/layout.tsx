@@ -1,5 +1,5 @@
 import { Footer } from "@/components/layouts/footer";
-import Header2 from "@/components/layouts/header";
+import { FloatingNav } from "@/components/layouts/floating-nav";
 import { routing } from "@/i18n/routing";
 import type { Metadata } from "next";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
@@ -31,12 +31,14 @@ const Layout = async ({ children, params }: LayoutProps) => {
   return (
     <NextIntlClientProvider>
       <div className="w-full">
-        <Header2 />
-        <div className="min-h-screen bg-background">
-          <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-16">{children}</main>
+        <FloatingNav />
+        <div className="min-h-screen bg-background lg:pl-24">
+          <main className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8 lg:pt-8">{children}</main>
         </div>
       </div>
-      <Footer />
+      <div className="lg:pl-24">
+        <Footer />
+      </div>
     </NextIntlClientProvider>
   );
 };

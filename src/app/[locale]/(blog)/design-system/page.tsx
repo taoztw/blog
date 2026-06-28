@@ -29,39 +29,52 @@ import {
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────
- *  墨色设计系统 — Ink Design System
+ *  配色系统 — 纯白底 + 冷中性灰 + 可选品牌色
  *  展示页：颜色 · 字体 · 按钮 · 徽章 · 表单 · 卡片
  * ───────────────────────────────────────────── */
 
 const inkScale = [
-  { step: "50", hex: "#FEFDFB", name: "纯净宣纸", usage: "Card / Popover", textDark: false },
-  { step: "100", hex: "#FAF9F6", name: "宣纸白", usage: "Page Background", textDark: false },
-  { step: "200", hex: "#F4F2ED", name: "陈年宣纸", usage: "Secondary / Muted", textDark: false },
-  { step: "300", hex: "#E2DDD4", name: "清", usage: "Border / Divider", textDark: false },
-  { step: "400", hex: "#C4BDB0", name: "淡", usage: "Disabled / Placeholder", textDark: false },
-  { step: "500", hex: "#887B6C", name: "重", usage: "Auxiliary Text ≥14px", textDark: true },
-  { step: "600", hex: "#6B5F52", name: "浓", usage: "Muted Foreground", textDark: true },
-  { step: "700", hex: "#453B32", name: "焦", usage: "Body Text", textDark: true },
-  { step: "800", hex: "#2C2520", name: "松烟墨", usage: "Headings / Foreground", textDark: true },
-  { step: "900", hex: "#1D1C19", name: "浓墨", usage: "Dark Mode Background", textDark: true },
+  { step: "50", hex: "#FFFFFF", name: "纯白", usage: "Card / Popover", textDark: false },
+  { step: "100", hex: "#F6F7F9", name: "极浅灰", usage: "Page Background", textDark: false },
+  { step: "200", hex: "#ECECF0", name: "浅灰", usage: "Secondary / Muted", textDark: false },
+  { step: "300", hex: "#DFE2E7", name: "线灰", usage: "Border / Divider", textDark: false },
+  { step: "400", hex: "#AEB4BD", name: "中灰", usage: "Disabled / Placeholder", textDark: false },
+  { step: "500", hex: "#8B939C", name: "辅助灰", usage: "Auxiliary Text ≥14px", textDark: true },
+  { step: "600", hex: "#5B636D", name: "次文灰", usage: "Muted Foreground", textDark: true },
+  { step: "700", hex: "#3D444D", name: "正文灰", usage: "Body Text", textDark: true },
+  { step: "800", hex: "#1F2328", name: "标题黑", usage: "Headings / Foreground", textDark: true },
+  { step: "900", hex: "#14171A", name: "近黑", usage: "High-contrast Emphasis", textDark: true },
 ];
 
 const accentColors = [
-  { name: "朱红 Seal", hex: "#C23B22", token: "--seal / --destructive", desc: "强调 · 错误 · 品牌" },
-  { name: "苔绿 Success", hex: "#5B7A5E", token: "--success", desc: "成功 · 正面" },
-  { name: "赭黄 Warning", hex: "#B8863E", token: "--warning", desc: "警告 · 提示" },
-  { name: "青墨 Info", hex: "#5C7A8A", token: "--info", desc: "信息 · 辅助" },
+  { name: "品牌 Brand", hex: "#2563EB", token: "--brand / --seal", desc: "强调 · 品牌 · 默认深蓝可自选" },
+  { name: "翠绿 Success", hex: "#1F9E6E", token: "--success", desc: "成功 · 正面" },
+  { name: "琥珀 Warning", hex: "#D97706", token: "--warning", desc: "警告 · 提示" },
+  { name: "天蓝 Info", hex: "#2F88D8", token: "--info", desc: "信息 · 辅助" },
+  { name: "红 Destructive", hex: "#DC2626", token: "--destructive", desc: "错误 · 危险操作" },
+];
+
+// 8 个可选品牌色（明 / 暗变体），默认深蓝；用户在导航「主题色」里自选并持久化
+const brandPalette = [
+  { name: "深蓝(默认)", light: "#2563EB", dark: "#5AAEF0" },
+  { name: "靛紫", light: "#5B53D6", dark: "#8B85F0" },
+  { name: "青墨", light: "#0D9488", dark: "#34C5B5" },
+  { name: "翠绿", light: "#1F9E6E", dark: "#46C08B" },
+  { name: "紫罗兰", light: "#7C3AED", dark: "#A98BF5" },
+  { name: "玫红", light: "#E11D48", dark: "#FB7185" },
+  { name: "琥珀", light: "#D97706", dark: "#F0A93A" },
+  { name: "朱红", light: "#C23B22", dark: "#E5604A" },
 ];
 
 const semanticTokens = [
-  { token: "background", light: "#FAF9F6", dark: "#1D1C19", desc: "页面背景" },
-  { token: "foreground", light: "#2C2520", dark: "#E2DDD4", desc: "主要文字" },
-  { token: "card", light: "#FEFDFB", dark: "#252320", desc: "卡片背景" },
-  { token: "muted", light: "#F4F2ED", dark: "#2A2725", desc: "次要背景" },
-  { token: "muted-foreground", light: "#6B5F52", dark: "#96897A", desc: "次要文字" },
-  { token: "border", light: "#E2DDD4", dark: "rgba(232,224,212,0.08)", desc: "边框" },
-  { token: "primary", light: "#2C2520", dark: "#E2DDD4", desc: "主按钮" },
-  { token: "destructive", light: "#C23B22", dark: "#D4493A", desc: "危险操作" },
+  { token: "background", light: "#FFFFFF", dark: "#16181D", desc: "页面背景" },
+  { token: "foreground", light: "#1F2328", dark: "#C5CCD4", desc: "主要文字" },
+  { token: "card", light: "#FFFFFF", dark: "#1D2027", desc: "卡片背景" },
+  { token: "muted", light: "#F6F7F9", dark: "#22262E", desc: "次要背景" },
+  { token: "muted-foreground", light: "#5B636D", dark: "#7D8590", desc: "次要文字" },
+  { token: "border", light: "#ECECF0", dark: "rgba(255,255,255,0.08)", desc: "边框" },
+  { token: "primary", light: "#1F2328", dark: "#F1F4F7", desc: "主按钮" },
+  { token: "destructive", light: "#DC2626", dark: "#F0686D", desc: "危险操作" },
 ];
 
 function CopyButton({ text }: { text: string }) {
@@ -224,10 +237,11 @@ export default function DesignSystemPage() {
           <div className="hidden lg:block mb-6">
             <Logo size="xl" />
           </div>
-          <h1 className="text-4xl font-normal tracking-wide mb-3 font-serif">Ink Design System</h1>
+          <h1 className="text-4xl font-normal tracking-wide mb-3 font-serif">Color System</h1>
           <p className="text-muted-foreground leading-relaxed">
-            墨色设计系统 — 源自宣纸与松烟墨的暖褐色阶，搭配印章朱红强调色。 所有色相锁定在
-            H≈40°-80°，避免了纯灰的「塑料感」。 本页展示博客使用的全部设计标记（Design Tokens）与组件样式。
+            纯白底 + 冷中性灰（H≈220°）+ 可选品牌色。品牌色统一走 <code className="text-seal">--brand</code>，
+            默认深蓝，用户可在导航「主题色」里从 8 个预设中自选并记住，首屏无闪烁。
+            本页展示博客使用的全部设计标记（Design Tokens）与组件样式。
           </p>
 
           {/* Quick nav — mobile only */}
@@ -254,7 +268,7 @@ export default function DesignSystemPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Light */}
-            <div className="rounded-xl border border-border bg-[#FAF9F6] p-10 flex flex-col items-center gap-4 relative overflow-hidden">
+            <div className="rounded-xl border border-border bg-[#FFFFFF] p-10 flex flex-col items-center gap-4 relative overflow-hidden">
               <div
                 className="absolute inset-0 opacity-[0.02]"
                 style={{
@@ -266,10 +280,10 @@ export default function DesignSystemPage() {
                 alt="Tz Logo Light"
                 className="h-14 w-auto relative z-10"
               />
-              <span className="text-xs tracking-widest text-ink-500 uppercase relative z-10">Light · 宣纸</span>
+              <span className="text-xs tracking-widest text-ink-500 uppercase relative z-10">Light · 白</span>
             </div>
             {/* Dark */}
-            <div className="rounded-xl border border-white/[0.04] bg-[#1D1C19] p-10 flex flex-col items-center gap-4 relative overflow-hidden">
+            <div className="rounded-xl border border-white/[0.04] bg-[#16181D] p-10 flex flex-col items-center gap-4 relative overflow-hidden">
               <div
                 className="absolute inset-0 opacity-[0.02]"
                 style={{
@@ -307,13 +321,13 @@ export default function DesignSystemPage() {
           <SectionHeader
             id="colors"
             title="Colors"
-            subtitle="墨色色阶 ink-50 → ink-900 · 功能色 · 语义映射"
+            subtitle="冷中性灰阶 ink-50 → ink-900 · 功能色 · 语义映射"
           />
 
           {/* Ink Scale */}
           <div className="mb-8">
             <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-medium">
-              墨色色阶 — Ink Scale
+              冷中性灰阶 — Neutral Scale
             </p>
             <div className="grid grid-cols-5 sm:grid-cols-10 rounded-xl overflow-hidden border border-border">
               {inkScale.map((c) => (
@@ -337,8 +351,38 @@ export default function DesignSystemPage() {
               ))}
             </div>
             <div className="flex justify-between mt-2 text-[10px] text-muted-foreground tracking-wider px-1">
-              <span>宣纸白 ←</span>
-              <span>→ 松烟墨</span>
+              <span>纯白 ←</span>
+              <span>→ 近黑</span>
+            </div>
+          </div>
+
+          {/* Random Brand Palette */}
+          <div className="mb-8">
+            <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-medium">
+              品牌色 — Brand Palette（明 / 暗变体 · 默认深蓝 · 导航「主题色」可自选 → --brand）
+            </p>
+            <div className="grid grid-cols-4 sm:grid-cols-8 gap-2">
+              {brandPalette.map((c) => (
+                <div
+                  key={c.name}
+                  className="rounded-lg border border-border overflow-hidden"
+                >
+                  <div className="flex h-12">
+                    <div
+                      className="flex-1"
+                      style={{ backgroundColor: c.light }}
+                    />
+                    <div
+                      className="flex-1"
+                      style={{ backgroundColor: c.dark }}
+                    />
+                  </div>
+                  <div className="bg-card px-2 py-1.5 text-center">
+                    <p className="text-[10px] font-medium text-foreground">{c.name}</p>
+                    <code className="text-[8px] text-muted-foreground font-mono">{c.light}</code>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
@@ -347,7 +391,7 @@ export default function DesignSystemPage() {
             <p className="text-xs text-muted-foreground mb-3 uppercase tracking-wider font-medium">
               功能色 — State Colors
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
               {accentColors.map((c) => (
                 <div
                   key={c.name}
@@ -436,12 +480,12 @@ export default function DesignSystemPage() {
               <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-2">文字层级</p>
               <div>
                 <span className="text-[10px] text-muted-foreground font-mono">text-4xl · font-light · font-serif</span>
-                <p className="text-4xl font-light tracking-wide mt-1 font-serif">Ink Design System</p>
+                <p className="text-4xl font-light tracking-wide mt-1 font-serif">Color System</p>
               </div>
               <Separator />
               <div>
                 <span className="text-[10px] text-muted-foreground font-mono">text-2xl · font-semibold</span>
-                <h2 className="text-2xl font-semibold tracking-tight mt-1">墨色设计系统</h2>
+                <h2 className="text-2xl font-semibold tracking-tight mt-1">冷调配色系统</h2>
               </div>
               <Separator />
               <div>
@@ -452,7 +496,7 @@ export default function DesignSystemPage() {
               <div>
                 <span className="text-[10px] text-muted-foreground font-mono">text-base · foreground</span>
                 <p className="text-base mt-1">
-                  正文文字排版示例 — Body text in the ink color system feels warm and readable.
+                  正文文字排版示例 — Body text in cold neutral gray, clean and readable.
                 </p>
               </div>
               <Separator />
@@ -880,7 +924,7 @@ export default function DesignSystemPage() {
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground line-clamp-2">
-                  墨色设计系统的完整文档，包含颜色、字体、组件使用指南...
+                  配色系统的完整文档，包含颜色、字体、组件使用指南...
                 </p>
               </CardContent>
               <CardFooter className="justify-between text-xs text-muted-foreground">
@@ -908,34 +952,35 @@ export default function DesignSystemPage() {
           <div className="rounded-xl border border-border bg-card overflow-hidden">
             <div className="p-6 font-mono text-xs leading-loose text-muted-foreground overflow-x-auto">
               <pre>{`/* 背景 */
-bg-background        /* 页面底色 ink-100 / ink-900 */
-bg-card              /* 卡片 ink-50 / #252320 */
-bg-muted             /* 次要区域 ink-200 / #2A2725 */
+bg-background        /* 页面底色 纯白 / #16181D */
+bg-card              /* 卡片 #FFFFFF / #1D2027 */
+bg-muted             /* 次要区域 ink-200 / #22262E */
 bg-secondary         /* 同 muted */
 
 /* 文字 */
-text-foreground           /* 标题 ink-800 / ink-300 */
-text-secondary-foreground /* 正文 ink-700 / ink-300 */
+text-foreground           /* 标题 ink-800 / ink-800(dark) */
+text-secondary-foreground /* 正文 ink-700 */
 text-muted-foreground     /* 辅助 ink-600 / ink-500 */
-text-destructive          /* 朱红错误 */
+text-destructive          /* 红色错误 */
 
 /* 边框 */
-border-border        /* 默认边框 ink-300 / 暖白8% */
+border-border        /* 默认边框 ink-300 / 白8% */
 border-input         /* 输入框边框 */
 
-/* 墨色色阶直接使用 */
+/* 冷中性灰阶直接使用 */
 bg-ink-50 ~ bg-ink-900
 text-ink-50 ~ text-ink-900
 
-/* 功能色 */
-text-seal / bg-seal       /* 印章朱红 */
-text-success / bg-success /* 苔绿 */
-text-warning / bg-warning /* 赭黄 */
-text-info / bg-info       /* 青墨 */
+/* 强调色 / 功能色 */
+text-brand / bg-brand     /* 品牌色 --brand（可自选） */
+text-seal / bg-seal       /* --brand 别名 */
+text-success / bg-success /* 翠绿 */
+text-warning / bg-warning /* 琥珀 */
+text-info / bg-info       /* 天蓝 */
 
 /* 透明度 */
-bg-primary/5              /* 5% 松烟墨 */
-bg-seal/10                /* 10% 朱红，适合标签背景 */
+bg-primary/5              /* 5% 前景 */
+bg-seal/10                /* 10% 强调色，适合标签背景 */
 border-foreground/20      /* 20% 前景色边框 */`}</pre>
             </div>
           </div>

@@ -9,7 +9,7 @@ const FileNodeView = ({ node, deleteNode }: any) => {
 
   return (
     <NodeViewWrapper className="react-renderer node-file" contentEditable={false}>
-      <div className="relative my-3 pl-2 py-1 pr-1 w-full flex min-w-0 gap-2 items-center justify-start rounded-md border overflow-hidden border-gray-300 bg-white hover:bg-gray-50 ring-1 ring-offset-2 ring-blue-100">
+      <div className="relative my-3 pl-2 py-1 pr-1 w-full flex min-w-0 gap-2 items-center justify-start rounded-md border overflow-hidden border-border bg-background hover:bg-accent ring-1 ring-offset-2 ring-blue-100">
         {/* 缩略图 */}
         <img className="size-7 rounded-sm object-cover object-top" src={src} alt={fileName} />
 
@@ -21,14 +21,14 @@ const FileNodeView = ({ node, deleteNode }: any) => {
           {/* 查看大图 */}
           <button
             type="button"
-            className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition active:scale-95"
+            className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-accent transition active:scale-95"
             onClick={() => window.open(src, "_blank")}
           >
             <Search size={16} />
           </button>
 
           {/* 替换文件 */}
-          <label className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition active:scale-95 cursor-pointer">
+          <label className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-accent transition active:scale-95 cursor-pointer">
             <RefreshCw size={16} />
             <input
               type="file"
@@ -44,7 +44,7 @@ const FileNodeView = ({ node, deleteNode }: any) => {
           {/* 删除 */}
           <button
             type="button"
-            className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-gray-100 transition active:scale-95"
+            className="h-8 w-8 rounded-md flex items-center justify-center hover:bg-accent transition active:scale-95"
             onClick={deleteNode}
           >
             <Trash2 size={16} />

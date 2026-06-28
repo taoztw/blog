@@ -1,18 +1,8 @@
 "use client";
 
-import {
-  Carousel,
-  type CarouselApi,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { Skeleton } from "../ui/skeleton";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "../ui/skeleton";
 
 interface FilterCarouselProps {
   value?: string | null;
@@ -23,85 +13,48 @@ interface FilterCarouselProps {
   }[];
 }
 
+/**
+ * 分类筛选条 —— 与博客列表筛选样式一致（圆角描边胶囊，选中实底）。
+ * 横向可滚动，超出隐藏滚动条。
+ */
 export const FilterCarousel = ({ value, data, isLoading }: FilterCarouselProps) => {
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0); // 当前选中的索引
-  const [count, setCount] = useState(0); // 轮播图项的总数
   const router = useRouter();
 
-  const onSelect = (value: string | null) => {
+  const onSelect = (next: string) => {
     const url = new URL(window.location.href);
-
-    if (value) {
-      url.searchParams.set("categoryId", value);
-    } else {
-      url.searchParams.delete("categoryId");
-    }
-
+    url.searchParams.set("categoryId", next);
     router.push(url.toString());
   };
 
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
-
   return (
-    <div className="relative w-full">
-      <div
-        className={cn(
-          "absolute left-12 top-0 bottom-0 w-12 z-10 bg-gradient-to-r from-white to-transparent pointer-events-none rounded-l-md",
-          current === 1 && "hidden"
-        )}
-      />
-
-      <Carousel setApi={setApi} opts={{ align: "start", dragFree: true }} className="max-w-[500px] px-12">
-        <CarouselContent className="-ml-3">
-          {!isLoading && (
-            <CarouselItem className="pl-3 basis-auto" onClick={() => onSelect(null)}>
-              <Badge
-                variant={!value ? "default" : "secondary"}
-                className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
-              >
-                All
-              </Badge>
-            </CarouselItem>
-          )}
-          {isLoading &&
-            Array.from({ length: 14 }).map((_, index) => (
-              <CarouselItem key={index} className="pl-3 basis-auto">
-                <Skeleton className="rounded-lg px-3 py-1 h-full text-sm w-[100px] font-semibold">&nbsp;</Skeleton>
-              </CarouselItem>
-            ))}
-          {!isLoading &&
-            data.map((item) => (
-              <CarouselItem key={item.value} className="pl-3 basis-auto" onClick={() => onSelect(item.value)}>
-                <Badge
-                  variant={value === null ? "default" : "secondary"}
-                  className="rounded-lg px-3 py-1 cursor-pointer whitespace-nowrap text-sm"
+    <div className="-mx-2 px-2">
+      <div className="scrollbar-hide flex items-center gap-2 overflow-x-auto whitespace-nowrap pb-1">
+        {isLoading
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="h-8 w-16 shrink-0 rounded-full"
+              />
+            ))
+          : data.map((item) => {
+              const active = value === item.value;
+              return (
+                <button
+                  key={item.value}
+                  type="button"
+                  onClick={() => onSelect(item.value)}
+                  className={cn(
+                    "inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-[13px] transition-colors",
+                    active
+                      ? "border-ink-800 bg-ink-800 text-ink-100"
+                      : "border-ink-300 text-ink-700 hover:border-ink-500 hover:text-ink-900",
+                  )}
                 >
                   {item.label}
-                </Badge>
-              </CarouselItem>
-            ))}
-        </CarouselContent>
-        <CarouselPrevious className="left-0 z-20" />
-        <CarouselNext className="right-0 z-20" />
-      </Carousel>
-      <div
-        className={cn(
-          "absolute right-12 top-0 bottom-0 w-12 z-10 bg-gradient-to-l from-white to-transparent pointer-events-none rounded-r-md",
-          current === count && "hidden"
-        )}
-      />
+                </button>
+              );
+            })}
+      </div>
     </div>
   );
 };

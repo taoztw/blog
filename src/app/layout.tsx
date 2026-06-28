@@ -1,7 +1,9 @@
+import { BrandProvider } from "@/components/brand-provider";
 import { FaviconSwitcher } from "@/components/favicon-switcher";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/constants";
+import { ACCENT_INJECT } from "@/lib/accent";
 import { TRPCReactProvider } from "@/trpc/react";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
@@ -62,25 +64,29 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     >
       {/* <html lang="en" suppressHydrationWarning> */}
       <body>
+        {/* 首屏注入品牌色（读 localStorage，默认深蓝）—— 无闪烁 */}
+        <script dangerouslySetInnerHTML={{ __html: ACCENT_INJECT }} />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <NextTopLoader
-            initialPosition={0.08}
-            crawlSpeed={200}
-            height={2}
-            crawl={true}
-            showSpinner={true}
-            easing="ease"
-            speed={200}
-            color="#C23B22"
-          />
-          <FaviconSwitcher />
-          <Toaster position="top-right" />
-          <TRPCReactProvider>{children}</TRPCReactProvider>
+          <BrandProvider>
+            <NextTopLoader
+              initialPosition={0.08}
+              crawlSpeed={200}
+              height={2}
+              crawl={true}
+              showSpinner={true}
+              easing="ease"
+              speed={200}
+              color="var(--brand)"
+            />
+            <FaviconSwitcher />
+            <Toaster position="top-right" />
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+          </BrandProvider>
         </ThemeProvider>
       </body>
     </html>

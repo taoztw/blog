@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
 ## Commands
 
@@ -117,38 +117,28 @@ Validated by `@t3-oss/env-nextjs` in `src/env.js`. Required for dev: `AUTH_GITHU
 
 ---
 
-## Color System — 纯白底 + 冷中性灰 + 可选品牌色
+## Ink Design System (墨色设计系统)
 
-The blog uses a **pure-white background + cold neutral gray** palette (H≈220°), with all brand color expressed through a single **user-selectable brand accent** (`--brand`). Source of truth for tokens: `src/styles/globals.css`. Source of truth for the brand presets + injection logic: `src/lib/accent.ts`.
+The blog uses a custom warm-tone color system inspired by Chinese calligraphy (xuan paper + pine soot ink). **Never use cold pure grays** (`oklch(x 0 0)` or `text-gray-*`). All neutrals carry a warm hue (H≈40°-80°).
 
 **Live reference page**: `/design-system` (source: `src/app/[locale]/(blog)/design-system/page.tsx`)
 
-### Brand Accent — `--brand`
+### Color Tokens — Ink Scale
 
-- **User-selectable**, default **deep blue** (`blue`). 8 presets (each with a dark-mode variant) live in `BRAND_PRESETS` in `src/lib/accent.ts`.
-- The visitor picks a color from the floating-nav **主题色** popover (`src/components/brand-picker.tsx`); the choice is persisted to `localStorage` under `brand-accent`.
-- **State + persistence**: `src/components/brand-provider.tsx` (`BrandProvider` + `useBrand`) holds the current brand, re-applies `--brand` on selection and on light/dark toggle, and writes `localStorage`. Mounted in `src/app/layout.tsx`.
-- **Flicker-free**: an inline body-top script (`ACCENT_INJECT`) reads `localStorage` (falling back to the default) and writes `--brand` before first paint.
-- **Single source, full-site linkage**: `--seal`, `--sidebar-primary`, `--chart-1`, `--ring`, `--highlight` all point to `var(--brand)`, so the chosen color updates links, buttons, logo accents, active states, focus rings, and the primary chart color at once.
+**Mode-aware**: in dark mode the scale is **reversed** so `ink-50` is always "lightest in current theme" and `ink-900` is always "darkest". This means `text-ink-700` always renders as body text, `bg-ink-100` always renders as page bg — both modes.
 
-> ⚠️ Do **not** repurpose shadcn's `--accent` token for the brand color — `--accent` is the muted **hover background** (cold gray) used by dozens of shadcn components. The brand color always goes through `--brand` (and its aliases above). To add/remove a brand option, edit `BRAND_PRESETS` only.
-
-### Color Tokens — Cold Neutral Scale (`ink-*`)
-
-The `ink-*` names are retained for compatibility but now map to **cold neutrals**. **Mode-aware**: in dark mode the scale is **reversed** so `ink-50` is always "lightest in current theme" and `ink-900` always "darkest". `text-ink-700` always renders as body text, `bg-ink-100` always as page bg — both modes.
-
-| Token | Light hex | Dark hex | Usage (mode-invariant) |
-|-------|-----------|----------|------------------------|
-| `ink-50` | `#FFFFFF` | `#16181D` | Page / Card background |
-| `ink-100` | `#F6F7F9` | `#1D2027` | Secondary background |
-| `ink-200` | `#ECECF0` | `#22262E` | Muted background |
-| `ink-300` | `#DFE2E7` | `#2A2E37` | Borders / Dividers |
-| `ink-400` | `#AEB4BD` | `#5B636D` | Disabled / Placeholder (mid-tone) |
-| `ink-500` | `#8B939C` | `#7D8590` | Auxiliary text (≥14px) |
-| `ink-600` | `#5B636D` | `#9AA1AB` | Muted foreground |
-| `ink-700` | `#3D444D` | `#C5CCD4` | Body text |
-| `ink-800` | `#1F2328` | `#F1F4F7` | Headings / Foreground |
-| `ink-900` | `#14171A` | `#FFFFFF` | High-contrast emphasis |
+| Token     | Light hex | Dark hex  | Usage (mode-invariant)            |
+| --------- | --------- | --------- | --------------------------------- |
+| `ink-50`  | `#FEFDFB` | `#1D1C19` | Page / Card background            |
+| `ink-100` | `#FAF9F6` | `#2C2520` | Secondary background              |
+| `ink-200` | `#F4F2ED` | `#453B32` | Muted background                  |
+| `ink-300` | `#E2DDD4` | `#6B5F52` | Borders / Dividers                |
+| `ink-400` | `#C4BDB0` | `#887B6C` | Disabled / Placeholder (mid-tone) |
+| `ink-500` | `#887B6C` | `#C4BDB0` | Auxiliary text (≥14px)            |
+| `ink-600` | `#6B5F52` | `#E2DDD4` | Muted foreground                  |
+| `ink-700` | `#453B32` | `#F4F2ED` | Body text                         |
+| `ink-800` | `#2C2520` | `#FAF9F6` | Headings / Foreground             |
+| `ink-900` | `#1D1C19` | `#FEFDFB` | High-contrast emphasis            |
 
 Tailwind usage: `bg-ink-50`, `text-ink-800`, `border-ink-300`, etc. — pick by **role**, not by light-mode hex.
 
@@ -157,38 +147,39 @@ Tailwind usage: `bg-ink-50`, `text-ink-800`, `border-ink-300`, etc. — pick by 
 ```tsx
 // ❌ WRONG — the scale is already mode-aware, this double-inverts in dark mode
 <p className="text-ink-700 dark:text-ink-300">...</p>
+<footer className="bg-ink-50 dark:bg-ink-900/50">...</footer>
 
 // ✅ RIGHT — base class works in both modes
 <p className="text-ink-700">...</p>
+<footer className="bg-ink-50">...</footer>
 ```
 
-For **theme-invariant** elements (always-dark/always-light decorative panels), the ink scale is the wrong tool — use literal arbitrary values instead:
+For **theme-invariant** elements (always-dark hero panels, always-light overlays, decorative banners that shouldn't follow the theme), the ink scale is the wrong tool — use literal arbitrary values instead:
 
 ```tsx
-// ✅ Always-dark decoration panel
-<div className="bg-[#16181d]">
+// ✅ Always-dark decoration panel (e.g. auth/layout.tsx)
+<div className="bg-[#1d1c19]">
+  <div className="bg-black/40" />
   <p className="text-white/40">© 2026</p>
 </div>
 ```
 
 ### Accent & State Colors
 
-| Token | Value | Usage |
-|-------|-------|-------|
-| `brand` | user-selectable, default `#2563eb` (8 presets in `accent.ts`) | Brand accent — links, buttons, logo, active state, focus ring |
-| `seal` | `var(--brand)` | Alias of brand (legacy name, used across blog components) |
-| `success` | `#1F9E6E` (dark `#46C08B`) | Success states |
-| `warning` | `#D97706` (dark `#F0A93A`) | Warning states |
-| `info` | `#2F88D8` (dark `#5AAEF0`) | Info states |
-| `destructive` | `#DC2626` (dark `#F0686D`) | Errors / destructive actions (no longer tied to brand) |
+| Token     | Hex       | Usage                                          |
+| --------- | --------- | ---------------------------------------------- |
+| `seal`    | `#C23B22` | Brand accent (印章朱红), same as `destructive` |
+| `success` | `#5B7A5E` | Success states (苔绿)                          |
+| `warning` | `#B8863E` | Warning states (赭黄)                          |
+| `info`    | `#5C7A8A` | Info states (青墨)                             |
 
 ### Semantic Token Rules
 
 - **Prefer semantic tokens** over direct ink colors: `bg-background`, `text-foreground`, `border-border`
-- Use `text-muted-foreground` for secondary text
-- For brand-colored UI use `text-seal` / `bg-seal/10` / `text-brand` (all follow the random `--brand`)
+- Use `text-muted-foreground` for secondary text (maps to ink-600 light / ink-500 dark)
 - Use ink scale directly only when finer control is needed: `text-ink-400` for disabled text
-- `bg-white` / `text-gray-*` now resolve close to the palette, but still **prefer semantic tokens** so dark mode stays automatic
+- Transparency: `bg-primary/5`, `bg-seal/10` for tinted backgrounds
+- **Never hardcode** `text-gray-*` or `bg-white` — use semantic tokens for automatic dark mode
 
 ### Typography
 
@@ -220,7 +211,13 @@ export function XxxTable() {
   const { table } = useDataTable({ data: data?.items ?? [], columns });
 
   if (isFetching && !data) {
-    return <DataTableSkeleton columnCount={N} rowCount={10} filterCount={2} />;
+    return (
+      <DataTableSkeleton
+        columnCount={N}
+        rowCount={10}
+        filterCount={2}
+      />
+    );
   }
 
   return (
@@ -254,6 +251,7 @@ export function XxxTable() {
 ```
 
 **Rules:**
+
 - `meta.variant` drives filter type (`"text"` / `"select"` / `"multiSelect"`); `meta.label` shows in view-options + header
 - Always set `enableColumnFilter: true` on filterable columns; add `filterFn` for select variants
 - Set `enableSorting: false` and `enableHiding: false` on image/actions columns

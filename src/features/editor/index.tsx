@@ -85,10 +85,10 @@ export default function Editor({ initialContent, onChange }: EditorProps) {
   };
 
   return (
-    <div className="editor-wrapper border rounded-lg p-4 bg-white">
+    <div className="editor-wrapper border rounded-lg p-4 bg-background">
       {/* 工具栏 */}
       <div className="toolbar flex gap-2 mb-4 pb-4 border-b">
-        <label className="cursor-pointer px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded text-sm transition">
+        <label className="cursor-pointer px-3 py-1.5 bg-muted hover:bg-accent rounded text-sm transition">
           📎 Upload File
           <input
             type="file"
@@ -104,7 +104,7 @@ export default function Editor({ initialContent, onChange }: EditorProps) {
             const name = prompt("Enter variable name:");
             if (name) insertVariable(name);
           }}
-          className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 rounded text-sm transition"
+          className="px-3 py-1.5 bg-muted hover:bg-accent rounded text-sm transition"
         >
           {"{{x}}"} Insert Variable
         </button>

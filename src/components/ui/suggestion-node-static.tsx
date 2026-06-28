@@ -28,7 +28,7 @@ export function SuggestionLeafStatic(props: SlateLeafProps<TSuggestionText>) {
       className={cn(
         'border-b-2 border-b-brand/[.24] bg-brand/[.08] text-brand/80 no-underline transition-colors duration-200',
         hasRemove &&
-          'border-b-gray-300 bg-gray-300/25 text-gray-400 line-through'
+          'border-b-border bg-muted text-muted-foreground line-through'
       )}
     >
       {props.children}

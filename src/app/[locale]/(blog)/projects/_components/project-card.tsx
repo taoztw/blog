@@ -67,8 +67,8 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
             className="object-cover transition-transform duration-300 group-hover/card:scale-105"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
-            <span className="text-gray-400 text-sm">No Image</span>
+          <div className="w-full h-full bg-gradient-to-br from-muted to-secondary flex items-center justify-center">
+            <span className="text-muted-foreground text-sm">No Image</span>
           </div>
         )}
         <div className="absolute top-3 left-3">
@@ -84,15 +84,15 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
       </CardHeader>
 
       <CardContent className="space-y-4 flex-1 flex flex-col">
-        {/* 标签 */}
+        {/* 标签 —— 与文章一致：#name 品牌色 */}
         {tagNames.length > 0 && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px] tracking-wide">
             {tagNames.slice(0, 4).map((tagName, index) => (
-              <Badge key={index} variant="outline">
-                {tagName}
-              </Badge>
+              <span key={index} className="text-seal">
+                #{tagName}
+              </span>
             ))}
-            {tagNames.length > 4 && <Badge variant="outline">+{tagNames.length - 4}</Badge>}
+            {tagNames.length > 4 && <span className="text-ink-500">+{tagNames.length - 4}</span>}
           </div>
         )}
       </CardContent>

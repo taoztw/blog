@@ -23,9 +23,9 @@ export function ProjectsGrid({ search, categoryId }: ProjectsGridProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="animate-pulse">
-            <div className="bg-gray-200 rounded-lg h-64 mb-4"></div>
-            <div className="bg-gray-200 rounded h-4 mb-2"></div>
-            <div className="bg-gray-200 rounded h-3 w-3/4"></div>
+            <div className="bg-muted rounded-lg h-64 mb-4"></div>
+            <div className="bg-muted rounded h-4 mb-2"></div>
+            <div className="bg-muted rounded h-3 w-3/4"></div>
           </div>
         ))}
       </div>

@@ -1,6 +1,5 @@
 "use client";
 
-import { Logo } from "@/components/logo";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -66,40 +65,15 @@ const SignInForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
         {/* Header */}
-        <div className="space-y-2">
-          {/* Desktop: logo is in layout left panel, hide here */}
-          <div className="hidden lg:block">
-            <h1 className="font-serif text-2xl font-semibold tracking-tight text-foreground">
-              Welcome back
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Sign in to your account to continue
-            </p>
-          </div>
-          {/* Mobile: show full branding */}
-          <div className="lg:hidden">
-            <h1 className="font-serif text-2xl font-semibold tracking-tight text-foreground">
-              Sign In to Tz Blog
-            </h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Welcome back! Sign in to continue
-            </p>
-          </div>
-        </div>
-
-        {/* Social Auth */}
-        <SocialAuthForm />
-
-        {/* Divider */}
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-dashed" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-muted-foreground">or continue with email</span>
-          </div>
+        <div className="text-center">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            首先，请登录
+          </h1>
+          <p className="mt-3 text-base text-muted-foreground">
+            输入你的邮箱和密码以继续。
+          </p>
         </div>
 
         {/* Form Fields */}
@@ -109,9 +83,13 @@ const SignInForm = () => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-medium">Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="your@email.com" {...field} />
+                  <Input
+                    type="email"
+                    placeholder="name@email.com"
+                    className="h-12 text-base"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -123,28 +101,43 @@ const SignInForm = () => {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <div className="flex items-center justify-between">
-                  <FormLabel className="font-medium">Password</FormLabel>
-                </div>
                 <FormControl>
-                  <Input type="password" placeholder="••••••••" {...field} />
+                  <Input
+                    type="password"
+                    placeholder="密码"
+                    className="h-12 text-base"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <Button className="w-full" disabled={isLoading}>
+          <Button className="h-12 w-full text-base font-semibold" disabled={isLoading}>
             {isLoading && <LoadingSpinner className="text-white" type="bars" />}
-            Sign In
+            继续
           </Button>
         </div>
 
+        {/* Divider */}
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="bg-background px-4 text-muted-foreground">或</span>
+          </div>
+        </div>
+
+        {/* Social Auth */}
+        <SocialAuthForm />
+
         {/* Footer */}
         <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
-          <Button asChild variant="link" className="h-auto p-0 text-foreground underline underline-offset-4">
-            <Link href={ROUTES.SIGN_UP}>Create account</Link>
+          还没有账户？{" "}
+          <Button asChild variant="link" className="h-auto p-0 text-base text-seal underline-offset-4 hover:underline">
+            <Link href={ROUTES.SIGN_UP}>立即创建</Link>
           </Button>
         </p>
       </form>

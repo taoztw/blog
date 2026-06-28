@@ -59,3 +59,5 @@ yarn-error.log*
 
 .claude
 .codex
+.agents
+.claude

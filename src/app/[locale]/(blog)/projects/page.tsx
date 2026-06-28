@@ -53,14 +53,14 @@ const page = async ({ searchParams }: PageProps) => {
         <div className="container mx-auto px-4 py-8 max-w-7xl">
           {/* Search section */}
           <div className="flex flex-col lg:flex-row justify-between items-center gap-4">
-            <section>
+            <section className="w-full lg:w-auto lg:flex-1 lg:max-w-md">
               <LocalSearch
                 route={ROUTES.PROJECTS}
                 placeholder="Search projects..."
                 otherClasses=""
               />
             </section>
-            <div className="flex">
+            <div className="w-full min-w-0 lg:w-auto lg:max-w-[520px]">
               <FilterCarousel
                 data={projectFilters}
                 value={categoryId || "all"}
@@ -91,9 +91,9 @@ function ProjectsGridSkeleton() {
           key={i}
           className="animate-pulse"
         >
-          <div className="bg-gray-200 rounded-lg h-64 mb-4"></div>
-          <div className="bg-gray-200 rounded h-4 mb-2"></div>
-          <div className="bg-gray-200 rounded h-3 w-3/4"></div>
+          <div className="bg-muted rounded-lg h-64 mb-4"></div>
+          <div className="bg-muted rounded h-4 mb-2"></div>
+          <div className="bg-muted rounded h-3 w-3/4"></div>
         </div>
       ))}
     </div>

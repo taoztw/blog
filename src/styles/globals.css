@@ -19,15 +19,18 @@ html body[data-scroll-locked] {
 }
 
 /*
- * 墨色设计系统 — Ink Design System
- * ─────────────────────────────────
- * 色相锁定 H≈55-80°（暖褐调），饱和度 C≈0.004-0.030
- * 灵感：宣纸（ink-50/100）· 松烟墨（ink-700/800）· 朱砂印泥（seal）
+ * 配色系统 — 纯白底 + 冷中性灰 + 随机强调色
+ * ──────────────────────────────────────────
+ * 背景纯白，文字用冷中性灰阶（H≈220°，去掉旧暖褐 ink 调）。
+ * 颜色只体现在「强调色」上：链接、按钮、logo、激活态、聚焦环、图表主色。
+ * 强调色由 --brand 单一驱动，运行时按文章 slug 随机取色（见 src/lib/accent.ts）。
  *
- * 色阶修正（基于专业评审）：
- *   P0: ink-500 加深至 #887B6C（小字号对比度 ≥4.0:1）
- *   P1: ink-50 拉开至 #FEFDFB（与 ink-100 区分度 ΔL≈3）
- *   P1: 暗色模式辅助文字用 ink-500 替代 ink-600
+ * 关键：shadcn 的 --accent 仍是「muted hover 背景」语义（冷灰），
+ *       品牌强调色走 --brand，并让 seal/sidebar-primary/chart-1/ring/highlight
+ *       全部指向 var(--brand)，因此随机换色一处生效、全站联动。
+ *
+ * ink-* 色阶名保留（兼容既有调用），数值重映射为冷中性；
+ * 仍按「角色」选色：ink-50=最浅背景，ink-900=最深前景，暗色模式反转。
  */
 
 @theme inline {
@@ -93,78 +96,78 @@ html body[data-scroll-locked] {
 }
 
 /* ═══════════════════════════════════════════
- *  亮色模式 — Light Mode (宣纸)
+ *  亮色模式 — Light Mode (纯白)
  * ═══════════════════════════════════════════ */
 :root {
   --radius: 0.625rem;
 
-  /* 墨色色阶（暖褐基调 H≈55-80°） */
-  --ink-50: #fefdfb; /* 纯净宣纸 — card/popover bg */
-  --ink-100: #faf9f6; /* 宣纸底色 — page bg */
-  --ink-200: #f4f2ed; /* 淡墨底 — secondary/muted bg */
-  --ink-300: #e2ddd4; /* 清 — border, subtle elements */
-  --ink-400: #c4bdb0; /* 淡 — disabled, placeholder */
-  --ink-500: #887b6c; /* 重（P0调深）— auxiliary text ≥14px */
-  --ink-600: #6b5f52; /* 浓 — secondary text, muted-foreground */
-  --ink-700: #453b32; /* 焦 — body text */
-  --ink-800: #2c2520; /* 松烟墨 — headings, foreground */
-  --ink-900: #1d1c19; /* 浓墨 — dark mode background */
+  /* 冷中性灰阶（H≈220°） */
+  --ink-50: #ffffff; /* card/popover bg — 最浅 */
+  --ink-100: #f6f7f9; /* page secondary bg */
+  --ink-200: #ececf0; /* muted bg */
+  --ink-300: #dfe2e7; /* border / divider */
+  --ink-400: #aeb4bd; /* disabled / placeholder（中性带） */
+  --ink-500: #8b939c; /* auxiliary text ≥14px */
+  --ink-600: #5b636d; /* secondary text, muted-foreground */
+  --ink-700: #3d444d; /* body text */
+  --ink-800: #1f2328; /* headings, foreground */
+  --ink-900: #14171a; /* 高对比强调 */
 
-  /* 印章朱红 */
-  --seal: #c23b22;
+  /* 品牌强调色：默认值，运行时由脚本随机覆盖 */
+  --brand: #5b53d6;
 
-  /* 功能色（传统中国色意象） */
-  --success: #5b7a5e; /* 苔绿 */
-  --warning: #b8863e; /* 赭黄 */
-  --info: #5c7a8a; /* 青墨 */
+  /* 印章/品牌别名 → 全部指向 --brand（随机换色一处联动） */
+  --seal: var(--brand);
+
+  /* 功能色 */
+  --success: #1f9e6e; /* 翠绿 */
+  --warning: #d97706; /* 琥珀 */
+  --info: #2f88d8; /* 天蓝 */
 
   /* shadcn/ui 语义映射 */
-  --background: #faf9f6;
-  --foreground: #2c2520;
-  --card: #fefdfb;
-  --card-foreground: #2c2520;
-  --popover: #fefdfb;
-  --popover-foreground: #2c2520;
-  --primary: #2c2520;
-  --primary-foreground: #fefdfb;
-  --secondary: #f4f2ed;
-  --secondary-foreground: #453b32;
-  --muted: #f4f2ed;
-  --muted-foreground: #6b5f52;
-  --accent: #f4f2ed;
-  --accent-foreground: #453b32;
-  --destructive: #c23b22;
-  --border: #e2ddd4;
-  --input: #e2ddd4;
-  --ring: #887b6c;
+  --background: #ffffff;
+  --foreground: #1f2328;
+  --card: #ffffff;
+  --card-foreground: #1f2328;
+  --popover: #ffffff;
+  --popover-foreground: #1f2328;
+  --primary: #1f2328;
+  --primary-foreground: #ffffff;
+  --secondary: #f6f7f9;
+  --secondary-foreground: #3d444d;
+  --muted: #f6f7f9;
+  --muted-foreground: #5b636d;
+  --accent: #f2f3f5; /* muted hover 背景（保持冷灰语义，勿用品牌色） */
+  --accent-foreground: #1f2328;
+  --destructive: #dc2626;
+  --border: #ececf0;
+  --input: #ececf0;
+  --ring: var(--brand);
 
-  /* 图表色（文房意象） */
-  --chart-1: #c23b22; /* 朱红 */
-  --chart-2: #5b7a5e; /* 苔绿 */
-  --chart-3: #b8863e; /* 赭黄 */
-  --chart-4: #5c7a8a; /* 青墨 */
-  --chart-5: #887b6c; /* 墨灰 */
+  /* 图表色：主色随品牌，其余固定区分色 */
+  --chart-1: var(--brand);
+  --chart-2: #1f9e6e;
+  --chart-3: #d97706;
+  --chart-4: #2f88d8;
+  --chart-5: #8b939c;
 
   /* 侧边栏 */
-  --sidebar: #faf9f6;
-  --sidebar-foreground: #2c2520;
-  --sidebar-primary: #c23b22;
-  --sidebar-primary-foreground: #fefdfb;
-  --sidebar-accent: #f4f2ed;
-  --sidebar-accent-foreground: #453b32;
-  --sidebar-border: #e2ddd4;
-  --sidebar-ring: #887b6c;
+  --sidebar: #f6f7f9;
+  --sidebar-foreground: #1f2328;
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #ececf0;
+  --sidebar-accent-foreground: #3d444d;
+  --sidebar-border: #ececf0;
+  --sidebar-ring: var(--brand);
 
-  /* 品牌色 */
-  --brand: #c23b22;
-  --highlight: #b8863e;
+  /* 高亮 */
+  --highlight: var(--brand);
 }
 
 /* ═══════════════════════════════════════════
- *  暗色模式 — Dark Mode (夜墨)
+ *  暗色模式 — Dark Mode (冷墨)
  * ═══════════════════════════════════════════
- *  策略：暖对暖（不用纯黑纯白，保留褐调温度）
- *
  *  色阶语义（与亮色模式一致）：
  *    ink-50 = 当前主题中"最浅"色（背景层）
  *    ink-900 = 当前主题中"最深"色（前景层）
@@ -172,59 +175,60 @@ html body[data-scroll-locked] {
  *    在两种模式下都保持"body text / page bg"的语义不变。
  */
 .dark {
-  --ink-50: #1d1c19; /* 最浅层 — page/card bg */
-  --ink-100: #2c2520; /* 次浅 — secondary bg */
-  --ink-200: #453b32; /* 浅 — muted bg */
-  --ink-300: #6b5f52; /* 边框/分割线 */
-  --ink-400: #887b6c; /* 禁用/placeholder（中性带） */
-  --ink-500: #c4bdb0; /* 辅助文字 ≥14px */
-  --ink-600: #e2ddd4; /* muted-foreground */
-  --ink-700: #f4f2ed; /* body text */
-  --ink-800: #faf9f6; /* headings / foreground */
-  --ink-900: #fefdfb; /* 最深层（高对比强调） */
+  --ink-50: #16181d; /* 最浅层 — page/card bg */
+  --ink-100: #1d2027; /* 次浅 — secondary bg */
+  --ink-200: #22262e; /* 浅 — muted bg */
+  --ink-300: #2a2e37; /* 边框/分割线 */
+  --ink-400: #5b636d; /* 禁用/placeholder（中性带） */
+  --ink-500: #7d8590; /* 辅助文字 ≥14px */
+  --ink-600: #9aa1ab; /* muted-foreground */
+  --ink-700: #c5ccd4; /* body text */
+  --ink-800: #f1f4f7; /* headings / foreground */
+  --ink-900: #ffffff; /* 最深层（高对比强调） */
 
-  --seal: #d4493a;
+  /* --brand 由脚本写入暗色变体；此处为无 JS 回退 */
+  --brand: #8b85f0;
+  --seal: var(--brand);
 
-  --success: #7a9e7d;
-  --warning: #d4a55a;
-  --info: #7a9db0;
+  --success: #46c08b;
+  --warning: #f0a93a;
+  --info: #5aaef0;
 
-  --background: #1d1c19;
-  --foreground: #e2ddd4;
-  --card: #252320;
-  --card-foreground: #e2ddd4;
-  --popover: #252320;
-  --popover-foreground: #e2ddd4;
-  --primary: #e2ddd4;
-  --primary-foreground: #1d1c19;
-  --secondary: #2a2725;
-  --secondary-foreground: #e2ddd4;
-  --muted: #2a2725;
-  --muted-foreground: #96897a;
-  --accent: #2a2725;
-  --accent-foreground: #e2ddd4;
-  --destructive: #d4493a;
-  --border: rgba(232, 224, 212, 0.08);
-  --input: rgba(232, 224, 212, 0.1);
-  --ring: #96897a;
+  --background: #16181d;
+  --foreground: #c5ccd4;
+  --card: #1d2027;
+  --card-foreground: #c5ccd4;
+  --popover: #1d2027;
+  --popover-foreground: #c5ccd4;
+  --primary: #f1f4f7;
+  --primary-foreground: #16181d;
+  --secondary: #22262e;
+  --secondary-foreground: #c5ccd4;
+  --muted: #22262e;
+  --muted-foreground: #7d8590;
+  --accent: #22262e;
+  --accent-foreground: #f1f4f7;
+  --destructive: #f0686d;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.1);
+  --ring: var(--brand);
 
-  --chart-1: #d4493a;
-  --chart-2: #7a9e7d;
-  --chart-3: #d4a55a;
-  --chart-4: #7a9db0;
-  --chart-5: #96897a;
+  --chart-1: var(--brand);
+  --chart-2: #46c08b;
+  --chart-3: #f0a93a;
+  --chart-4: #5aaef0;
+  --chart-5: #7d8590;
 
-  --sidebar: #1d1c19;
-  --sidebar-foreground: #e2ddd4;
-  --sidebar-primary: #d4493a;
-  --sidebar-primary-foreground: #fefdfb;
-  --sidebar-accent: #2a2725;
-  --sidebar-accent-foreground: #e2ddd4;
-  --sidebar-border: rgba(232, 224, 212, 0.08);
-  --sidebar-ring: #96897a;
+  --sidebar: #16181d;
+  --sidebar-foreground: #c5ccd4;
+  --sidebar-primary: var(--brand);
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #22262e;
+  --sidebar-accent-foreground: #c5ccd4;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: var(--brand);
 
-  --brand: #d4493a;
-  --highlight: #d4a55a;
+  --highlight: var(--brand);
 }
 
 @layer base {
@@ -233,16 +237,5 @@ html body[data-scroll-locked] {
   }
   body {
     @apply bg-background text-foreground antialiased;
-  }
-
-  /* 宣纸纹理 — Xuan Paper Texture (极致克制) */
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg width='200' height='200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.5;
   }
 }
