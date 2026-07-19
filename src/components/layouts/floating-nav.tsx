@@ -9,7 +9,20 @@ import ROUTES from "@/constants/routes";
 import { authClient } from "@/lib/auth/authClient";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, easeInOut, motion } from "framer-motion";
-import { FolderGit2, Languages, LogIn, Menu, Moon, Newspaper, NotebookPen, Palette, Search, Sun, User, X } from "lucide-react";
+import {
+  FolderGit2,
+  Languages,
+  LogIn,
+  Menu,
+  Moon,
+  Newspaper,
+  NotebookPen,
+  Palette,
+  Search,
+  Sun,
+  User,
+  X,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTheme } from "next-themes";
 import Link from "next/link";
@@ -41,20 +54,20 @@ function PillRow({
 }) {
   return (
     <>
-      {/* 固定 48px 宽的图标区：折叠态(64px - 左右各8px padding = 48px)正好居中 */}
-      <span className="grid w-12 shrink-0 place-items-center">
+      {/* 固定 32px 宽的图标区：折叠态(48px - 左右各8px padding = 32px)正好居中 */}
+      <span className="grid w-8 shrink-0 place-items-center">
         <span
           data-active={active}
-          className="grid size-9 place-items-center rounded-full text-muted-foreground transition-colors group-hover:text-foreground data-[active=true]:bg-[var(--brand)] data-[active=true]:text-white"
+          className="grid size-7 place-items-center rounded-full text-muted-foreground transition-colors group-hover:text-foreground data-[active=true]:bg-[var(--brand)] data-[active=true]:text-white"
         >
-          <Icon className="size-[18px]" />
+          <Icon className="size-3.5" />
         </span>
       </span>
       <span
-        style={{ opacity: open ? 1 : 0 }}
+        style={{ opacity: open ? 1 : 0, width: open ? undefined : 0 }}
         className={cn(
           "min-w-0 truncate pr-3 text-sm font-semibold text-foreground transition-opacity duration-200",
-          className,
+          className
         )}
       >
         {label}
@@ -125,9 +138,9 @@ export function FloatingNav() {
       <motion.nav
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
-        animate={{ width: open ? 200 : 64 }}
+        animate={{ width: open ? 164 : 48 }}
         transition={{ type: "spring", stiffness: 400, damping: 34 }}
-        className="fixed top-1/2 left-5 z-40 hidden -translate-y-1/2 flex-col gap-1 overflow-hidden rounded-[26px] bg-card/90 p-2 shadow-xl ring-1 ring-border backdrop-blur-md lg:flex"
+        className="fixed top-1/2 left-5 z-40 hidden -translate-y-1/2 flex-col gap-1 overflow-hidden rounded-[18px] bg-card/90 p-1 shadow-xl ring-1 ring-border backdrop-blur-md lg:flex"
       >
         {/* Logo */}
         <Link
@@ -135,8 +148,8 @@ export function FloatingNav() {
           aria-label="Go Home"
           className="group mb-1 flex items-center rounded-xl py-1.5"
         >
-          <span className="grid w-12 shrink-0 place-items-center">
-            <Logo size="sm" />
+          <span className="grid w-8 shrink-0 place-items-center">
+            <Logo size="sm" className="h-4" />
           </span>
         </Link>
 
@@ -221,7 +234,7 @@ export function FloatingNav() {
         {/* 用户 / 登录 */}
         {session?.user?.id ? (
           <div className="flex items-center py-1.5">
-            <span className="grid w-12 shrink-0 place-items-center">
+            <span className="grid w-8 shrink-0 place-items-center">
               <UserAvatarHeader
                 id={session.user.id}
                 name={session.user.name!}
@@ -229,7 +242,7 @@ export function FloatingNav() {
               />
             </span>
             <span
-              style={{ opacity: open ? 1 : 0 }}
+              style={{ opacity: open ? 1 : 0, width: open ? undefined : 0 }}
               className="min-w-0 truncate pr-3 text-sm font-semibold text-foreground transition-opacity duration-200"
             >
               {session.user.name}
@@ -310,7 +323,7 @@ export function FloatingNav() {
                           onClick={() => setIsMobileOpen(false)}
                           className={cn(
                             "flex items-center gap-3 rounded-xl px-3 py-2.5 font-medium transition-colors",
-                            active ? "text-foreground" : "text-foreground hover:bg-muted",
+                            active ? "text-foreground" : "text-foreground hover:bg-muted"
                           )}
                         >
                           <span
@@ -370,7 +383,7 @@ export function FloatingNav() {
                           title={p.name}
                           className={cn(
                             "grid size-8 place-items-center rounded-full ring-offset-2 ring-offset-background transition-transform active:scale-95",
-                            active && "ring-2 ring-foreground/40",
+                            active && "ring-2 ring-foreground/40"
                           )}
                           style={{ backgroundColor: isDark ? p.dark : p.light }}
                         >
