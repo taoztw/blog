@@ -109,10 +109,6 @@ export const createTagColumns = ({ onEdit, onDelete }: TagColumnsProps): ColumnD
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>操作</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(tag.id.toString())}>
-              复制标签 ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onEdit(tag)}>
               <Edit className="mr-2 h-4 w-4" />
               编辑

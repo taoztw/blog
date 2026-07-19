@@ -159,8 +159,6 @@ export const createUserColumns = ({
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>操作</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.id)}>复制用户 ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onViewDetails(user)}>
               <Eye className="mr-2 h-4 w-4" />
               查看详情

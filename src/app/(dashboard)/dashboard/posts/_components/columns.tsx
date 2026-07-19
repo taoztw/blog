@@ -157,8 +157,6 @@ export const createPostColumns = ({ onEdit, onDelete, onPublish, onUnpublish }: 
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>操作</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(post.id)}>复制文章 ID</DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onEdit(post)}>
               <Edit className="mr-2 h-4 w-4" />
               编辑

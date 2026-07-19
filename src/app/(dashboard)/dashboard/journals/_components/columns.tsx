@@ -126,10 +126,6 @@ export const createJournalColumns = ({ onEdit, onDelete }: JournalColumnsProps):
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>操作</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(journal.id)}>
-              复制日志 ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onEdit(journal)}>
               <Edit className="mr-2 h-4 w-4" />
               编辑

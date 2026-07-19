@@ -149,7 +149,10 @@ export function FloatingNav() {
           className="group mb-1 flex items-center rounded-xl py-1.5"
         >
           <span className="grid w-8 shrink-0 place-items-center">
-            <Logo size="sm" className="h-4" />
+            <Logo
+              size="sm"
+              className="h-4"
+            />
           </span>
         </Link>
 

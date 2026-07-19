@@ -69,10 +69,6 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>操作</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(category.id.toString())}>
-              复制类别 ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => onEdit(category)}>
               <Edit className="mr-2 h-4 w-4" />
               编辑
