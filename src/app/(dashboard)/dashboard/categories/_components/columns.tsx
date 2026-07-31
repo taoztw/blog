@@ -27,7 +27,12 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
       placeholder: "搜索类别...",
       variant: "text",
     },
-    header: ({ column }) => <DataTableColumnHeader column={column} label="类别名称" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        label="类别名称"
+      />
+    ),
     cell: ({ row }) => {
       return <div className="flex font-medium justify-start ml-3">{row.getValue("name")}</div>;
     },
@@ -45,7 +50,12 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
   {
     accessorKey: "createdAt",
     meta: { label: "创建时间" },
-    header: ({ column }) => <DataTableColumnHeader column={column} label="创建时间" />,
+    header: ({ column }) => (
+      <DataTableColumnHeader
+        column={column}
+        label="创建时间"
+      />
+    ),
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
       const formatted = date.toLocaleDateString("zh-CN");
@@ -62,7 +72,10 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0"
+            >
               <span className="sr-only">打开操作菜单</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
@@ -73,7 +86,10 @@ export const createCategoryColumns = ({ onEdit, onDelete }: CategoryColumnsProps
               <Edit className="mr-2 h-4 w-4" />
               编辑
             </DropdownMenuItem>
-            <DropdownMenuItem className="text-red-500" onClick={() => onDelete(category)}>
+            <DropdownMenuItem
+              className="text-red-500"
+              onClick={() => onDelete(category)}
+            >
               <Trash2 className="mr-2 h-4 w-4" />
               删除
             </DropdownMenuItem>

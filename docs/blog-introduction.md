@@ -32,9 +32,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 
 ## 二、站点功能与页面介绍
 
-> 📷 本章每个页面下方的 `![](images/xxx.png)` 为截图占位。截图获取方式与文件名见
-> [附录 A · 截图清单](#附录-a--截图清单待补充)，按文件名放入 `docs/images/` 即可自动渲染。
-
 ### 1. 首页 Home
 
 地址：`/zh`
@@ -47,8 +44,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 - **主题标签云**：按文章数排序的热门标签，点击可跳转到对应标签的文章列表。
 - **精选文章**：基于阅读量的热门文章卡片。
 - **最近动态（Streams）**：聚合最新文章与日志的时间流。
-
-![首页](images/home.png)
 
 ---
 
@@ -63,8 +58,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 - 关键字搜索与分页。
 - 侧边栏（分类、标签、热门文章等）。
 
-![博客列表](images/blog-list.png)
-
 ---
 
 ### 3. 文章详情 Post Detail
@@ -76,8 +69,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 - **点赞 / 反应**：游客（按 IP）与登录用户均可点赞。
 - **评论系统**：支持嵌套回复（父子结构）、评论点赞，登录后可发表。
 
-![文章详情](images/blog-detail.png)
-
 ---
 
 ### 4. 归档 Archives
@@ -85,8 +76,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 地址：`/zh/archives`
 
 按时间线归档所有文章，便于快速回溯历史内容。
-
-![归档](images/archives.png)
 
 ---
 
@@ -101,8 +90,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 - 独立的评论体系（`journal_comments`，支持嵌套回复）。
 - 登录用户可直接发布新动态。
 
-![日志动态](images/journals.png)
-
 ---
 
 ### 6. 项目 Projects
@@ -116,8 +103,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 - 每个项目可附 **GitHub 链接、Demo 链接、博客链接**。
 - 支持手动排序（`sortOrder`）。
 
-![项目](images/projects.png)
-
 ---
 
 ### 7. 关于 About
@@ -125,8 +110,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 地址：`/zh/about`
 
 个人介绍页，包含动态时间线、经验年数、在线时长时钟等动态元素。
-
-![关于](images/about.png)
 
 ---
 
@@ -140,8 +123,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 - **字体系统**：正文 Geist Sans、装饰标题 Cormorant Garamond。
 - **组件规范**：按钮、徽章、表单、卡片等 shadcn 组件用法。
 
-![设计系统](images/design-system.png)
-
 ---
 
 ### 9. 登录 / 注册 Auth
@@ -153,8 +134,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 - 邮箱 + 密码（注册后自动登录，密码至少 6 位）。
 - GitHub / Google 第三方登录。
 - 基于角色（admin / user）的权限控制。
-
-![登录](images/sign-in.png)
 
 ---
 
@@ -171,8 +150,6 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 - **用户管理**：用户列表与角色管理。
 
 后台表格统一支持：URL 同步的分页/排序/筛选、列显隐、骨架屏加载、文本/下拉/多选筛选器。
-
-![管理后台](images/dashboard.png)
 
 ---
 
@@ -253,8 +230,7 @@ erDiagram
     user ||--o{ vote : "投票"
 ```
 
-> 提示：以上为 Mermaid 关系图，GitHub / VS Code / 多数 Markdown 阅读器可直接渲染。
-> 若需要位图，可把它粘贴到 <https://mermaid.live> 导出 PNG，放到 `docs/images/db-er.png` 并在此处引用。
+> 提示：以上为 Mermaid 关系图，GitHub / VS Code / Typora 等多数 Markdown 阅读器可直接渲染。
 
 ---
 
@@ -325,11 +301,29 @@ erDiagram
 | created_by_id | text FK→user | 作者（索引 `created_by_idx`） |
 | category_id | text FK→category | 分类 |
 
-**`post_views`** — 阅读记录（自增 id、`post_id`、`user_id?`、`ip`），用于按 IP 去重统计阅读量。
+**`post_views`** — 阅读记录（按 IP 去重统计阅读量）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | int PK 自增 | 记录 ID |
+| post_id | text FK→post | 所属文章 |
+| user_id | text FK→user（可空） | 登录用户（游客为空） |
+| ip | text | 访问者 IP，用于去重 |
 
-**`post_tags`** — 文章↔标签 多对多（联合主键 `post_id` + `tag_id`）。
+**`post_tags`** — 文章↔标签 多对多
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| post_id | text FK→post | 文章（联合主键） |
+| tag_id | text FK→tag | 标签（联合主键） |
 
-**`post_reactions`** — 文章点赞/反应（`ip`、`user_id?`、`post_id`、`num`、`type`）。
+**`post_reactions`** — 文章点赞 / 反应
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | int PK 自增 | 记录 ID |
+| ip | text | 访问者 IP |
+| user_id | text FK→user（可空） | 登录用户 |
+| post_id | text FK→post | 所属文章 |
+| num | int | 反应次数（默认 0） |
+| type | enum | `like` / `dislike` |
 
 #### 3.3.3 内容域：项目
 
@@ -345,16 +339,32 @@ erDiagram
 | created_by_id | text FK→user | 作者 |
 
 索引：`project_created_by_idx`、`project_category_idx`、`project_status_idx`。
+项目类型枚举（前端/后端/移动/工具/AI/其他）定义在 `enums.ts`。
 
-**`project_tags`** — 项目↔标签 多对多（联合主键）。
-
-> 项目类型枚举（前端/后端/移动/工具/AI/其他）定义在 `enums.ts`。
+**`project_tags`** — 项目↔标签 多对多
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| project_id | text FK→project | 项目（联合主键） |
+| tag_id | text FK→tag | 标签（联合主键） |
 
 #### 3.3.4 内容域：日志
 
-**`journal`** — 短动态：`author_id`（FK→user，索引 `journal_author_idx`）、`content`、`image_url`。
+**`journal`** — 短动态
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | text PK | 日志 ID |
+| author_id | text FK→user | 作者（索引 `journal_author_idx`） |
+| content | text | 正文内容 |
+| image_url | text | 配图（可空） |
 
-**`journal_comments`** — 日志评论：`journal_id`（FK→journal，级联删除）、`user_id`、`parent_id`（自引用，支持嵌套回复）、`content`。
+**`journal_comments`** — 日志评论
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | text PK | 评论 ID |
+| journal_id | text FK→journal | 所属日志（级联删除） |
+| user_id | text FK→user | 评论者 |
+| parent_id | text FK→journal_comments | 父评论（自引用，嵌套回复） |
+| content | text | 内容 |
 
 #### 3.3.5 互动域：评论与反应
 
@@ -367,27 +377,84 @@ erDiagram
 | parent_id | text FK→comments | 父评论（自引用，嵌套回复） |
 | content | text | 内容 |
 
-**`comment_reactions`** — 评论反应（联合主键 `user_id` + `comment_id`，`type` 为 like/dislike，`comment_id` 级联删除）。
+**`comment_reactions`** — 评论反应
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| user_id | text FK→user | 用户（联合主键） |
+| comment_id | text FK→comments | 评论（联合主键，级联删除） |
+| type | enum | `like` / `dislike` |
 
 #### 3.3.6 Q&A 域
 
-**`question`** — 问题：`title`、`content`、`author_id`、`views`、`upvotes`、`downvotes`、`answers`（计数）、`status`（pending/approved/rejected）。索引：作者、状态。
+**`question`** — 问题
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | text PK | 问题 ID |
+| title | text | 标题 |
+| content | text | 内容 |
+| author_id | text FK→user | 提问者（索引） |
+| views | int | 浏览量（默认 0） |
+| upvotes / downvotes | int | 赞 / 踩计数 |
+| answers | int | 回答数（冗余计数） |
+| status | enum | `pending` / `approved` / `rejected`（索引） |
 
-**`answer`** — 回答：`question_id`（FK→question，级联删除）、`author_id`、`content`、`upvotes`、`downvotes`。
+**`answer`** — 回答
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | text PK | 回答 ID |
+| question_id | text FK→question | 所属问题（级联删除，索引） |
+| author_id | text FK→user | 回答者（索引） |
+| content | text | 内容 |
+| upvotes / downvotes | int | 赞 / 踩计数 |
 
-**`question_tags`** — 问题↔标签 多对多。
+**`question_tags`** — 问题↔标签 多对多
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| question_id | text FK→question | 问题（联合主键，级联删除） |
+| tag_id | text FK→tag | 标签（联合主键） |
 
-**`question_views`** — 问题浏览记录（按 IP）。
+**`question_views`** — 问题浏览记录（按 IP 去重）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | int PK 自增 | 记录 ID |
+| question_id | text FK→question | 所属问题（级联删除） |
+| user_id | text FK→user（可空） | 登录用户 |
+| ip | text | 访问者 IP |
 
-**`vote`** — 投票：`action_id` + `action_type`（question / answer）+ `vote_type`（upvote / downvote），多态关联问题或回答。索引：`vote_action_idx`、`vote_author_idx`。
+**`vote`** — 投票（多态，关联问题或回答）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | text PK | 投票 ID |
+| author_id | text FK→user | 投票者（索引） |
+| action_id | text | 被投票对象 ID |
+| action_type | enum | `question` / `answer`（配合 action_id 定位对象，索引） |
+| vote_type | enum | `upvote` / `downvote` |
 
 #### 3.3.7 分类法与统计
 
-**`category`** — 分类：`name`、`description`。被文章与项目共用。
+**`category`** — 分类（被文章与项目共用）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | text PK | 分类 ID |
+| name | text | 名称 |
+| description | text | 描述（可空） |
 
-**`tag`** — 标签：`name`（unique）、`description`、`color`（hex）、`icon`（SVG 字符串）。被文章、项目、问题共用。
+**`tag`** — 标签（被文章、项目、问题共用）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | text PK | 标签 ID |
+| name | text unique | 名称（唯一） |
+| description | text | 描述（可空） |
+| color | text | 十六进制颜色码 |
+| icon | text | 图标 SVG 字符串 |
 
-**`statistics`** — 全站统计快照：`total_posts`、`total_views`、`last_updated`。
+**`statistics`** — 全站统计快照
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| id | text PK | 记录 ID |
+| total_posts | int | 文章总数 |
+| total_views | int | 累计阅读量 |
+| last_updated | timestamp | 最后更新时间 |
 
 ### 3.4 关系特征小结
 
@@ -421,39 +488,3 @@ erDiagram
 - 通过 OpenNext 适配为 Cloudflare Worker：`pnpm preview` 本地预览，`pnpm deploy` 部署。
 - 绑定：D1 数据库 `DB`、R2 存储桶 `NEXT_INC_CACHE_R2_BUCKET`、自定义域名 `tz1.me`。
 - 迁移：`pnpm db:generate` 生成迁移到 `migrations_productions/`，`pnpm db:migrate` 应用。
-
----
-
-## 附录 A · 截图清单（待补充）
-
-> 本文「二、站点功能与页面介绍」中已用 `![](images/xxx.png)` 占位引用截图。
-> 请按下表自行截图，保存到 `docs/images/` 目录、**使用对应文件名**，即可自动在文档中渲染。
-
-**截图规范建议：**
-
-- 浏览器视口宽度 **1440px** 左右（桌面布局），整页或首屏皆可；可隐藏滚动条。
-- 本地访问地址：开发服务器 `http://localhost:3000`，语言前缀用 `/zh`。
-- 文章详情、后台等需要先有数据 / 登录；后台需用 admin 账号登录后访问。
-- 建议导出 PNG，统一放在 `docs/images/`。
-
-| 文件名 | 页面 | 访问地址 | 截图要点 |
-|--------|------|----------|----------|
-| `home.png` | 首页 | `/zh` | Hero 问候 + 统计 + 写作热力图 + 标签云 + 精选文章 |
-| `blog-list.png` | 博客列表 | `/zh/blog` | 文章卡片网格 + 侧边栏 + 筛选/搜索 |
-| `blog-detail.png` | 文章详情 | `/zh/blog/<某篇文章 slug>` | 富文本正文 + 代码块 + 点赞 + 评论区 |
-| `archives.png` | 归档 | `/zh/archives` | 按时间线归档的文章列表 |
-| `journals.png` | 日志/动态 | `/zh/journals` | 按日期分组的动态流 + 评论面板 |
-| `projects.png` | 项目 | `/zh/projects` | 项目卡片 + 分类筛选 + 外链 |
-| `about.png` | 关于 | `/zh/about` | 个人介绍 + 动态时间线/时钟 |
-| `design-system.png` | 设计系统 | `/zh/design-system` | 配色色阶 + 字体 + 组件展示 |
-| `sign-in.png` | 登录 | `/zh/sign-in` | 邮箱密码 + GitHub/Google 登录入口 |
-| `dashboard.png` | 管理后台 | `/dashboard`（需 admin 登录） | 数据表格 + 侧边栏 + 筛选/分页 |
-
-**可选补充截图：**
-
-| 文件名 | 内容 | 说明 |
-|--------|------|------|
-| `brand-picker.png` | 主题色弹窗 | 浮动导航「主题色」展开，展示 8 种品牌色 |
-| `dark-mode.png` | 深色模式 | 任意页面切换深色后的效果 |
-| `dashboard-editor.png` | 文章编辑器 | 后台 Plate.js 富文本编辑界面 |
-| `db-er.png` | 数据库关系图 | 将 §3.1 的 Mermaid 图导出为位图（可选） |
