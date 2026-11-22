@@ -2,6 +2,7 @@
 
 import { type ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal, Edit, Trash2 } from "lucide-react";
+import { getNodeText, loadDocument } from "@/components/tiptap/document";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -45,19 +46,11 @@ export const createJournalColumns = ({ onEdit, onDelete }: JournalColumnsProps):
       <DataTableColumnHeader column={column} label="内容预览" />
     ),
     cell: ({ row }) => {
-      const content = row.getValue("content") as string;
-      try {
-        const parsed = JSON.parse(content);
-        const firstNode = Array.isArray(parsed) ? parsed[0] : null;
-        const text = firstNode?.children?.[0]?.text || "空内容";
-        return (
-          <div className="max-w-[400px] truncate text-sm">
-            {text}
-          </div>
-        );
-      } catch {
-        return <div className="text-xs text-muted-foreground italic">无法解析</div>;
-      }
+      const doc = loadDocument(row.getValue<string>("content"));
+      if (!doc) return <div className="text-xs text-muted-foreground italic">无法解析</div>;
+      // 取第一个有文字的块作为预览
+      const text = (doc.content ?? []).map(getNodeText).find((value) => value.trim()) ?? "空内容";
+      return <div className="max-w-[400px] truncate text-sm">{text}</div>;
     },
     enableColumnFilter: true,
   },

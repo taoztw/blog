@@ -3,45 +3,18 @@
 import * as React from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useLocale } from "next-intl";
-import { normalizeNodeId, type TElement, type Value } from "platejs";
+import type { JSONContent } from "@tiptap/core";
 import { ArrowLeftIcon, CheckIcon, MoreHorizontalIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { PlateEditor } from "@/components/editor/plate-editor";
+import { buildPostDocument, extractTitle } from "@/components/tiptap/document";
+import { TiptapEditor } from "@/components/tiptap/tiptap-editor";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { api } from "@/trpc/react";
 import { authClient } from "@/lib/auth/authClient";
 import { PublishDialog } from "./publish-dialog";
-
-/** Extract plain text from the first h1 node in the editor value */
-function extractTitle(value: Value): string {
-  const first = value[0] as TElement | undefined;
-  if (!first || first.type !== "h1") return "";
-  return (first.children as Array<{ text?: string }>).map((c) => c.text ?? "").join("");
-}
-
-/** Build the initial editor value from persisted title + content */
-function buildInitialValue(title: string, content: string): Value {
-  // If we have persisted JSON content, use it as-is (title is embedded as h1)
-  if (content) {
-    try {
-      const parsed = JSON.parse(content);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return normalizeNodeId(parsed as Value);
-      }
-    } catch {
-      // fall through to default
-    }
-  }
-
-  // No content yet — seed the editor with the title (or empty h1) + empty paragraph
-  return normalizeNodeId([
-    { type: "h1", children: [{ text: title ?? "" }] },
-    { type: "p", children: [{ text: "" }] },
-  ]);
-}
 
 export default function PostEditorPage() {
   const params = useParams<{ id: string }>();
@@ -55,7 +28,7 @@ export default function PostEditorPage() {
   const update = api.post.update.useMutation();
   const updateWithTags = api.post.updateWithTags.useMutation();
 
-  const editorValueRef = React.useRef<Value | null>(null);
+  const editorValueRef = React.useRef<JSONContent | null>(null);
   const [showPublish, setShowPublish] = React.useState(false);
   const [isSaving, setIsSaving] = React.useState(false);
   const [lastSaved, setLastSaved] = React.useState<Date | null>(null);
@@ -63,12 +36,13 @@ export default function PostEditorPage() {
   // Derived title — read from editor value for PublishDialog preview
   const [previewTitle, setPreviewTitle] = React.useState("");
 
-  const initialValue = React.useMemo<Value | undefined>(() => {
+  const initialValue = React.useMemo<JSONContent | undefined>(() => {
     if (!postData) return undefined;
-    return buildInitialValue(postData.title, postData.content);
+    // 旧的 Plate 内容在这里被转换成新格式，保存后数据库里就是新格式了
+    return buildPostDocument(postData.title, postData.content);
   }, [postData?.id]); // only re-compute when post ID changes, not on every save
 
-  const handleChange = (value: Value) => {
+  const handleChange = (value: JSONContent) => {
     editorValueRef.current = value;
     // Keep preview title in sync for PublishDialog
     setPreviewTitle(extractTitle(value));
@@ -235,7 +209,7 @@ export default function PostEditorPage() {
 
       {/* Editor — title is the first h1 block, no separate input */}
       <div className="flex-1 overflow-hidden">
-        <PlateEditor
+        <TiptapEditor
           initialValue={initialValue}
           onChange={handleChange}
         />

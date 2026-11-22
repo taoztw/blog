@@ -2,18 +2,17 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { normalizeNodeId, type Value } from "platejs";
+import type { JSONContent } from "@tiptap/core";
 import { ArrowLeftIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { PlateEditor } from "@/components/editor/plate-editor";
+import { EMPTY_NOTE } from "@/components/tiptap/document";
+import { TiptapEditor } from "@/components/tiptap/tiptap-editor";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { api } from "@/trpc/react";
 import { authClient } from "@/lib/auth/authClient";
-
-const EMPTY_VALUE: Value = normalizeNodeId([{ type: "p", children: [{ text: "" }] }]);
 
 export default function NewJournalPage() {
   const router = useRouter();
@@ -30,14 +29,14 @@ export default function NewJournalPage() {
     },
   });
 
-  const editorValueRef = React.useRef<Value | null>(null);
+  const editorValueRef = React.useRef<JSONContent | null>(null);
 
-  const handleChange = (value: Value) => {
+  const handleChange = (value: JSONContent) => {
     editorValueRef.current = value;
   };
 
   const handleSave = React.useCallback(() => {
-    const value = editorValueRef.current ?? EMPTY_VALUE;
+    const value = editorValueRef.current ?? EMPTY_NOTE;
     create.mutate({ content: JSON.stringify(value) });
   }, [create]);
 
@@ -109,7 +108,7 @@ export default function NewJournalPage() {
 
       {/* Editor */}
       <div className="flex-1 overflow-hidden">
-        <PlateEditor initialValue={EMPTY_VALUE} onChange={handleChange} />
+        <TiptapEditor initialValue={EMPTY_NOTE} onChange={handleChange} />
       </div>
     </div>
   );

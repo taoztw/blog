@@ -1,10 +1,11 @@
 "use client";
 
 import * as React from "react";
-import type { Value } from "platejs";
+import type { JSONContent } from "@tiptap/core";
 import { toast } from "sonner";
 
-import { PlateEditor } from "@/components/editor/plate-editor";
+import { EMPTY_NOTE, loadDocument } from "@/components/tiptap/document";
+import { TiptapEditor } from "@/components/tiptap/tiptap-editor";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -32,7 +33,7 @@ export function JournalEditorDialog({
   journal,
   onSuccess,
 }: JournalEditorDialogProps) {
-  const editorValueRef = React.useRef<Value | null>(null);
+  const editorValueRef = React.useRef<JSONContent | null>(null);
   const utils = api.useUtils();
 
   const createMutation = api.journal.create.useMutation({
@@ -59,18 +60,7 @@ export function JournalEditorDialog({
     },
   });
 
-  const initialValue = React.useMemo<Value | undefined>(() => {
-    if (!journal?.content) return undefined;
-
-    try {
-      const parsed = JSON.parse(journal.content);
-      if (Array.isArray(parsed)) return parsed as Value;
-    } catch {
-      // Content is not JSON, start with empty
-    }
-
-    return undefined;
-  }, [journal?.content]);
+  const initialValue = React.useMemo(() => loadDocument(journal?.content) ?? EMPTY_NOTE, [journal?.content]);
 
   const handleSave = () => {
     const value = editorValueRef.current;
@@ -93,7 +83,7 @@ export function JournalEditorDialog({
     }
   };
 
-  const handleChange = (value: Value) => {
+  const handleChange = (value: JSONContent) => {
     editorValueRef.current = value;
   };
 
@@ -111,8 +101,8 @@ export function JournalEditorDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-hidden px-6">
-          <PlateEditor
+        <div className="min-h-0 flex-1 overflow-hidden">
+          <TiptapEditor
             key={journal?.id ?? "new"}
             initialValue={initialValue}
             onChange={handleChange}

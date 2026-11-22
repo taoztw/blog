@@ -23,7 +23,7 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 | 鉴权 | better-auth（邮箱密码 + GitHub + Google + admin 插件） |
 | API | tRPC v11 + TanStack Query（端到端类型安全） |
 | UI | Tailwind CSS v4 + shadcn/ui（new-york 风格） |
-| 富文本编辑器 | Plate.js（`@platejs/*`），部分场景用 Tiptap |
+| 富文本编辑器 | Tiptap v3（`@tiptap/*`） |
 | 国际化 | next-intl（`en` / `zh`，默认 `zh`） |
 | URL 状态 | nuqs（表格筛选/分页同步到 URL） |
 | 部署 | Cloudflare Workers（OpenNext），自定义域名 `tz1.me` |
@@ -64,7 +64,7 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 
 地址：`/zh/blog/[...slug]`
 
-- **Plate.js 富文本渲染**：标题层级、代码块（带高亮）、图片、引用等。
+- **Tiptap 富文本渲染**（服务端渲染）：标题层级、代码块（带高亮）、图片、引用等。
 - **阅读量统计**：基于 IP 去重计数。
 - **点赞 / 反应**：游客（按 IP）与登录用户均可点赞。
 - **评论系统**：支持嵌套回复（父子结构）、评论点赞，登录后可发表。
@@ -143,7 +143,7 @@ Tz Blog 是一个集 **博客文章、随手日志、项目作品集、Q&A** 于
 
 管理员专属后台，基于共享的 **数据表系统**（TanStack Table + nuqs URL 状态）：
 
-- **文章管理**：列表、筛选、新建/编辑（Plate.js 编辑器 + 草稿保存）。
+- **文章管理**：列表、筛选、新建/编辑（Tiptap 编辑器 + 草稿保存）。
 - **项目管理**：作品集 CRUD。
 - **日志管理**：动态 CRUD。
 - **分类 / 标签管理**：维护文章与项目的分类法。
@@ -295,7 +295,7 @@ erDiagram
 | title | text | 标题 |
 | slug | text unique | URL slug |
 | excerpt | text | 摘要 |
-| content | text | 正文（Plate.js JSON） |
+| content | text | 正文（Tiptap JSON；旧的 Plate JSON 读取时自动转换） |
 | image_url | text | 封面 |
 | status | enum | `draft` / `published` |
 | created_by_id | text FK→user | 作者（索引 `created_by_idx`） |

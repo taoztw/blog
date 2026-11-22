@@ -42,7 +42,7 @@ pnpm auth:generate      # Regenerate better-auth Drizzle schema from auth config
 - **Auth**: [better-auth](https://better-auth.com) (NOT NextAuth) with email/password + GitHub + Google + admin plugin
 - **API**: tRPC v11 + TanStack Query, end-to-end type safety
 - **UI**: Tailwind CSS v4 + shadcn/ui (style: `new-york`, base: `slate`)
-- **Editor**: Plate.js (`@platejs/*`) for rich-text post editing, plus Tiptap in some surfaces
+- **Editor**: Tiptap v3 (`@tiptap/*`, ProseMirror-based) for posts and journals — see the Editor section below
 - **i18n**: next-intl (locales `en`, `zh`; default `zh`)
 - **URL state**: nuqs (syncing table state to query params)
 - **Deployment**: Cloudflare Workers via OpenNext (`@opennextjs/cloudflare`)
@@ -53,12 +53,12 @@ pnpm auth:generate      # Regenerate better-auth Drizzle schema from auth config
   - `[locale]/(blog)/` — public blog pages (intl-aware)
   - `[locale]/(auth)/` — sign-in/up pages (intl-aware)
   - `(dashboard)/dashboard/` — admin (NOT intl-aware; excluded by middleware)
-  - `(editors)/`, `editor/` — editor surfaces (also excluded from intl middleware)
-  - `api/` — REST endpoints (`auth`, `trpc`, `upload`, `images`, `file`, `ai`, `comment-upload`)
+  - `editor/` — editor playground, not persisted (also excluded from intl middleware)
+  - `api/` — REST endpoints (`auth`, `trpc`, `upload`, `images`, `file`, `comment-upload`)
 - `src/server/api/routers/` — tRPC routers (see list below)
 - `src/server/db/schemas/` — Drizzle table definitions, split per domain; `schema.ts` re-exports all
-- `src/features/{editor,comments,tags}/` — feature-local components/logic outside the shared `components/`
-- `src/components/` — shared components (`ui/` = shadcn primitives, `data-table/` = TanStack Table system, `editor/` = Plate UI pieces)
+- `src/features/{comments,tags}/` — feature-local components/logic outside the shared `components/`
+- `src/components/` — shared components (`ui/` = shadcn primitives, `data-table/` = TanStack Table system, `tiptap/` = editor + read-only renderer)
 - `src/hooks/` — shared hooks (`use-data-table`, `use-debounced-callback`, `use-mobile`, …)
 - `src/lib/` — utilities, auth client, image service, parsers, validations
 - `src/trpc/` — tRPC client/server setup (`server.ts` for RSC, `react.tsx` for client)
@@ -103,7 +103,23 @@ pnpm auth:generate      # Regenerate better-auth Drizzle schema from auth config
 ### i18n
 
 - `defaultLocale: "zh"`, `locales: ["en", "zh"]` (`src/i18n/routing.ts`)
-- Middleware (`src/middleware.ts`) applies next-intl routing but **excludes** `api`, `trpc`, `_next`, `_vercel`, `dashboard`, `editor` / `editors`, `playground`, and anything with a dot. Dashboard pages live outside `[locale]` and are not localized.
+- Middleware (`src/middleware.ts`) applies next-intl routing but **excludes** `api`, `trpc`, `_next`, `_vercel`, `dashboard`, `editor`, and anything with a dot. Dashboard pages live outside `[locale]` and are not localized.
+
+### Editor (Tiptap)
+
+Everything lives in `src/components/tiptap/`. Post and journal `content` columns store the Tiptap document as a JSON string (`{ "type": "doc", ... }`).
+
+- `extensions.ts` — `createContentExtensions()`, the **single schema source** shared by the editor and the read-only renderer. Add a node/mark here or the two will disagree. Editing-only behaviour (placeholder, slash menu, paste/drop upload) is added in `tiptap-editor.tsx`, not here.
+- `tiptap-editor.tsx` — `<TiptapEditor initialValue onChange />` (client). `initialValue` is read once on mount; remount with a `key` to load another document.
+- `tiptap-content.tsx` — `<TiptapContent doc />`, read-only rendering via `@tiptap/static-renderer`. It has no `"use client"`: used from a server component (the blog post page), highlighting and KaTeX run on the server and no editor code ships to the browser.
+- `document.ts` — pure JSON helpers, safe to import anywhere: `loadDocument(raw)`, `extractTitle`, `withoutTitle`, `collectHeadings` (TOC + heading anchor ids come from this one function, so they always match).
+- `plate-convert.ts` — converts legacy Plate JSON (a top-level **array**) to a Tiptap doc. `loadDocument` calls it automatically, so old rows render and open in the editor without a DB migration, and are rewritten in the new format on save. Unknown nodes degrade to paragraphs; text is never dropped.
+- `callout.ts`, `slash-command.tsx`, `toolbar.tsx`, `bubble-toolbar.tsx`, `math-dialog.tsx`, `upload.ts` (image upload through `/api/upload`), `tiptap.css` (content styles scoped to `.tiptap-content`, shared by editor and renderer).
+
+Rules:
+- Always read stored content through `loadDocument()` — never `JSON.parse` it directly, or legacy rows break.
+- The first top-level `h1` is the post title (`extractTitle`); reader pages strip it with `withoutTitle` and show the title in the page header.
+- Playground for trying the editor without saving: `/editor`.
 
 ### Environment Variables
 

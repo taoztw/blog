@@ -2,11 +2,12 @@
 
 import * as React from "react";
 import { useParams, useRouter } from "next/navigation";
-import { normalizeNodeId, type Value } from "platejs";
+import type { JSONContent } from "@tiptap/core";
 import { ArrowLeftIcon, CheckIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 
-import { PlateEditor } from "@/components/editor/plate-editor";
+import { EMPTY_NOTE, loadDocument } from "@/components/tiptap/document";
+import { TiptapEditor } from "@/components/tiptap/tiptap-editor";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -22,23 +23,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { api } from "@/trpc/react";
 import { authClient } from "@/lib/auth/authClient";
-
-/** Build the initial editor value from persisted content */
-function buildInitialValue(content: string): Value {
-  if (content) {
-    try {
-      const parsed = JSON.parse(content);
-      if (Array.isArray(parsed) && parsed.length > 0) {
-        return normalizeNodeId(parsed as Value);
-      }
-    } catch {
-      // fall through to default
-    }
-  }
-
-  // No content yet — seed with empty paragraph
-  return normalizeNodeId([{ type: "p", children: [{ text: "" }] }]);
-}
 
 export default function JournalEditorPage() {
   const params = useParams<{ id: string }>();
@@ -59,17 +43,18 @@ export default function JournalEditorPage() {
     },
   });
 
-  const editorValueRef = React.useRef<Value | null>(null);
+  const editorValueRef = React.useRef<JSONContent | null>(null);
   const [isSaving, setIsSaving] = React.useState(false);
   const [lastSaved, setLastSaved] = React.useState<Date | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
 
-  const initialValue = React.useMemo<Value | undefined>(() => {
+  const initialValue = React.useMemo<JSONContent | undefined>(() => {
     if (!journalData) return undefined;
-    return buildInitialValue(journalData.content);
+    // 旧的 Plate 内容在这里被转换成新格式，保存后数据库里就是新格式了
+    return loadDocument(journalData.content) ?? EMPTY_NOTE;
   }, [journalData?.id]);
 
-  const handleChange = (value: Value) => {
+  const handleChange = (value: JSONContent) => {
     editorValueRef.current = value;
   };
 
@@ -201,7 +186,7 @@ export default function JournalEditorPage() {
 
         {/* Editor */}
         <div className="flex-1 overflow-hidden">
-          <PlateEditor
+          <TiptapEditor
             initialValue={initialValue}
             onChange={handleChange}
           />

@@ -2,27 +2,17 @@
 
 import * as React from "react";
 import { useRouter } from "next/navigation";
-import { normalizeNodeId, type TElement, type Value } from "platejs";
+import type { JSONContent } from "@tiptap/core";
 import { ArrowLeftIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { PlateEditor } from "@/components/editor/plate-editor";
+import { EMPTY_DOCUMENT, extractTitle } from "@/components/tiptap/document";
+import { TiptapEditor } from "@/components/tiptap/tiptap-editor";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { api } from "@/trpc/react";
 import { authClient } from "@/lib/auth/authClient";
-
-const EMPTY_VALUE: Value = normalizeNodeId([
-  { type: "h1", children: [{ text: "" }] },
-  { type: "p", children: [{ text: "" }] },
-]);
-
-function extractTitle(value: Value): string {
-  const first = value[0] as TElement | undefined;
-  if (!first || first.type !== "h1") return "";
-  return (first.children as Array<{ text?: string }>).map((c) => c.text ?? "").join("");
-}
 
 export default function NewPostPage() {
   const router = useRouter();
@@ -32,15 +22,15 @@ export default function NewPostPage() {
   const createDraft = api.post.createDraft.useMutation();
   const update = api.post.update.useMutation();
 
-  const editorValueRef = React.useRef<Value | null>(null);
+  const editorValueRef = React.useRef<JSONContent | null>(null);
   const [isSaving, setIsSaving] = React.useState(false);
 
-  const handleChange = (value: Value) => {
+  const handleChange = (value: JSONContent) => {
     editorValueRef.current = value;
   };
 
   const handleSave = React.useCallback(async () => {
-    const value = editorValueRef.current ?? EMPTY_VALUE;
+    const value = editorValueRef.current ?? EMPTY_DOCUMENT;
     const title = extractTitle(value);
     setIsSaving(true);
     try {
@@ -123,7 +113,7 @@ export default function NewPostPage() {
       </header>
 
       <div className="flex-1 overflow-hidden">
-        <PlateEditor initialValue={EMPTY_VALUE} onChange={handleChange} />
+        <TiptapEditor initialValue={EMPTY_DOCUMENT} onChange={handleChange} />
       </div>
     </div>
   );

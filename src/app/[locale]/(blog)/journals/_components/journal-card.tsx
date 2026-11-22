@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { authClient } from "@/lib/auth/authClient";
-import { BaseEditorKit } from "@/components/editor/editor-base-kit";
-import { EditorStatic } from "@/components/ui/editor-static";
+import { loadDocument } from "@/components/tiptap/document";
+import { TiptapContent } from "@/components/tiptap/tiptap-content";
 import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
@@ -17,8 +17,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { api } from "@/trpc/react";
 import { cn } from "@/lib/utils";
-import { createSlateEditor } from "platejs";
-import type { Value } from "platejs";
 import { MessageSquare, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { Spinner } from "@/components/ui/spinner";
@@ -63,23 +61,7 @@ export function JournalCard({
     },
   });
 
-  const parsedContent = React.useMemo<Value | null>(() => {
-    try {
-      const parsed = JSON.parse(journal.content);
-      if (Array.isArray(parsed)) return parsed as Value;
-    } catch {
-      // Not JSON
-    }
-    return null;
-  }, [journal.content]);
-
-  const editor = React.useMemo(() => {
-    if (!parsedContent) return null;
-    return createSlateEditor({
-      plugins: BaseEditorKit,
-      value: parsedContent,
-    });
-  }, [parsedContent]);
+  const doc = React.useMemo(() => loadDocument(journal.content), [journal.content]);
 
   const isAdmin = session?.user?.role === "ADMIN";
 
@@ -150,13 +132,11 @@ export function JournalCard({
           </time>
 
           {/* Content */}
-          <div className="prose prose-sm max-w-none dark:prose-invert text-ink-700">
-            {editor ? (
-              <EditorStatic editor={editor} variant="none" />
-            ) : (
-              <p className="text-muted-foreground italic">无法加载内容</p>
-            )}
-          </div>
+          {doc ? (
+            <TiptapContent doc={doc} className="text-[0.9375rem]" />
+          ) : (
+            <p className="text-sm text-muted-foreground italic">无法加载内容</p>
+          )}
 
           {/* Comment action */}
           <div className="mt-2.5 flex items-center">

@@ -1,0 +1,373 @@
+/*
+ * Tiptap 文档内容样式。
+ * 作用域是 .tiptap-content，编辑器和（之后的）阅读页静态渲染共用这一份，
+ * 颜色全部走 globals.css 里的设计令牌，深色模式自动跟随。
+ */
+
+.tiptap-content {
+  width: 100%;
+  color: var(--ink-700);
+  font-size: 1rem;
+  line-height: 1.75;
+  overflow-wrap: break-word;
+}
+
+/* 编辑态：居中的窄栏排版，底部留出大片空白方便在文末继续写 */
+.tiptap-content.ProseMirror {
+  min-height: 100%;
+  padding: 1rem 4rem 18rem;
+  outline: none;
+  caret-color: var(--brand);
+}
+
+@media (min-width: 640px) {
+  .tiptap-content.ProseMirror {
+    padding-inline: max(64px, calc(50% - 350px));
+  }
+}
+
+.tiptap-content ::selection {
+  background: color-mix(in srgb, var(--brand) 25%, transparent);
+}
+
+.tiptap-content > * + * {
+  margin-top: 0.75em;
+}
+
+/* ── 标题 ─────────────────────────────────────────── */
+
+.tiptap-content :is(h1, h2, h3, h4) {
+  color: var(--ink-800);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.tiptap-content h1 {
+  margin-top: 1.6em;
+  font-size: 2.25rem;
+  letter-spacing: -0.02em;
+}
+
+.tiptap-content h2 {
+  margin-top: 1.5em;
+  font-size: 1.625rem;
+  letter-spacing: -0.015em;
+}
+
+.tiptap-content h3 {
+  margin-top: 1.3em;
+  font-size: 1.3rem;
+}
+
+.tiptap-content h4 {
+  margin-top: 1.2em;
+  font-size: 1.1rem;
+}
+
+.tiptap-content > :first-child {
+  margin-top: 0;
+}
+
+.tiptap-content.ProseMirror > :first-child {
+  margin-top: 0.5em;
+}
+
+/* ── 行内 ─────────────────────────────────────────── */
+
+.tiptap-content strong {
+  color: var(--ink-800);
+  font-weight: 700;
+}
+
+.tiptap-content a {
+  color: var(--brand);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--brand) 40%, transparent);
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.tiptap-content :not(pre) > code {
+  padding: 0.15em 0.4em;
+  border-radius: 0.35rem;
+  background: var(--ink-200);
+  color: var(--ink-800);
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.875em;
+}
+
+/* ── 列表 ─────────────────────────────────────────── */
+
+.tiptap-content :is(ul, ol) {
+  padding-left: 1.5em;
+}
+
+.tiptap-content ul {
+  list-style: disc;
+}
+
+.tiptap-content ul ul {
+  list-style: circle;
+}
+
+.tiptap-content ol {
+  list-style: decimal;
+}
+
+.tiptap-content li > * + * {
+  margin-top: 0.25em;
+}
+
+.tiptap-content li + li {
+  margin-top: 0.25em;
+}
+
+.tiptap-content li::marker {
+  color: var(--ink-500);
+}
+
+.tiptap-content ul[data-type="taskList"] {
+  padding-left: 0;
+  list-style: none;
+}
+
+.tiptap-content ul[data-type="taskList"] > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6em;
+}
+
+.tiptap-content ul[data-type="taskList"] > li > label {
+  flex-shrink: 0;
+  margin-top: 0.4em;
+  line-height: 1;
+  user-select: none;
+}
+
+.tiptap-content ul[data-type="taskList"] > li > label input {
+  width: 1em;
+  height: 1em;
+  accent-color: var(--brand);
+  cursor: pointer;
+}
+
+.tiptap-content ul[data-type="taskList"] > li > div {
+  flex: 1;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.tiptap-content ul[data-type="taskList"] > li[data-checked="true"] > div {
+  color: var(--ink-500);
+  text-decoration: line-through;
+}
+
+/* ── 引用 / 分割线 / 图片 ─────────────────────────── */
+
+.tiptap-content blockquote {
+  padding-left: 1em;
+  border-left: 3px solid var(--ink-300);
+  color: var(--ink-600);
+}
+
+.tiptap-content hr {
+  margin-block: 2em;
+  border: 0;
+  border-top: 1px solid var(--ink-300);
+}
+
+.tiptap-content img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  border-radius: 0.5rem;
+}
+
+.tiptap-content .ProseMirror-selectednode:is(img, hr, [data-type="block-math"]) {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* ── 提示块 ───────────────────────────────────────── */
+
+.tiptap-content [data-callout] {
+  --callout: var(--info);
+  padding: 0.75em 1em;
+  border-left: 3px solid var(--callout);
+  border-radius: 0.5rem;
+  background: color-mix(in srgb, var(--callout) 9%, transparent);
+}
+
+.tiptap-content [data-callout][data-variant="success"] {
+  --callout: var(--success);
+}
+
+.tiptap-content [data-callout][data-variant="warning"] {
+  --callout: var(--warning);
+}
+
+.tiptap-content [data-callout][data-variant="danger"] {
+  --callout: var(--destructive);
+}
+
+.tiptap-content [data-callout] > * + * {
+  margin-top: 0.5em;
+}
+
+/* ── 表格 ─────────────────────────────────────────── */
+
+.tiptap-content .tableWrapper {
+  overflow-x: auto;
+}
+
+.tiptap-content table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.9375rem;
+}
+
+.tiptap-content :is(th, td) {
+  position: relative;
+  min-width: 4em;
+  padding: 0.45em 0.75em;
+  border: 1px solid var(--ink-300);
+  text-align: left;
+  vertical-align: top;
+}
+
+.tiptap-content th {
+  background: var(--ink-100);
+  color: var(--ink-800);
+  font-weight: 600;
+}
+
+.tiptap-content .selectedCell::after {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--brand) 14%, transparent);
+  content: "";
+  pointer-events: none;
+}
+
+.tiptap-content .column-resize-handle {
+  position: absolute;
+  top: 0;
+  right: -2px;
+  bottom: -1px;
+  width: 3px;
+  background: var(--brand);
+  pointer-events: none;
+}
+
+.tiptap-content.resize-cursor {
+  cursor: col-resize;
+}
+
+/* ── 公式 ─────────────────────────────────────────── */
+
+.tiptap-content [data-type="inline-math"] {
+  padding: 0 0.15em;
+  border-radius: 0.25rem;
+  cursor: pointer;
+}
+
+.tiptap-content [data-type="block-math"] {
+  padding: 0.75em;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tiptap-content:not(.ProseMirror) :is([data-type="inline-math"], [data-type="block-math"]) {
+  cursor: auto;
+}
+
+.tiptap-content[contenteditable="true"] :is([data-type="inline-math"], [data-type="block-math"]):hover {
+  background: var(--ink-100);
+}
+
+/* ── 代码块 ───────────────────────────────────────── */
+
+.tiptap-content pre {
+  --hl-comment: #6e7781;
+  --hl-keyword: #cf222e;
+  --hl-string: #0a3069;
+  --hl-number: #0550ae;
+  --hl-title: #8250df;
+  --hl-attr: #116329;
+  --hl-variable: #953800;
+
+  padding: 0.9em 1.1em;
+  border: 1px solid var(--ink-300);
+  border-radius: 0.6rem;
+  background: var(--ink-100);
+  color: var(--ink-800);
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.875rem;
+  line-height: 1.65;
+  overflow-x: auto;
+  tab-size: 2;
+}
+
+.dark .tiptap-content pre {
+  --hl-comment: #8b949e;
+  --hl-keyword: #ff7b72;
+  --hl-string: #a5d6ff;
+  --hl-number: #79c0ff;
+  --hl-title: #d2a8ff;
+  --hl-attr: #7ee787;
+  --hl-variable: #ffa657;
+}
+
+.tiptap-content pre code {
+  padding: 0;
+  background: none;
+  font: inherit;
+  white-space: pre;
+}
+
+.tiptap-content pre :is(.hljs-comment, .hljs-quote, .hljs-meta) {
+  color: var(--hl-comment);
+  font-style: italic;
+}
+
+.tiptap-content pre :is(.hljs-keyword, .hljs-selector-tag, .hljs-doctag, .hljs-deletion) {
+  color: var(--hl-keyword);
+}
+
+.tiptap-content pre :is(.hljs-string, .hljs-regexp, .hljs-template-string) {
+  color: var(--hl-string);
+}
+
+.tiptap-content pre :is(.hljs-number, .hljs-literal, .hljs-symbol, .hljs-bullet, .hljs-operator) {
+  color: var(--hl-number);
+}
+
+.tiptap-content pre :is(.hljs-title, .hljs-section, .hljs-selector-id, .hljs-selector-class) {
+  color: var(--hl-title);
+}
+
+.tiptap-content pre :is(.hljs-attr, .hljs-attribute, .hljs-name, .hljs-tag, .hljs-addition, .hljs-property) {
+  color: var(--hl-attr);
+}
+
+.tiptap-content pre :is(.hljs-variable, .hljs-template-variable, .hljs-built_in, .hljs-type, .hljs-params) {
+  color: var(--hl-variable);
+}
+
+/* ── 编辑态专属：占位符、光标占位 ─────────────────── */
+
+.tiptap-content .is-empty::before {
+  float: left;
+  height: 0;
+  color: var(--ink-400);
+  content: attr(data-placeholder);
+  pointer-events: none;
+}
+
+.tiptap-content .ProseMirror-gapcursor::after {
+  border-top-color: var(--ink-800);
+}

@@ -4,47 +4,27 @@ import { LikeButton } from "@/components/like-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { EditorStatic } from "@/components/ui/editor-static";
 import { Separator } from "@/components/ui/separator";
-import { BaseEditorKit } from "@/components/editor/editor-base-kit";
+import type { HeadingItem } from "@/components/tiptap/document";
 import type { Post } from "@/global";
 import { cn } from "@/lib/utils";
 import { api } from "@/trpc/react";
-import GithubSlugger from "github-slugger";
 import { Calendar, Eye, MessageCircle, Share2 } from "lucide-react";
-import { createSlateEditor } from "platejs";
-import type { Value } from "platejs";
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
-
-interface TableOfContentsItem {
-  id: string;
-  text: string;
-  level: number;
-}
 
 interface PostSectionProps {
   post: Post;
+  /** 服务端渲染好的正文；文章没有内容时为空 */
+  content?: ReactNode;
 }
 
-const HEADING_TYPES: Record<string, number> = {
-  h1: 1,
-  h2: 2,
-  h3: 3,
-  h4: 4,
-  h5: 5,
-  h6: 6,
-};
-
-function extractText(node: any): string {
-  if (typeof node.text === "string") return node.text;
-  if (Array.isArray(node.children)) {
-    return node.children.map(extractText).join("");
-  }
-  return "";
+interface PostTableOfContentsProps {
+  /** 服务端算好的标题列表 */
+  headings: HeadingItem[];
 }
 
-export const PostSection = ({ post }: PostSectionProps) => {
+export const PostSection = ({ post, content }: PostSectionProps) => {
   const createPostView = api.post.createView.useMutation();
 
   useEffect(() => {
@@ -71,36 +51,6 @@ export const PostSection = ({ post }: PostSectionProps) => {
         toast.error("复制链接失败，请手动复制");
       });
   };
-
-  const parsedContent = useMemo<Value | null>(() => {
-    try {
-      const parsed = JSON.parse(post.content);
-      if (Array.isArray(parsed)) return parsed as Value;
-    } catch {
-      // Not JSON
-    }
-    return null;
-  }, [post.content]);
-
-  const contentWithoutFirstH1 = useMemo<Value | null>(() => {
-    if (!parsedContent) return null;
-    let removed = false;
-    return parsedContent.filter((node) => {
-      if (!removed && (node as any).type === "h1") {
-        removed = true;
-        return false;
-      }
-      return true;
-    }) as Value;
-  }, [parsedContent]);
-
-  const editor = useMemo(() => {
-    if (!contentWithoutFirstH1) return null;
-    return createSlateEditor({
-      plugins: BaseEditorKit,
-      value: contentWithoutFirstH1,
-    });
-  }, [contentWithoutFirstH1]);
 
   return (
     <>
@@ -142,15 +92,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
       </div>
 
       {/* 文章内容 */}
-      {editor ? (
-        <EditorStatic
-          editor={editor}
-          variant="none"
-          className="w-full text-base"
-        />
-      ) : (
-        <p className="text-muted-foreground">暂无内容</p>
-      )}
+      {content ?? <p className="text-muted-foreground">暂无内容</p>}
 
       <div className="flex flex-col space-y-2 mt-8">
         <Separator />
@@ -172,7 +114,7 @@ export const PostSection = ({ post }: PostSectionProps) => {
   );
 };
 
-export const PostTableOfContents = ({ post }: PostSectionProps) => {
+export const PostTableOfContents = ({ headings }: PostTableOfContentsProps) => {
   const [activeId, setActiveId] = useState("");
 
   useEffect(() => {
@@ -193,35 +135,8 @@ export const PostTableOfContents = ({ post }: PostSectionProps) => {
     return () => observer.disconnect();
   }, []);
 
-  const parsedContent = useMemo<Value | null>(() => {
-    try {
-      const parsed = JSON.parse(post.content);
-      if (Array.isArray(parsed)) return parsed as Value;
-    } catch {
-      // Not JSON
-    }
-    return null;
-  }, [post.content]);
-
-  const toc: TableOfContentsItem[] = useMemo(() => {
-    if (!parsedContent) return [];
-
-    const slugger = new GithubSlugger();
-    const items: TableOfContentsItem[] = [];
-
-    for (const node of parsedContent) {
-      const level = HEADING_TYPES[(node as any).type];
-      if (level && level >= 2) {
-        const text = extractText(node);
-        if (text) {
-          const id = slugger.slug(text);
-          items.push({ id, text, level });
-        }
-      }
-    }
-
-    return items;
-  }, [parsedContent]);
+  // 一级标题是文章标题，不进目录
+  const toc = useMemo(() => headings.filter((heading) => heading.level >= 2), [headings]);
 
   if (toc.length === 0) return null;
 
