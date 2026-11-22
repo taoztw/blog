@@ -61,3 +61,5 @@ yarn-error.log*
 .codex
 .agents
 .claude
+# pnpm store
+.pnpm-store

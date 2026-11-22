@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TagBadge } from "@/components/tag-badge";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { type Tag } from "@/global";
+import type { Tag } from "@/global";
 
 interface TagColumnsProps {
   onEdit: (tag: Tag) => void;

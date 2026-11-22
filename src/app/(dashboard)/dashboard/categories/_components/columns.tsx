@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { type Category } from "@/global";
+import type { Category } from "@/global";
 
 interface CategoryColumnsProps {
   onEdit: (category: Category) => void;
