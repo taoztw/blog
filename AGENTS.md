@@ -103,7 +103,7 @@ pnpm auth:generate      # Regenerate better-auth Drizzle schema from auth config
 ### i18n
 
 - `defaultLocale: "zh"`, `locales: ["en", "zh"]` (`src/i18n/routing.ts`)
-- Middleware (`src/middleware.ts`) applies next-intl routing but **excludes** `api`, `trpc`, `_next`, `_vercel`, `dashboard`, `editors`, and anything with a dot. Dashboard pages live outside `[locale]` and are not localized.
+- Middleware (`src/middleware.ts`) applies next-intl routing but **excludes** `api`, `trpc`, `_next`, `_vercel`, `dashboard`, `editor` / `editors`, `playground`, and anything with a dot. Dashboard pages live outside `[locale]` and are not localized.
 
 ### Environment Variables
 

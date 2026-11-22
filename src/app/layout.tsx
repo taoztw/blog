@@ -1,3 +1,8 @@
+import type { Metadata } from "next";
+import localFont from "next/font/local";
+import { getLocale } from "next-intl/server";
+import NextTopLoader from "nextjs-toploader";
+
 import { BrandProvider } from "@/components/brand-provider";
 import { FaviconSwitcher } from "@/components/favicon-switcher";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -5,9 +10,6 @@ import { Toaster } from "@/components/ui/sonner";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/constants";
 import { ACCENT_INJECT } from "@/lib/accent";
 import { TRPCReactProvider } from "@/trpc/react";
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import NextTopLoader from "nextjs-toploader";
 import "@/styles/globals.css";
 
 const geistSans = localFont({
@@ -55,14 +57,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  // 带语言前缀的页面取 middleware 识别出的语言；后台、编辑器等页面回退到默认语言（见 src/i18n/request.ts）
+  const locale = await getLocale();
+
   return (
     <html
-      lang="en"
+      lang={locale}
       className={`${geistSans.variable} ${cormorant.variable}`}
       suppressHydrationWarning
     >
-      {/* <html lang="en" suppressHydrationWarning> */}
       <body>
         {/* 首屏注入品牌色（读 localStorage，默认深蓝）—— 无闪烁 */}
         <script dangerouslySetInnerHTML={{ __html: ACCENT_INJECT }} />
